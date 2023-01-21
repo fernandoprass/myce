@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Version>$(VersionPrefix)0.1.1</Version>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>MYCE (Makes Your Coding Easier) Response is a response object with Error, Warning and Information messages</Title>
+		<Authors>Fernando Prass</Authors>
+		<Description>MYCE (Makes Your Coding Easier) Response is a response object to handle Error, Warning and Information messages</Description>
+		<Copyright>Fernando Prass</Copyright>
+		<PackageProjectUrl>https://github.com/fernandoprass/myce</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/fernandoprass/myce</RepositoryUrl>
+		<PackageTags>messages; response;</PackageTags>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+		<PackageLicenseFile>license.txt</PackageLicenseFile>
+	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="Myce.Extensions" Version="0.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="license.txt">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Update="readme.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+</Project>

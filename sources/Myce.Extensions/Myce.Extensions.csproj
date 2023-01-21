@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Version>$(VersionPrefix)0.1.0</Version>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>MYCE (Makes Your Coding Easier) Extensions is a Nuget package for Visual Studio that contains a set of extensions for the most common types.</Title>
+		<Authors>Fernando Prass</Authors>
+		<Description>MYCE (Makes Your Coding Easier) Extensions is a Nuget package for Visual Studio that contains a set of extensions for the most common types</Description>
+		<Copyright>Fernando Prass</Copyright>
+		<PackageProjectUrl>https://github.com/fernandoprass/myce</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/fernandoprass/myce</RepositoryUrl>
+		<PackageTags>extensions; string; int; double; collections; guid</PackageTags>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+		<PackageLicenseFile>license.txt</PackageLicenseFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="license.txt" Pack="True" PackagePath="\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="readme.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+</Project>
