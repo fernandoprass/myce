@@ -12,10 +12,34 @@ namespace Myce.Extensions
       /// <summary>
       /// Return TRUE if the collection object is not null and has any record
       /// </summary>
-      /// <param name="collection"></param>
-      public static bool HasData<T>(this IEnumerable<T> collection)
+      /// <param name="enumerable">The enumerable</param>
+      public static bool HasData<T>(this IEnumerable<T> enumerable)
       {
-         return collection.IsNotNull() && collection.Any();
+         return enumerable.IsNotNull() && enumerable.Any();
+      }
+
+      /// <summary>
+      /// Check for duplicates in a collection
+      /// </summary>
+      /// <typeparam name="T">The Enumerable Type</typeparam>
+      /// <param name="enumerable">The enumerable</param>
+      /// <returns></returns>
+      public static bool ContainsDuplicates<T>(this IEnumerable<T> enumerable)
+      {
+         var knownElements = new HashSet<T>();
+
+         if (enumerable.HasData())
+         {
+            foreach (T element in enumerable)
+            {
+               if (!knownElements.Add(element))
+               {
+                  return true;
+               }
+            }
+         }
+
+         return false;
       }
    }
 }

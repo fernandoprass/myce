@@ -13,8 +13,21 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
     - GreaterThanOrEqualZero() - Return true if the value is greater than or equal zero
     - LessThanZero() - Return true if the value is less than zero
     - LessThanOrEqualZero() - Return true if the value is less than or equal zero
+- DoubleExtension
+    - EqualZero() - Return true if the value is equal zero
+    - GreaterThanZero() - Return true if the value is greater than zero
+    - GreaterThanOrEqualZero() - Return true if the value is greater than or equal zero
+    - LessThanZero() - Return true if the value is less than zero
+    - LessThanOrEqualZero() - Return true if the value is less than or equal zero
+- IntegerExtension
+    - EqualZero() - Return true if the value is equal zero
+    - GreaterThanZero() - Return true if the value is greater than zero
+    - GreaterThanOrEqualZero() - Return true if the value is greater than or equal zero
+    - LessThanZero() - Return true if the value is less than zero
+    - LessThanOrEqualZero() - Return true if the value is less than or equal zero
 - EnumerableExtensions
-    - HasData() - Return the if the collection object is not null and has any record
+    - HasData() - Return true the if the enumerable object is not null and has any record
+    - ContainsDuplicates() - Return true the if the enumerable constains a duplicate element
 - EnumExtensions
     - GetDescription() - Return the enumerator description as a string
 - GuidExtension
@@ -27,6 +40,7 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
     - KeepOnlyNumbers() - Remove letters and simbols, keeping only numbers
     - KeepOnlyNumbersAndLetters() - Remove simbols keeping only numbers and letters  
     - KeepOnlyNumbersAndLettersAndSpaces() - Remove simbols keeping only numbers, letters and spaces 
+    - RemoveSimbols() Remove simbols keeping only numbers, letters and spaces (if asked)
     - RemoveAccents() - Remove accents
 
 ## Installation
