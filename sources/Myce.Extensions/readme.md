@@ -7,6 +7,12 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
     - FirstDayOfMonth() - Return the first day of the mounth for a given date
     - DaysInMonth() - Return the number of days in the mounth for a given date
     - LastDayOfMonth() - Return the last day of the mounth for a given date
+    - IsWorkDay() - Return true if the date is a workday (Monday to Friday)
+    - IsWeekend() - Return true if the date is a weekend (Saturday or Sunday). Holidays are not taken into account.
+    - PriorWorkday() - Return the prior workday (Monday to Friday) for a given date. Holidays are not taken into account.
+    - NextWorkday() - Return the next workday (Monday to Friday) for a given date. Holidays are not taken into account.
+    - Yesterday() - Return yesterday's date
+    - Tomorrow() - Return oomorrow's date
 - DecimalExtension
     - EqualZero() - Return true if the value is equal zero
     - GreaterThanZero() - Return true if the value is greater than zero
