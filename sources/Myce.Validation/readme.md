@@ -6,6 +6,10 @@ MYCE (Makes Your Coding Easier) Validation is fluent validation library.
 - EntityValidator: is fluent validation class for entities
 - ValidatorBuilder: join multiples validation in one single process
 
+## Dependencies
+- Myce.Extensions
+- Myce.Response
+
 
 ## Installation
 

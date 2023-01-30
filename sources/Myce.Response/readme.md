@@ -5,6 +5,8 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio with a set 
 - Result: a set of classes to be used as a return in APIs
 - Message: a class to handle Error, Warning and Information messages
 
+## Dependencies
+- Myce.Extensions
 
 ## Installation
 

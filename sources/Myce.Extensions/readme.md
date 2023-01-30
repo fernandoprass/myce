@@ -2,7 +2,6 @@
 MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contains a set of extensions for the most common types.
 
 ## Library
-
 - DateTimeExtension
     - FirstDayOfMonth() - Return the first day of the mounth for a given date
     - DaysInMonth() - Return the number of days in the mounth for a given date
@@ -48,6 +47,9 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
     - KeepOnlyNumbersAndLettersAndSpaces() - Remove simbols keeping only numbers, letters and spaces 
     - RemoveSimbols() Remove simbols keeping only numbers, letters and spaces (if asked)
     - RemoveAccents() - Remove accents
+
+## Dependencies
+- None
 
 ## Installation
 
