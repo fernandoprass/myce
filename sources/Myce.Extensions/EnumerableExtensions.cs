@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Myce.Extensions
+﻿namespace Myce.Extensions
 {
    /// <summary>
    /// Extensions for IEnumerable type
@@ -21,7 +17,6 @@ namespace Myce.Extensions
       /// <summary>
       /// Check for duplicates in a collection
       /// </summary>
-      /// <typeparam name="T">The Enumerable Type</typeparam>
       /// <param name="enumerable">The enumerable</param>
       /// <returns></returns>
       public static bool ContainsDuplicates<T>(this IEnumerable<T> enumerable)
@@ -40,6 +35,24 @@ namespace Myce.Extensions
          }
 
          return false;
+      }
+
+      /// <summary>
+      /// Return a collection of elements distinct by specific property
+      /// </summary>
+      /// <param name="enumerable">The enumerable</param>
+      /// <param name="keySelector">The distinct property</param>
+      /// <returns></returns>
+      public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector)
+      {
+         HashSet<TKey> seenKeys = new HashSet<TKey>();
+         foreach (TSource element in enumerable)
+         {
+            if (seenKeys.Add(keySelector(element)))
+            {
+               yield return element;
+            }
+         }
       }
    }
 }

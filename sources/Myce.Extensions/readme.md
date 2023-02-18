@@ -33,6 +33,7 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
 - EnumerableExtensions
     - HasData() - Return true the if the enumerable object is not null and has any record
     - ContainsDuplicates() - Return true the if the enumerable constains a duplicate element
+    - DistinctBy() - Return a collection of elements distinct by specific property
 - EnumExtensions
     - GetDescription() - Return the enumerator description as a string
 - GuidExtension
