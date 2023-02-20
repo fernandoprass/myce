@@ -74,22 +74,12 @@ namespace Myce.Extensions.Tests
       [Fact]
       public void DistinctBy_ReceiveListPeopleWithDuplicatesNames_ReturnTrue()
       {
-         var list = new List<Person> { 
-            new Person {Name = "Paul", Age = 41},
-            new Person {Name = "Paul", Age = 18},
-            new Person {Name = "John", Age = 27},
+         var list = MockData.GetListOfPeopleWithDuplicateNames();
 
-         };
          var result = list.DistinctBy(x => x.Name);
          Assert.Equal(2, result.Count());
          Assert.Equal("Paul", result.First().Name);
          Assert.Equal("John", result.Last().Name);
       }
-   }
-
-   public class Person
-   {
-      public string Name { get; set; }
-      public int Age { get; set; }
    }
 }
