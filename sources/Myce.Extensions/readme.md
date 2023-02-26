@@ -2,6 +2,10 @@
 MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contains a set of extensions for the most common types.
 
 ## Library
+- CollectionExtensions
+    - AddIfNotNull() - Add an item to a collection if the item is not null
+    - AddRangeIfHasData() - Add a collection of items to a collection if the collections of items has data
+
 - DateTimeExtension
     - FirstDayOfMonth() - Return the first day of the mounth for a given date
     - DaysInMonth() - Return the number of days in the mounth for a given date
@@ -12,36 +16,44 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
     - NextWorkday() - Return the next workday (Monday to Friday) for a given date. Holidays are not taken into account.
     - Yesterday() - Return yesterday's date
     - Tomorrow() - Return oomorrow's date
+
 - DecimalExtension
     - EqualZero() - Return true if the value is equal zero
     - GreaterThanZero() - Return true if the value is greater than zero
     - GreaterThanOrEqualZero() - Return true if the value is greater than or equal zero
     - LessThanZero() - Return true if the value is less than zero
     - LessThanOrEqualZero() - Return true if the value is less than or equal zero
+
 - DoubleExtension
     - EqualZero() - Return true if the value is equal zero
     - GreaterThanZero() - Return true if the value is greater than zero
     - GreaterThanOrEqualZero() - Return true if the value is greater than or equal zero
     - LessThanZero() - Return true if the value is less than zero
     - LessThanOrEqualZero() - Return true if the value is less than or equal zero
+
+- EnumerableExtensions
+    - HasData() - Return true the if the enumerable object is not null and has any record
+    - ContainsDuplicates() - Return true the if the enumerable constains a duplicate element
+    - DistinctBy() - Return a collection of elements distinct by specific property
+
+- EnumExtensions
+    - GetDescription() - Return the enumerator description as a string
+
+- GuidExtension
+    - IsEmpty() - Return true if the guid is empty
+    - IsNotEmpty() - Return true if the guid is not empty
+
 - IntegerExtension
     - EqualZero() - Return true if the value is equal zero
     - GreaterThanZero() - Return true if the value is greater than zero
     - GreaterThanOrEqualZero() - Return true if the value is greater than or equal zero
     - LessThanZero() - Return true if the value is less than zero
     - LessThanOrEqualZero() - Return true if the value is less than or equal zero
-- EnumerableExtensions
-    - HasData() - Return true the if the enumerable object is not null and has any record
-    - ContainsDuplicates() - Return true the if the enumerable constains a duplicate element
-    - DistinctBy() - Return a collection of elements distinct by specific property
-- EnumExtensions
-    - GetDescription() - Return the enumerator description as a string
-- GuidExtension
-    - IsEmpty() - Return true if the guid is empty
-    - IsNotEmpty() - Return true if the guid is not empty
+
 - ObjectExtension
     - IsNull() - Return true if the guid is null
     - IsNotNull() - Return true if the guid is not null
+
 - StringExtension
     - KeepOnlyNumbers() - Remove letters and simbols, keeping only numbers
     - KeepOnlyNumbersAndLetters() - Remove simbols keeping only numbers and letters  
