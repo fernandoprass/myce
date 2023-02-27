@@ -7,6 +7,20 @@ namespace Myce.Extensions.Tests
    /// </summary>
    public class EnumerableExtensionTests
    {
+      /// <summary> Receive a list and a positive chunk size, should split </summary>
+      [Fact]
+      public void Chunk_ReceiveAListAndAPositiveChunkSize_ShouldSplit()
+      {
+         var list = new List<int> { 1, 2, 3, 4, 5 };
+         var result = list.Chunk(2);
+        
+         // should return { { 1, 2 }, { 3, 4}, { 5 } }
+
+         Assert.NotNull(result);
+         Assert.Equal(3, result.Count());
+         Assert.Equal(5, result.Last().First()); 
+      }
+
       /// <summary> Receive an uninstantiated list and return False </summary>
       [Fact]
       public void HasData_ReceiveUninstantiatedList_ReturnFalse()
