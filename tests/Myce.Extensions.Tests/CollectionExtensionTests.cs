@@ -3,7 +3,7 @@ using Xunit;
 namespace Myce.Extensions.Tests
 {
    /// <summary>
-   /// Tests for IEnumerable type class extensions
+   /// Tests for ICollection type class extensions
    /// </summary>
    public class CollectionExtensionTests
    {

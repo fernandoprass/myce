@@ -6,6 +6,28 @@
    public static class EnumerableExtensions
    {
       /// <summary>
+      /// Splits an enumerable into chunks of a specified size.
+      /// </summary>
+      /// <typeparam name="T"></typeparam>
+      /// <param name="list">The IEnumerable</param>
+      /// <param name="chunkSize">The chunk size</param>
+      /// <returns></returns>
+      /// <exception cref="ArgumentException"></exception>
+      public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> list, int chunkSize)
+      {
+         if (chunkSize <= 0)
+         {
+            throw new ArgumentException("chunkSize must be greater than 0.");
+         }
+
+         while (list.Any())
+         {
+            yield return list.Take(chunkSize);
+            list = list.Skip(chunkSize);
+         }
+      }
+
+      /// <summary>
       /// Return TRUE if the collection object is not null and has any record
       /// </summary>
       /// <param name="enumerable">The enumerable</param>
