@@ -6,6 +6,15 @@ namespace Myce.Extensions
    public static class StringExtensions
    {
       /// <summary>
+      /// Return an empty string if the string is null
+      /// </summary>
+      /// <param name="value"></param>
+      public static string EmptyIfIsNull(this string value)
+      {
+         return value.IsNull() ? string.Empty : value;
+      }
+
+      /// <summary>
       /// Remove letters and simbols, keeping only numbers
       /// </summary>
       /// <param name="value"></param>

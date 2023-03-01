@@ -56,6 +56,7 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
     - IsNotNull() - Return true if the guid is not null
 
 - StringExtension
+    - EmptyIfIsNull() - Return an empty string if the string is null
     - KeepOnlyNumbers() - Remove letters and simbols, keeping only numbers
     - KeepOnlyNumbersAndLetters() - Remove simbols keeping only numbers and letters  
     - KeepOnlyNumbersAndLettersAndSpaces() - Remove simbols keeping only numbers, letters and spaces 

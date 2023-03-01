@@ -3,7 +3,7 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>$(VersionPrefix)0.2</Version>
+		<Version>$(VersionPrefix)0.2.5</Version>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>MYCE (Makes Your Coding Easier) Extensions is a Nuget package for Visual Studio that contains a set of extensions for the most common types.</Title>
 		<Authors>Fernando Prass</Authors>
