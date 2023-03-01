@@ -7,12 +7,28 @@ namespace Myce.Extensions.Tests
     /// </summary>
     public class StringExtensionTests
     {
-        /// <summary>
-        /// Remove letters and simbols, keeping only numbers
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="expected"></param>
-        [Theory]
+      /// <summary>
+      ///  Return an empty string if the string is null
+      /// </summary>
+      /// <param name="value"></param>
+      /// <param name="expected"></param>
+      [Theory]
+      [InlineData("123", "123")]
+      [InlineData("a1b2c3", "a1b2c3")]
+      [InlineData("", "")]
+      [InlineData(null, "")]
+      public void EmptyIfIsNull(string value, string expected)
+      {
+         var result = value.EmptyIfIsNull();
+         Assert.Equal(expected, result);
+      }
+
+      /// <summary>
+      /// Remove letters and simbols, keeping only numbers
+      /// </summary>
+      /// <param name="value"></param>
+      /// <param name="expected"></param>
+      [Theory]
         [InlineData("123", "123")]
         [InlineData("a1b2c3", "123")]
         [InlineData("1 2.3,4a5b", "12345")]
