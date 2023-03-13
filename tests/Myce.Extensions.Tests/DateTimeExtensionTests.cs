@@ -25,6 +25,28 @@ namespace Myce.Extensions.Tests
       /// <param name="day"></param>
       /// <param name="expectedDay"></param>
       [Theory]
+      [InlineData(1600, 05, 25, true)]
+      [InlineData(1700, 11, 12, false)]
+      [InlineData(1900, 11, 12, false)]
+      [InlineData(2000, 08, 25, true)]
+      [InlineData(2020, 01, 01, true)]
+      [InlineData(2021, 04, 30, false)]
+      [InlineData(2022, 07, 12, false)]
+      [InlineData(2024, 02, 29, true)]
+      public void IsLeapYear(int year, int month, int day, bool expectedResult)
+      {
+         var result = DateTimeExtension.IsLeapYear(new DateTime(year, month, day));
+         Assert.Equal(expectedResult, result);
+      }
+
+      /// <summary>
+      /// Validate LastDayOfMonth for Leap and No Leap Years
+      /// </summary>
+      /// <param name="year"></param>
+      /// <param name="month"></param>
+      /// <param name="day"></param>
+      /// <param name="expectedDay"></param>
+      [Theory]
       [InlineData(2020, 01, 01, 31)]
       [InlineData(2021, 04, 30, 30)]
       [InlineData(2022, 07, 12, 31)]

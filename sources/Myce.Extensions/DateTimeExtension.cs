@@ -24,6 +24,25 @@
       }
 
       /// <summary>
+      /// Returns true if the date is in a leap year
+      /// </summary>
+      /// <param name="date">Given date</param>
+      /// <returns></returns>
+      public static Boolean IsLeapYear(this DateTime date)
+      {
+         //Any year that is evenly divisible by 4 is a leap year (e.g. 1988, 1992, 1996, ...)
+         if (date.Year % 100 != 0)
+         {
+            return (date.Year % 4 == 0);
+         }
+
+         //A year that is evenly divisible by 100 (e.g. 1900)
+         //is a leap year only if it is also evenly divisible by 400.
+
+         return (date.Year % 400 == 0);
+      }
+
+      /// <summary>
       /// Return the last day of the mounth for a given date
       /// </summary>
       /// <param name="value">Given date</param>
