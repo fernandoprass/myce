@@ -27,6 +27,16 @@
          }
       }
 
+
+      /// <summary>
+      /// Return TRUE if the collection object is not null and has any record
+      /// </summary>
+      /// <param name="enumerable">The enumerable</param>
+      public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
+      {
+         return enumerable.IsNull() || !enumerable.Any();
+      }
+
       /// <summary>
       /// Return TRUE if the collection object is not null and has any record
       /// </summary>
@@ -57,6 +67,29 @@
          }
 
          return false;
+      }
+
+      /// <summary>
+      /// Return the duplicate elements in an enumerable
+      /// </summary>
+      /// <typeparam name="T"></typeparam>
+      /// <param name="enumerable"></param>
+      /// <returns></returns>
+      public static IEnumerable<T> GetDuplicates<T>(this IEnumerable<T> enumerable)
+      {
+         HashSet<T> itemsSeen = new HashSet<T>();
+         HashSet<T> itemsYielded = new HashSet<T>();
+
+         foreach (T item in enumerable)
+         {
+            if (!itemsSeen.Add(item))
+            {
+               if (itemsYielded.Add(item))
+               {
+                  yield return item;
+               }
+            }
+         }
       }
 
       /// <summary>
