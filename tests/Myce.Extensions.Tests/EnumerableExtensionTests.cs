@@ -84,6 +84,34 @@ namespace Myce.Extensions.Tests
          Assert.True(result);
       }
 
+      /// <summary> Receive an empty array and return an empty array </summary>
+      [Fact]
+      public void GetDuplicates_ReceiveEmptyArray_ReturnEmptyArray()
+      {
+         int[] array = { };
+         var result = array.GetDuplicates();
+         Assert.Empty(result);
+      }
+
+      /// <summary> Receive a array of integer without duplicates elements return an empty array </summary>
+      [Fact]
+      public void GetDuplicates_ReceiveArrayOfDoubblesWithoutDuplicates_ReturnFalse()
+      {
+         double[] array = { 1.6, 2.1, 3, 5, 16, 21 };
+         var result = array.GetDuplicates();
+         Assert.Empty(result);
+      }
+
+      /// <summary> Receive a list of strings with duplicates elements and return the duplicates </summary>
+      [Fact]
+      public void ContainsDuplicates_ReceiveListOfStringsWithDuplicates_ReturnTheDuplicates()
+      {
+         var list = new List<string> { "a", "b", "a", "AB", "AB", "B", "a" };
+         var result = list.GetDuplicates();
+         Assert.NotEmpty(result);
+         Assert.Equal(2, result.Count());
+      }
+
       /// <summary> Receive a list of Person with duplicates names and return a list with no duplicates name </summary>
       [Fact]
       public void DistinctBy_ReceiveListPeopleWithDuplicatesNames_ReturnTrue()
