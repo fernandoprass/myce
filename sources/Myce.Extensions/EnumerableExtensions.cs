@@ -27,8 +27,18 @@
          }
       }
 
+
       /// <summary>
-      /// Return TRUE if the collection object is not null and has any record
+      /// Return TRUE if the enumerable is not null and has any record
+      /// </summary>
+      /// <param name="enumerable">The enumerable</param>
+      public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
+      {
+         return enumerable.IsNull() || !enumerable.Any();
+      }
+
+      /// <summary>
+      /// Return TRUE if the enumerable is not null and has any record
       /// </summary>
       /// <param name="enumerable">The enumerable</param>
       public static bool HasData<T>(this IEnumerable<T> enumerable)
@@ -37,7 +47,7 @@
       }
 
       /// <summary>
-      /// Check for duplicates in a collection
+      /// Check for duplicates in an enumerable
       /// </summary>
       /// <param name="enumerable">The enumerable</param>
       /// <returns></returns>
@@ -60,7 +70,30 @@
       }
 
       /// <summary>
-      /// Return a collection of elements distinct by specific property
+      /// Return the duplicate elements in an enumerable
+      /// </summary>
+      /// <typeparam name="T"></typeparam>
+      /// <param name="enumerable"></param>
+      /// <returns></returns>
+      public static IEnumerable<T> GetDuplicates<T>(this IEnumerable<T> enumerable)
+      {
+         HashSet<T> itemsSeen = new HashSet<T>();
+         HashSet<T> itemsYielded = new HashSet<T>();
+
+         foreach (T item in enumerable)
+         {
+            if (!itemsSeen.Add(item))
+            {
+               if (itemsYielded.Add(item))
+               {
+                  yield return item;
+               }
+            }
+         }
+      }
+
+      /// <summary>
+      /// Return an enumerable of elements distinct by specific property
       /// </summary>
       /// <param name="enumerable">The enumerable</param>
       /// <param name="keySelector">The distinct property</param>
