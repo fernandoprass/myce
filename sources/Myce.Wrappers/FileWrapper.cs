@@ -1,8 +1,9 @@
 ﻿using System.Text;
+using Myce.Wrappers.Contracts;
 
 namespace Myce.Wrappers
 {
-   public class FileWrapper : IFileWrapper
+    public class FileWrapper : IFileWrapper
    {
       /// <inheritdoc/>
       public bool Exists(string path)
