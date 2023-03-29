@@ -11,10 +11,10 @@ A set of classes to be used as a return in APIs.
 A fluent validation library.
 
 ## [MYCE.Wrappers](https://github.com/fernandoprass/myce/tree/main/sources/Myce.Wrappers)
-A set of wrappers for the most common IO classes, it is usefull to mock methods in unit tests
+A set of wrappers for the most common IO classes,  which is especially useful for mock methods in unit tests..
 
 ## Contributions
-Contributions are welcome on this project. If you have an extension that you think is useful and can make life easier for other developers, even if it's for a type not present in the package yet, create a Pull Request and submit it.
-**Attention**: all extensions sent must have a unit test.
+Contributions are welcome on this project. If you have a contribution you think is useful and can make life easier for other developers, even if it's for a type not present in the package yet, create a Pull Request and submit it.
+**Attention**: all method sent must have a unit test, except for Myce.Wrapper library.
 
 
