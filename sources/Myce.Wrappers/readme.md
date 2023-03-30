@@ -3,6 +3,9 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
 
 ## Library
 Directory
+    - Delete (string path) - Deletes an empty directory from a specified path.
+    - Delete (string path, bool recursive) - Deletes the specified directory and, if indicated, any subdirectories and files in the directory.
+    - Exists (string? path) - Determines whether the given path refers to an existing directory on disk.
     - GetFiles(string path) - Returns the names of files (including their paths) that match the specified search pattern and enumeration options in the specified directory.
     - GetFiles(string path, string searchPattern) - Returns the names of files (including their paths) that match the specified search pattern and enumeration options in the specified directory.
     - GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions) - Returns the names of files (including their paths) that match the specified search pattern and enumeration options in the specified directory.
@@ -27,25 +30,5 @@ None of this library's methods have unit test for the simple fact that, as the n
 
 ## Contributions
 Contributions are welcome on this library. If you use a class or method from the System.IO namespace that is not already here, create a Pull Request and submit it.
-
-## Installation
-
-Package Manager Console:
-
-```sh
-Install-Package Myce.Wrappers -Version 0.1.0
-```
-
-Package Reference (editing the Project File):
-```
-<PackageReference Include="Myce.Wrappers" Version="0.1.0" />
-```
-
-.NET.CLI:
-```
-dotnet add package Myce.Wrappers --version 0.1.0
-```
-
-Change 0.1.0 for the current version
 
 Develeped by Fernando Prass
