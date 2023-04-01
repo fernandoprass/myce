@@ -6,6 +6,24 @@ namespace Myce.Wrappers
     public class FileWrapper : IFileWrapper
    {
       /// <inheritdoc/>
+      public FileStream Create(string path)
+      {
+         return File.Create(path);
+      }
+
+      /// <inheritdoc/>
+      public FileStream Create(string path, int bufferSize)
+      {
+         return File.Create(path, bufferSize);
+      }
+
+      /// <inheritdoc/>
+      public FileStream Create(string path, int bufferSize, FileOptions options)
+      {
+         return File.Create(path, bufferSize, options);
+      }
+
+      /// <inheritdoc/>
       public bool Exists(string path)
       {
          return File.Exists(path);
