@@ -69,24 +69,4 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
 ## Dependencies
 - None
 
-## Installation
-
-Package Manager Console:
-
-```sh
-Install-Package Myce.Extensions -Version 0.1.0
-```
-
-Package Reference (editing the Project File):
-```
-<PackageReference Include="Myce.Extensions" Version="0.1.0" />
-```
-
-.NET.CLI:
-```
-dotnet add package Myce.Extensions --version 0.1.0
-```
-
-Change 0.1.0 for the current version
-
-Develeped by Fernando Prass
+Developed by Fernando Prass
