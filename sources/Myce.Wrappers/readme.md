@@ -3,10 +3,10 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
 
 ## Library
 This is a simple wrapper for some of the most used classes of System.IO Namespace. For more information, including examples, visit 
-[Microsoft Learn - System.IO Namespace](https://learn.microsoft.com/en-us/dotnet/api/system.io). All methods descriptions below were copied from there,
-if you find any information that is incorrect or out of date, please contact us. 
+[Microsoft Learn - System.IO Namespace](https://learn.microsoft.com/en-us/dotnet/api/system.io). All method descriptions below were copied from there,
+if you find any information inconsistent or out of date, please contact us.
 
-Directory
+- Directory
     - CreateDirectory (string path) - Creates all directories and subdirectories in the specified path unless they already exist.
     - CreateDirectory (string path, UnixFileMode unixCreateMode) - Creates all directories and subdirectories in the specified path with the specified permissions unless they already exist.
     - Delete (string path) - Deletes an empty directory from a specified path.

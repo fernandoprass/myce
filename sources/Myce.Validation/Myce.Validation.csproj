@@ -4,7 +4,7 @@
 	  <TargetFramework>net6.0</TargetFramework>
 	  <ImplicitUsings>enable</ImplicitUsings>
 	  <Nullable>enable</Nullable>
-	  <Version>$(VersionPrefix)0.1.1</Version>
+	  <Version>$(VersionPrefix)0.1.2</Version>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	  <Title>MYCE (Makes Your Coding Easier) Validation is fluent validation class</Title>
 	  <Authors>Fernando Prass</Authors>
@@ -18,8 +18,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Myce.Extensions" Version="0.1.0" />
-    <PackageReference Include="Myce.Response" Version="0.1.1" />
+    <PackageReference Include="Myce.Extensions" Version="0.2.7" />
+    <PackageReference Include="Myce.Response" Version="0.1.2" />
   </ItemGroup>
 
   <ItemGroup>
