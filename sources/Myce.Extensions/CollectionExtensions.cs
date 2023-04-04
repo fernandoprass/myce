@@ -9,8 +9,8 @@
       /// Add an item to a collection if the item is not null
       /// </summary>
       /// <param name="collection">The collection</param>
-      /// <param name="item">The item</param>
-      public static void AddIfNotNull<T>(this ICollection<T> collection, T item)
+      /// <param name="item">The new item</param>
+      public static void AddIfIsNotNull<T>(this ICollection<T> collection, T item)
       {
          if (item.IsNotNull())
          {
