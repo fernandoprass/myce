@@ -36,6 +36,7 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
     - Chunk() - Splits an enumerable into chunks of a specified size
     - ContainsDuplicates() - Return true the if the enumerable constains a duplicate element
     - DistinctBy() - Return an enumerable of elements distinct by specific property
+    - ForEach<T>() - The foreach loop
     - GetDuplicates() - Return the duplicate elements in an enumerable
     - HasData() - Return true the if the enumerable object is not null and has any record
     - IsNullOrEmpty() - Return true if the enumerable is not null and has any record

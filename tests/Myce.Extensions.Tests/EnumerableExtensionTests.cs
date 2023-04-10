@@ -22,6 +22,9 @@ namespace Myce.Extensions.Tests
       public void ContainsDuplicates_ReceiveArrayOfIntegersWithoutDuplicates_ReturnFalse()
       {
          int[] array = { 1, 2, 3 };
+
+         var a = array.ToList();
+
          var result = array.ContainsDuplicates();
          Assert.False(result);
       }
@@ -56,9 +59,9 @@ namespace Myce.Extensions.Tests
 
       #endregion
 
-      /// <summary> Receive a list and a positive chunk size, should split </summary>
+      /// <summary> Receive a list and a positive chunk size and split it</summary>
       [Fact]
-      public void Chunk_ReceiveAListAndAPositiveChunkSize_ShouldSplit()
+      public void Chunk()
       {
          var list = new List<int> { 1, 2, 3, 4, 5 };
          var result = list.Chunk(2);
@@ -72,7 +75,7 @@ namespace Myce.Extensions.Tests
 
       /// <summary> Receive a list of Person with duplicates names and return a list with no duplicates name </summary>
       [Fact]
-      public void DistinctBy_ReceiveListPeopleWithDuplicatesNames_ReturnTrue()
+      public void DistinctBy()
       {
          var list = MockData.GetListOfPeopleWithDuplicateNames();
 
@@ -80,6 +83,18 @@ namespace Myce.Extensions.Tests
          Assert.Equal(2, result.Count());
          Assert.Equal("Paul", result.First().Name);
          Assert.Equal("John", result.Last().Name);
+      }
+
+      /// <summary> Loops through an array of integers and returns the total </summary>
+      [Fact]
+      public void ForEach()
+      {
+         int[] array = { 1, 2, 3 };
+         int i = 0;
+
+         array.ForEach(x => i += x);
+
+         Assert.Equal(6, i);
       }
 
       /// <summary> Receive a array of integer without duplicates elements return an empty array </summary>

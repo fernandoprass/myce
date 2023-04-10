@@ -9,7 +9,7 @@ namespace Myce.Extensions.Tests
    {
       /// <summary> Receive a null element and not add to list </summary>
       [Fact]
-      public void AddIfNotNull_ReceiveNullItem_ShouldNotAdd()
+      public void AddIfIsNotNull_ReceiveNullItem_ShouldNotAdd()
       {
          var people = MockData.GetListOfPeople();
 
@@ -19,7 +19,7 @@ namespace Myce.Extensions.Tests
 
          Person person = null;
 
-         people.AddIfNotNull(person);
+         people.AddIfIsNotNull(person);
 
          Assert.Equal(numberOfElements, people.Count());
          Assert.Equal(lastPerson.Name, people.Last().Name);
@@ -27,7 +27,7 @@ namespace Myce.Extensions.Tests
 
       /// <summary> Receive a new element and add to list </summary>
       [Fact]
-      public void AddIfNotNull_ReceiveAnItem_ShouldAdd()
+      public void AddIfIsNotNull_ReceiveAnItem_ShouldAdd()
       {
          var people = MockData.GetListOfPeople();
 
@@ -35,7 +35,7 @@ namespace Myce.Extensions.Tests
 
          var person = new Person { Name = "Billy Preston" };
 
-         people.AddIfNotNull(person);
+         people.AddIfIsNotNull(person);
 
          Assert.Equal(++numberOfElements, people.Count());
          Assert.Equal(person.Name, people.Last().Name);
