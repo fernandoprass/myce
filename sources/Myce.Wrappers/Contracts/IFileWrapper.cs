@@ -5,6 +5,21 @@ namespace Myce.Wrappers.Contracts
    public interface IFileWrapper
    {
       /// <summary>
+      /// Copies an existing file to a new file. Overwriting a file of the same name is allowed.
+      /// </summary>
+      /// <param name="sourceFileName">The file to copy.</param>
+      /// <param name="destFileName">The name of the destination file. This cannot be a directory.</param>
+      void Copy(string sourceFileName, string destFileName);
+
+      /// <summary>
+      /// Copies an existing file to a new file. Overwriting a file of the same name is allowed.
+      /// </summary>
+      /// <param name="sourceFileName">The file to copy.</param>
+      /// <param name="destFileName">The name of the destination file. This cannot be a directory.</param>
+      /// <param name="overwrite">TRUE if the destination file can be overwritten; otherwise, FALSE.</param>
+      void Copy(string sourceFileName, string destFileName, bool overwrite);
+
+      /// <summary>
       /// Creates or overwrites a file in the specified path.
       /// </summary>
       /// <param name="path">The path and name of the file to create.</param>
