@@ -18,9 +18,12 @@ if you find any information inconsistent or out of date, please contact us.
     - GetFiles(string path, string searchPattern, SearchOption searchOption) - Returns the names of files (including their paths) that match the specified search pattern in the specified directory, using a value to determine whether to search subdirectories.
 
 - File
+    - Copy(string sourceFileName, string destFileName) - Copies an existing file to a new file.
+    - Copy(string sourceFileName, string destFileName, bool overwrite) - Copies an existing file to a new file. Overwriting a file of the same name is allowed.
     - Create(String) - Creates or overwrites a file in the specified path.
     - Create(String, Int32)	- Creates or overwrites a file in the specified path, specifying a buffer size.
     - Create(String, Int32, FileOptions) - Creates or overwrites a file in the specified path, specifying a buffer size and options that describe how to create or overwrite the file.
+    - Delete (string path) - Deletes the specified file.
     - Exists(string path) - Determines whether the specified file exists.
     - ReadAllText(string path) - Opens a text file, reads all the text in the file, and then closes the file.
     - ReadAllTextAsync(string path, CancellationToken cancellationToken = default) - Asynchronously opens a text file, reads all the text in the file, and then closes the file.

@@ -5,11 +5,13 @@ namespace Myce.Wrappers
 {
     public class FileWrapper : IFileWrapper
    {
+      /// <inheritdoc/>
       public void Copy(string sourceFileName, string destFileName)
       {
          File.Copy(sourceFileName, destFileName);
       }
 
+      /// <inheritdoc/>
       public void Copy(string sourceFileName, string destFileName, bool overwrite)
       {
          File.Copy(sourceFileName, destFileName, overwrite);
@@ -31,6 +33,12 @@ namespace Myce.Wrappers
       public FileStream Create(string path, int bufferSize, FileOptions options)
       {
          return File.Create(path, bufferSize, options);
+      }
+
+      /// <inheritdoc/>
+      public void Delete(string path)
+      {
+         File.Delete(path);
       }
 
       /// <inheritdoc/>
