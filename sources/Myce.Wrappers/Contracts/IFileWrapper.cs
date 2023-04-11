@@ -59,6 +59,21 @@ namespace Myce.Wrappers.Contracts
       bool Exists(string path);
 
       /// <summary>
+      /// Moves a specified file to a new location, providing the option to specify a new file name.
+      /// </summary>
+      /// <param name="sourceFileName">The name of the file to move. Can include a relative or absolute path.</param>
+      /// <param name="destFileName">The new path and name for the file.</param>
+      void Move(string sourceFileName, string destFileName);
+
+      /// <summary>
+      /// Moves a specified file to a new location, providing the options to specify a new file name and to overwrite the destination file if it already exists.
+      /// </summary>
+      /// <param name="sourceFileName">The name of the file to move. Can include a relative or absolute path.</param>
+      /// <param name="destFileName">The new path and name for the file.</param>
+      /// <param name="overwrite">TRUE to overwrite the destination file if it already exists; FALSE otherwise.</param>
+      void Move(string sourceFileName, string destFileName, bool overwrite);
+
+      /// <summary>
       /// Opens a text file, reads all the text in the file, and then closes the file.
       /// </summary>
       /// <param name="path">The file to open for reading.</param>

@@ -25,6 +25,8 @@ if you find any information inconsistent or out of date, please contact us.
     - Create(String, Int32, FileOptions) - Creates or overwrites a file in the specified path, specifying a buffer size and options that describe how to create or overwrite the file.
     - Delete (string path) - Deletes the specified file.
     - Exists(string path) - Determines whether the specified file exists.
+    - Move(string sourceFileName, string destFileName) - Moves a specified file to a new location, providing the option to specify a new file name.
+    - Move(string sourceFileName, string destFileName, bool overwrite) - Moves a specified file to a new location, providing the options to specify a new file name and to overwrite the destination file if it already exists.
     - ReadAllText(string path) - Opens a text file, reads all the text in the file, and then closes the file.
     - ReadAllTextAsync(string path, CancellationToken cancellationToken = default) - Asynchronously opens a text file, reads all the text in the file, and then closes the file.
     - ReadAllText(string path, Encoding encoding) - Opens a file, reads all text in the file with the specified encoding, and then closes the file.
