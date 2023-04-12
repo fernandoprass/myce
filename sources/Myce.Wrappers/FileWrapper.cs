@@ -6,6 +6,18 @@ namespace Myce.Wrappers
     public class FileWrapper : IFileWrapper
    {
       /// <inheritdoc/>
+      public void Copy(string sourceFileName, string destFileName)
+      {
+         File.Copy(sourceFileName, destFileName);
+      }
+
+      /// <inheritdoc/>
+      public void Copy(string sourceFileName, string destFileName, bool overwrite)
+      {
+         File.Copy(sourceFileName, destFileName, overwrite);
+      }
+
+      /// <inheritdoc/>
       public FileStream Create(string path)
       {
          return File.Create(path);
@@ -24,9 +36,27 @@ namespace Myce.Wrappers
       }
 
       /// <inheritdoc/>
+      public void Delete(string path)
+      {
+         File.Delete(path);
+      }
+
+      /// <inheritdoc/>
       public bool Exists(string path)
       {
          return File.Exists(path);
+      }
+
+      /// <inheritdoc/>
+      public void Move(string sourceFileName, string destFileName)
+      {
+         File.Move(sourceFileName, destFileName);
+      }
+
+      /// <inheritdoc/>
+      public void Move(string sourceFileName, string destFileName, bool overwrite)
+      {
+         File.Move(sourceFileName, destFileName, overwrite);
       }
 
       /// <inheritdoc/>

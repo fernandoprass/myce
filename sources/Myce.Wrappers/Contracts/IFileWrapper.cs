@@ -5,6 +5,27 @@ namespace Myce.Wrappers.Contracts
    public interface IFileWrapper
    {
       /// <summary>
+      /// Copies an existing file to a new file.
+      /// </summary>
+      /// <param name="sourceFileName">The file to copy.</param>
+      /// <param name="destFileName">The name of the destination file. This cannot be a directory.</param>
+      void Copy(string sourceFileName, string destFileName);
+
+      /// <summary>
+      /// Copies an existing file to a new file. Overwriting a file of the same name is allowed.
+      /// </summary>
+      /// <param name="sourceFileName">The file to copy.</param>
+      /// <param name="destFileName">The name of the destination file. This cannot be a directory.</param>
+      /// <param name="overwrite">TRUE if the destination file can be overwritten; otherwise, FALSE.</param>
+      void Copy(string sourceFileName, string destFileName, bool overwrite);
+
+      /// <summary>
+      /// Deletes the specified file.
+      /// </summary>
+      /// <param name="path">The name of the file to be deleted. Wildcard characters are not supported.</param>
+      void Delete(string path);
+
+      /// <summary>
       /// Creates or overwrites a file in the specified path.
       /// </summary>
       /// <param name="path">The path and name of the file to create.</param>
@@ -36,6 +57,21 @@ namespace Myce.Wrappers.Contracts
       /// This method also returns FALSE if path is null, an invalid path, or a zero-length string. If the caller does not have sufficient 
       /// permissions to read the specified file, no exception is thrown and the method returns FALSE regardless of the existence of path.</returns>
       bool Exists(string path);
+
+      /// <summary>
+      /// Moves a specified file to a new location, providing the option to specify a new file name.
+      /// </summary>
+      /// <param name="sourceFileName">The name of the file to move. Can include a relative or absolute path.</param>
+      /// <param name="destFileName">The new path and name for the file.</param>
+      void Move(string sourceFileName, string destFileName);
+
+      /// <summary>
+      /// Moves a specified file to a new location, providing the options to specify a new file name and to overwrite the destination file if it already exists.
+      /// </summary>
+      /// <param name="sourceFileName">The name of the file to move. Can include a relative or absolute path.</param>
+      /// <param name="destFileName">The new path and name for the file.</param>
+      /// <param name="overwrite">TRUE to overwrite the destination file if it already exists; FALSE otherwise.</param>
+      void Move(string sourceFileName, string destFileName, bool overwrite);
 
       /// <summary>
       /// Opens a text file, reads all the text in the file, and then closes the file.
