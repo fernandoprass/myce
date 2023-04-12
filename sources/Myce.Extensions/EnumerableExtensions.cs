@@ -12,7 +12,12 @@
       /// <returns></returns>
       public static bool ContainsDuplicates<T>(this IEnumerable<T> enumerable)
       {
-         var knownElements = new HashSet<T>();
+         if (enumerable.IsNull())
+         {
+            return false;
+         }
+
+         var knownElements = new HashSet<T>(enumerable.Count());
 
          if (enumerable.HasData())
          {
@@ -58,7 +63,7 @@
       /// <returns></returns>
       public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector)
       {
-         HashSet<TKey> seenKeys = new HashSet<TKey>();
+         HashSet<TKey> seenKeys = new HashSet<TKey>(enumerable.Count());
          foreach (TSource element in enumerable)
          {
             if (seenKeys.Add(keySelector(element)))
@@ -95,8 +100,9 @@
       /// <returns></returns>
       public static IEnumerable<T> GetDuplicates<T>(this IEnumerable<T> enumerable)
       {
-         HashSet<T> itemsSeen = new HashSet<T>();
-         HashSet<T> itemsYielded = new HashSet<T>();
+         int size = enumerable.Count();
+         HashSet<T> itemsSeen = new HashSet<T>(size);
+         HashSet<T> itemsYielded = new HashSet<T>(size/2);
 
          foreach (T item in enumerable)
          {
