@@ -56,8 +56,9 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
     - LessThanOrEqualZero() - Return true if the value is less than or equal zero
 
 - ObjectExtension
-    - IsNull() - Return true if the guid is null
-    - IsNotNull() - Return true if the guid is not null
+    - IsBetween() -  Compare object values is between other two values (inclusive)
+    - IsNull() -  Check if the value of the object is null
+    - IsNotNull() -  Check if the value of the object is not null
 
 - StringExtension
     - EmptyIfIsNull() - Return an empty string if the string is null
