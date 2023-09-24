@@ -67,6 +67,7 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
     - KeepOnlyNumbersAndLettersAndSpaces() - Remove simbols keeping only numbers, letters and spaces 
     - RemoveSimbols() Remove simbols keeping only numbers, letters and spaces (if asked)
     - RemoveAccents() - Remove accents
+    - ToEnum() - Converts string to Enum object
 
 ## Dependencies
 - None
