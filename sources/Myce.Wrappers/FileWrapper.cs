@@ -36,6 +36,12 @@ namespace Myce.Wrappers
       }
 
       /// <inheritdoc/>
+      public StreamWriter CreateText(string path)
+      {
+         return File.CreateText(path);
+      }
+
+      /// <inheritdoc/>
       public void Delete(string path)
       {
          File.Delete(path);
@@ -57,6 +63,30 @@ namespace Myce.Wrappers
       public void Move(string sourceFileName, string destFileName, bool overwrite)
       {
          File.Move(sourceFileName, destFileName, overwrite);
+      }
+
+      /// <inheritdoc/>
+      public FileStream Open(string path, FileMode mode)
+      {
+         return File.Open(path, mode);
+      }
+
+      /// <inheritdoc/>
+      public FileStream Open(string path, FileStreamOptions options)
+      {
+         return File.Open(path, options);
+      }
+
+      /// <inheritdoc/>
+      public FileStream Open(string path, FileMode mode, FileAccess access)
+      {
+         return File.Open(path, mode, access);
+      }
+
+      /// <inheritdoc/>
+      public FileStream Open(string path, FileMode mode, FileAccess access, FileShare share)
+      {
+         return File.Open(path, mode, access, share);
       }
 
       /// <inheritdoc/>

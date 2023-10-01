@@ -20,12 +20,6 @@ namespace Myce.Wrappers.Contracts
       void Copy(string sourceFileName, string destFileName, bool overwrite);
 
       /// <summary>
-      /// Deletes the specified file.
-      /// </summary>
-      /// <param name="path">The name of the file to be deleted. Wildcard characters are not supported.</param>
-      void Delete(string path);
-
-      /// <summary>
       /// Creates or overwrites a file in the specified path.
       /// </summary>
       /// <param name="path">The path and name of the file to create.</param>
@@ -50,6 +44,19 @@ namespace Myce.Wrappers.Contracts
       FileStream Create(string path, int bufferSize, System.IO.FileOptions options);
 
       /// <summary>
+      /// Creates or opens a file for writing UTF-8 encoded text. If the file already exists, its contents are overwritten.
+      /// </summary>
+      /// <param name="path">The file to be opened for writing.</param>
+      /// <returns>A StreamWriter that writes to the specified file using UTF-8 encoding.</returns>
+      StreamWriter CreateText(string path);
+
+      /// <summary>
+      /// Deletes the specified file.
+      /// </summary>
+      /// <param name="path">The name of the file to be deleted. Wildcard characters are not supported.</param>
+      void Delete(string path);
+
+      /// <summary>
       /// Determines whether the specified file exists.
       /// </summary>
       /// <param name="path">The file to check.</param>
@@ -72,6 +79,41 @@ namespace Myce.Wrappers.Contracts
       /// <param name="destFileName">The new path and name for the file.</param>
       /// <param name="overwrite">TRUE to overwrite the destination file if it already exists; FALSE otherwise.</param>
       void Move(string sourceFileName, string destFileName, bool overwrite);
+
+      /// <summary>
+      /// Opens a FileStream on the specified path with read/write access with no sharing.
+      /// </summary>
+      /// <param name="path">The file to open.</param>
+      /// <param name="mode">An object that describes optional FileStream parameters to use.</param>
+      /// <returns>A FileStream opened in the specified mode and path, with read/write access and not shared.</returns>
+      FileStream Open(string path, FileMode mode);
+
+      /// <summary>
+      /// Initializes a new instance of the FileStream class with the specified path, creation mode, read/write and sharing permission, the access other FileStreams can have to the same file, the buffer size, additional file options and the allocation size.
+      /// </summary>
+      /// <param name="path">The file to open.</param>
+      /// <param name="options">An object that describes optional FileStream parameters to use.</param>
+      /// <returns>A FileStream instance that wraps the opened file.</returns>
+      FileStream Open(string path, FileStreamOptions options);
+
+      /// <summary>
+      /// Opens a FileStream on the specified path, with the specified mode and access with no sharing.
+      /// </summary>
+      /// <param name="path">The file to open.</param>
+      /// <param name="mode">A FileMode value that specifies whether a file is created if one does not exist, and determines whether the contents of existing files are retained or overwritten.</param>
+      /// <param name="access">A FileAccess value that specifies the operations that can be performed on the file.</param>
+      /// <returns>An unshared FileStream that provides access to the specified file, with the specified mode and access.</returns>
+      FileStream Open(string path, FileMode mode, FileAccess access);
+
+      /// <summary>
+      /// Opens a FileStream on the specified path, having the specified mode with read, write, or read/write access and the specified sharing option.
+      /// </summary>
+      /// <param name="path">The file to open.</param>
+      /// <param name="mode">A FileMode value that specifies whether a file is created if one does not exist, and determines whether the contents of existing files are retained or overwritten.</param>
+      /// <param name="access">A FileAccess value that specifies the operations that can be performed on the file.</param>
+      /// <param name="share">A FileShare value specifying the type of access other threads have to the file.</param>
+      /// <returns>A FileStream on the specified path, having the specified mode with read, write, or read/write access and the specified sharing option.</returns>
+      FileStream Open(string path, FileMode mode, FileAccess access, FileShare share);
 
       /// <summary>
       /// Opens a text file, reads all the text in the file, and then closes the file.
