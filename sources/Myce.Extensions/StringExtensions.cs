@@ -8,7 +8,8 @@ namespace Myce.Extensions
       /// <summary>
       /// Return an empty string if the string is null
       /// </summary>
-      /// <param name="value"></param>
+      /// <param name="value">The string value</param>
+      /// <returns>Returns an empty string if the string is null</returns>
       public static string EmptyIfIsNull(this string value)
       {
          return value.IsNull() ? string.Empty : value;
@@ -18,6 +19,7 @@ namespace Myce.Extensions
       /// Remove letters and simbols, keeping only numbers
       /// </summary>
       /// <param name="value"></param>
+      /// <returns>Returns a string with only numbers</returns>
       public static string KeepOnlyNumbers(this string value)
       {
          if (value.IsNull())
@@ -30,8 +32,8 @@ namespace Myce.Extensions
       /// <summary>
       /// Remove simbols keeping only numbers and letters
       /// </summary>
-      /// <param name="value"></param>
-      /// <param name="expected"></param>
+      /// <param name="value">The string value</param>
+      /// <returns>Returns a string with only numbers and letters</returns>
       public static string KeepOnlyNumbersAndLetters(this string value)
       {
          return RemoveSimbols(value, false);
@@ -41,6 +43,7 @@ namespace Myce.Extensions
       /// Remove simbols keeping only numbers, letters and spaces
       /// </summary>
       /// <param name="value"></param>
+      /// <returns>Returns a string with only numbers, letters, and spaces</returns>
       public static string KeepOnlyNumbersAndLettersAndSpaces(this string value)
       {
          return RemoveSimbols(value, true);
@@ -49,8 +52,9 @@ namespace Myce.Extensions
       /// <summary>
       /// Remove simbols keeping only numbers, letters and spaces (if asked)
       /// </summary>
-      /// <param name="value"></param>
+      /// <param name="value">The string value</param>
       /// <param name="keepSpaces">If TRUE white spaces are NOT removed</param>
+      /// <returns>Returns a string with only numbers, letters, and spaces if required</returns>
       private static string RemoveSimbols(string value, bool keepSpaces)
       {
          if (value.IsNull())
@@ -73,7 +77,8 @@ namespace Myce.Extensions
       /// <summary>
       /// Remove accents
       /// </summary>
-      /// <param name="value"></param>
+      /// <param name="value">The string value</param>
+      /// <returns>Returns a string without accents</returns>
       public static string RemoveAccents(this string value)
       {
          if (value.IsNull())
@@ -85,6 +90,18 @@ namespace Myce.Extensions
          return Encoding.ASCII.GetString(
              Encoding.GetEncoding("Cyrillic").GetBytes(value)
          );
+      }
+
+      /// <summary>
+      /// Converts string to Enum object
+      /// </summary>
+      /// <typeparam name="T">The type of enum</typeparam>
+      /// <param name="value">The string value to convert</param>
+      /// <returns>Returns and enum object</returns>
+      public static T ToEnum<T>(this string value)
+          where T : struct
+      {
+         return (T)System.Enum.Parse(typeof(T), value, true);
       }
    }
 }
