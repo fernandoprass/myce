@@ -27,6 +27,10 @@ if you find any information inconsistent or out of date, please contact us.
     - Exists(string path) - Determines whether the specified file exists.
     - Move(string sourceFileName, string destFileName) - Moves a specified file to a new location, providing the option to specify a new file name.
     - Move(string sourceFileName, string destFileName, bool overwrite) - Moves a specified file to a new location, providing the options to specify a new file name and to overwrite the destination file if it already exists.
+    - Open(String, FileMode) - Opens a FileStream on the specified path with read/write access with no sharing.
+    - Open(String, FileStreamOptions) - Initializes a new instance of the FileStream class with the specified path, creation mode, read/write and sharing permission, the access other FileStreams can have to the same file, the buffer size, additional file options and the allocation size.
+    - Open(String, FileMode, FileAccess) - Opens a FileStream on the specified path, with the specified mode and access with no sharing.
+    - Open(String, FileMode, FileAccess, FileShare)	- Opens a FileStream on the specified path, having the specified mode with read, write, or read/write access and the specified sharing option.
     - ReadAllText(string path) - Opens a text file, reads all the text in the file, and then closes the file.
     - ReadAllTextAsync(string path, CancellationToken cancellationToken = default) - Asynchronously opens a text file, reads all the text in the file, and then closes the file.
     - ReadAllText(string path, Encoding encoding) - Opens a file, reads all text in the file with the specified encoding, and then closes the file.
