@@ -44,6 +44,13 @@ namespace Myce.Wrappers.Contracts
       FileStream Create(string path, int bufferSize, System.IO.FileOptions options);
 
       /// <summary>
+      /// Creates or opens a file for writing UTF-8 encoded text. If the file already exists, its contents are overwritten.
+      /// </summary>
+      /// <param name="path">The file to be opened for writing.</param>
+      /// <returns>A StreamWriter that writes to the specified file using UTF-8 encoding.</returns>
+      StreamWriter CreateText(string path);
+
+      /// <summary>
       /// Deletes the specified file.
       /// </summary>
       /// <param name="path">The name of the file to be deleted. Wildcard characters are not supported.</param>

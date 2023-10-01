@@ -36,6 +36,12 @@ namespace Myce.Wrappers
       }
 
       /// <inheritdoc/>
+      public StreamWriter CreateText(string path)
+      {
+         return File.CreateText(path);
+      }
+
+      /// <inheritdoc/>
       public void Delete(string path)
       {
          File.Delete(path);

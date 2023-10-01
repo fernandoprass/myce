@@ -6,7 +6,7 @@ This is a simple wrapper for some of the most used classes of System.IO Namespac
 [Microsoft Learn - System.IO Namespace](https://learn.microsoft.com/en-us/dotnet/api/system.io). All method descriptions below were copied from there,
 if you find any information inconsistent or out of date, please contact us.
 
-- Directory
+### Directory
     - CreateDirectory (string path) - Creates all directories and subdirectories in the specified path unless they already exist.
     - CreateDirectory (string path, UnixFileMode unixCreateMode) - Creates all directories and subdirectories in the specified path with the specified permissions unless they already exist.
     - Delete (string path) - Deletes an empty directory from a specified path.
@@ -17,12 +17,13 @@ if you find any information inconsistent or out of date, please contact us.
     - GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions) - Returns the names of files (including their paths) that match the specified search pattern and enumeration options in the specified directory.
     - GetFiles(string path, string searchPattern, SearchOption searchOption) - Returns the names of files (including their paths) that match the specified search pattern in the specified directory, using a value to determine whether to search subdirectories.
 
-- File
+### File
     - Copy(string sourceFileName, string destFileName) - Copies an existing file to a new file.
     - Copy(string sourceFileName, string destFileName, bool overwrite) - Copies an existing file to a new file. Overwriting a file of the same name is allowed.
     - Create(String) - Creates or overwrites a file in the specified path.
     - Create(String, Int32)	- Creates or overwrites a file in the specified path, specifying a buffer size.
     - Create(String, Int32, FileOptions) - Creates or overwrites a file in the specified path, specifying a buffer size and options that describe how to create or overwrite the file.
+    - CreateText(String) - Creates or opens a file for writing UTF-8 encoded text. If the file already exists, its contents are overwritten.
     - Delete (string path) - Deletes the specified file.
     - Exists(string path) - Determines whether the specified file exists.
     - Move(string sourceFileName, string destFileName) - Moves a specified file to a new location, providing the option to specify a new file name.
