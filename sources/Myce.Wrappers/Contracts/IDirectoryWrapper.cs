@@ -30,6 +30,13 @@
       void Delete(string path, bool recursive);
 
       /// <summary>
+      /// Returns the volume information, root information, or both for the specified path.
+      /// </summary>
+      /// <param name="path">The path of a file or directory.</param>
+      /// <returns>A string that contains the volume information, root information, or both for the specified path.</returns>
+      string GetDirectoryRoot(string path);
+
+      /// <summary>
       /// Returns the names of files (including their paths) that match the specified search pattern and enumeration options in the specified directory.
       /// </summary>
       /// <param name="path">The relative or absolute path to the directory to search. This string is not case-sensitive.</param>
@@ -72,5 +79,12 @@
       /// <returns>An array of the full names (including paths) for the files in the specified directory that match the specified search 
       /// pattern and option, or an empty array if no files are found. </returns>
       string[] GetFiles(string path, string searchPattern, SearchOption searchOption);
+
+      /// <summary>
+      /// Retrieves the parent directory of the specified path, including both absolute and relative paths.
+      /// </summary>
+      /// <param name="path">The path for which to retrieve the parent directory.</param>
+      /// <returns>The parent directory, or null if path is the root directory, including the root of a UNC server or share name.</returns>
+      DirectoryInfo? GetParent(string path);
    }
 }

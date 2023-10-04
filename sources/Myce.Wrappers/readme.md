@@ -12,26 +12,28 @@ if you find any information inconsistent or out of date, please contact us.
     - Delete (string path) - Deletes an empty directory from a specified path.
     - Delete (string path, bool recursive) - Deletes the specified directory and, if indicated, any subdirectories and files in the directory.
     - Exists (string? path) - Determines whether the given path refers to an existing directory on disk.
+    - GetDirectoryRoot (string path) - Returns the volume information, root information, or both for the specified path.
     - GetFiles(string path) - Returns the names of files (including their paths) that match the specified search pattern and enumeration options in the specified directory.
     - GetFiles(string path, string searchPattern) - Returns the names of files (including their paths) that match the specified search pattern and enumeration options in the specified directory.
     - GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions) - Returns the names of files (including their paths) that match the specified search pattern and enumeration options in the specified directory.
     - GetFiles(string path, string searchPattern, SearchOption searchOption) - Returns the names of files (including their paths) that match the specified search pattern in the specified directory, using a value to determine whether to search subdirectories.
+    - GetParent(String path) - Retrieves the parent directory of the specified path, including both absolute and relative paths.
 
 ### File
     - Copy(string sourceFileName, string destFileName) - Copies an existing file to a new file.
     - Copy(string sourceFileName, string destFileName, bool overwrite) - Copies an existing file to a new file. Overwriting a file of the same name is allowed.
-    - Create(String) - Creates or overwrites a file in the specified path.
-    - Create(String, Int32)	- Creates or overwrites a file in the specified path, specifying a buffer size.
-    - Create(String, Int32, FileOptions) - Creates or overwrites a file in the specified path, specifying a buffer size and options that describe how to create or overwrite the file.
-    - CreateText(String) - Creates or opens a file for writing UTF-8 encoded text. If the file already exists, its contents are overwritten.
+    - Create(String path) - Creates or overwrites a file in the specified path.
+    - Create(String path, Int32bufferSize) - Creates or overwrites a file in the specified path, specifying a buffer size.
+    - Create(String path, Int32bufferSize, FileOptions options) - Creates or overwrites a file in the specified path, specifying a buffer size and options that describe how to create or overwrite the file.
+    - CreateText(String path) - Creates or opens a file for writing UTF-8 encoded text. If the file already exists, its contents are overwritten.
     - Delete (string path) - Deletes the specified file.
     - Exists(string path) - Determines whether the specified file exists.
     - Move(string sourceFileName, string destFileName) - Moves a specified file to a new location, providing the option to specify a new file name.
     - Move(string sourceFileName, string destFileName, bool overwrite) - Moves a specified file to a new location, providing the options to specify a new file name and to overwrite the destination file if it already exists.
-    - Open(String, FileMode) - Opens a FileStream on the specified path with read/write access with no sharing.
-    - Open(String, FileStreamOptions) - Initializes a new instance of the FileStream class with the specified path, creation mode, read/write and sharing permission, the access other FileStreams can have to the same file, the buffer size, additional file options and the allocation size.
-    - Open(String, FileMode, FileAccess) - Opens a FileStream on the specified path, with the specified mode and access with no sharing.
-    - Open(String, FileMode, FileAccess, FileShare)	- Opens a FileStream on the specified path, having the specified mode with read, write, or read/write access and the specified sharing option.
+    - Open(String path, FileMode mode) - Opens a FileStream on the specified path with read/write access with no sharing.
+    - Open(String path, FileStreamOptions options) - Initializes a new instance of the FileStream class with the specified path, creation mode, read/write and sharing permission, the access other FileStreams can have to the same file, the buffer size, additional file options and the allocation size.
+    - Open(String path, FileMode mode, FileAccess access) - Opens a FileStream on the specified path, with the specified mode and access with no sharing.
+    - Open(String path, FileMode mode, FileAccess access, FileShare share)- Opens a FileStream on the specified path, having the specified mode with read, write, or read/write access and the specified sharing option.
     - ReadAllText(string path) - Opens a text file, reads all the text in the file, and then closes the file.
     - ReadAllTextAsync(string path, CancellationToken cancellationToken = default) - Asynchronously opens a text file, reads all the text in the file, and then closes the file.
     - ReadAllText(string path, Encoding encoding) - Opens a file, reads all text in the file with the specified encoding, and then closes the file.

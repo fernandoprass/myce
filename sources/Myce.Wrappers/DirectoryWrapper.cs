@@ -29,6 +29,12 @@ namespace Myce.Wrappers
       }
 
       /// <inheritdoc/>
+      public string GetDirectoryRoot(string path)
+      {
+        return Directory.GetDirectoryRoot(path);
+      }
+
+      /// <inheritdoc/>
       public string[] GetFiles(string path)
       {
          return Directory.GetFiles(path);
@@ -50,6 +56,12 @@ namespace Myce.Wrappers
       public string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
       {
          return Directory.GetFiles(path, searchPattern, searchOption);
+      }
+
+      /// <inheritdoc/>
+      public DirectoryInfo? GetParent(string path)
+      {
+         return Directory.GetParent(path);
       }
    }
 }
