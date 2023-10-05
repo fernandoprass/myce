@@ -18,6 +18,7 @@ if you find any information inconsistent or out of date, please contact us.
     - GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions) - Returns the names of files (including their paths) that match the specified search pattern and enumeration options in the specified directory.
     - GetFiles(string path, string searchPattern, SearchOption searchOption) - Returns the names of files (including their paths) that match the specified search pattern in the specified directory, using a value to determine whether to search subdirectories.
     - GetParent(String path) - Retrieves the parent directory of the specified path, including both absolute and relative paths.
+    - Move (string sourceDirName, string destDirName) - Moves a file or a directory and its contents to a new location.
 
 ### File
     - Copy(string sourceFileName, string destFileName) - Copies an existing file to a new file.

@@ -63,5 +63,10 @@ namespace Myce.Wrappers
       {
          return Directory.GetParent(path);
       }
+
+      public void Move(string sourceDirName, string destDirName)
+      {
+         Directory.Move(sourceDirName, destDirName);
+      }
    }
 }

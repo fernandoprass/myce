@@ -10,13 +10,6 @@
       DirectoryInfo CreateDirectory(string path);
 
       /// <summary>
-      /// Determines whether the given path refers to an existing directory on disk.
-      /// </summary>
-      /// <param name="path">The path to test.</param>
-      /// <returns>TRUE if path refers to an existing directory; FALSE if the directory does not exist or an error occurs when trying to determine if the specified directory exists.</returns>
-      bool Exists(string? path);
-
-      /// <summary>
       /// Deletes an empty directory from a specified path.
       /// </summary>
       /// <param name="path">The name of the empty directory to remove. This directory must be writable and empty.</param>
@@ -28,6 +21,13 @@
       /// <param name="path">The name of the directory to remove.</param>
       /// <param name="recursive">True to remove directories, subdirectories, and files in path; otherwise, FALSE.</param>
       void Delete(string path, bool recursive);
+
+      /// <summary>
+      /// Determines whether the given path refers to an existing directory on disk.
+      /// </summary>
+      /// <param name="path">The path to test.</param>
+      /// <returns>TRUE if path refers to an existing directory; FALSE if the directory does not exist or an error occurs when trying to determine if the specified directory exists.</returns>
+      bool Exists(string? path);
 
       /// <summary>
       /// Returns the volume information, root information, or both for the specified path.
@@ -86,5 +86,12 @@
       /// <param name="path">The path for which to retrieve the parent directory.</param>
       /// <returns>The parent directory, or null if path is the root directory, including the root of a UNC server or share name.</returns>
       DirectoryInfo? GetParent(string path);
+
+      /// <summary>
+      /// Moves a file or a directory and its contents to a new location.
+      /// </summary>
+      /// <param name="sourceDirName">The path of the file or directory to move.</param>
+      /// <param name="destDirName">The path to the new location for sourceDirName or its contents. If sourceDirName is a file, then destDirName must also be a file name.</param>
+      void Move(string sourceDirName, string destDirName);
    }
 }

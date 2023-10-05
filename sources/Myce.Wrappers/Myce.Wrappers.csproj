@@ -3,7 +3,7 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>$(VersionPrefix)0.5.1</Version>
+		<Version>$(VersionPrefix)0.5.2</Version>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>MYCE (Makes Your Coding Easier) Wrappers</Title>
 		<Authors>Fernando Prass</Authors>
