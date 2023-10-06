@@ -33,5 +33,17 @@ namespace Myce.Wrappers
       {
          return Path.Combine(path1, path2, path3, path4);
       }
+
+      /// <inheritdoc/>
+      public ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path)
+      {
+         return Path.GetFileName(path); ;
+      }
+
+      /// <inheritdoc/>
+      public string? GetFileName(string? path)
+      {
+         return Path.GetFileName(path);
+      }
    }
 }
