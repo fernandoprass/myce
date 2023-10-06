@@ -46,6 +46,10 @@ if you find any information inconsistent or out of date, please contact us.
 
 ### Path
     - ChangeExtension(string? path, string? extension) - Changes the extension of a path string.
+    - Combine(params string[] paths) - Combines an array of strings into a path.
+    - Combine(string path1, string path2) - Combines two strings into a path.
+    - Combine(string path1, string path2, string path3) - Combines three strings into a path.
+    - Combine(string path1, string path2, string path3, string path4) - Combines four strings into a path.
 
 ## Dependencies
 - None
