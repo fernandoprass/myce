@@ -44,6 +44,9 @@ if you find any information inconsistent or out of date, please contact us.
     - WriteAllTextAsync(string path, string? contents, CancellationToken cancellationToken = default) - Asynchronously creates a new file, writes the specified string to the file, and then closes the file. If the target file already exists, it is overwritten.
     - WriteAllTextAsync(string path, string? contents, Encoding encoding, CancellationToken cancellationToken = default) - Asynchronously creates a new file, writes the specified string to the file, and then closes the file. If the target file already exists, it is overwritten.
 
+### Path
+    - ChangeExtension(string? path, string? extension) - Changes the extension of a path string.
+
 ## Dependencies
 - None
 
