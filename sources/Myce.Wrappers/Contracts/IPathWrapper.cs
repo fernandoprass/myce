@@ -63,5 +63,34 @@
       /// <returns>The characters after the last directory separator character in PATH. If the last character of PATH is a directory 
       /// or volume separator character, this method returns Empty. If PATH is null, this method returns null.</returns>
       string? GetFileName(string? path);
+
+      /// <summary>
+      /// Returns the file name without the extension of a file path that is represented by a read-only character span.
+      /// </summary>
+      /// <param name="path">A read-only span that contains the path from which to obtain the file name without the extension.</param>
+      /// <returns>The characters in the read-only span returned by GetFileName(ReadOnlySpan<Char>), minus the last period (.) and all characters following it.</returns>
+      ReadOnlySpan<char> GetFileNameWithoutExtension(ReadOnlySpan<char> path);
+
+      /// <summary>
+      /// Returns the file name of the specified path string without the extension.
+      /// </summary>
+      /// <param name="path">The path of the file.</param>
+      /// <returns>The string returned by GetFileName(ReadOnlySpan<Char>), minus the last period (.) and all characters following it.</returns>
+      string? GetFileNameWithoutExtension(string? path);
+
+      /// <summary>
+      /// Returns the absolute path for the specified path string.
+      /// </summary>
+      /// <param name="path">The file or directory for which to obtain absolute path information.</param>
+      /// <returns>The fully qualified location of PATH, such as "C:\MyFile.txt".</returns>
+      string GetFullPath(string path);
+
+      /// <summary>
+      /// Returns an absolute path from a relative path and a fully qualified base path.
+      /// </summary>
+      /// <param name="path">A relative path to concatenate to BASEPATH.</param>
+      /// <param name="basePath">The beginning of a fully qualified path.</param>
+      /// <returns>The absolute path.</returns>
+      string GetFullPath(string path, string basePath);
    }
 }

@@ -52,6 +52,10 @@ if you find any information inconsistent or out of date, please contact us.
     - Combine(string path1, string path2, string path3, string path4) - Combines four strings into a path.
     - GetFileName (ReadOnlySpan<char> path) - Returns the file name and extension of a file path that is represented by a read-only character span.
     - GetFileName (string? path) - Returns the file name and extension of the specified path string.
+    - GetFileNameWithoutExtension(ReadOnlySpan<Char> path) - Returns the file name without the extension of a file path that is represented by a read-only character span.
+    - GetFileNameWithoutExtension(String path) - Returns the file name of the specified path string without the extension.
+    - GetFullPath(String path) - Returns the absolute path for the specified path string.
+    - GetFullPath(String path, String basePath) - Returns an absolute path from a relative path and a fully qualified base path.
 
 ## Dependencies
 - None
