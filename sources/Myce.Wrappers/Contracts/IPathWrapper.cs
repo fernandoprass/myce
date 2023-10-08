@@ -1,4 +1,6 @@
-﻿namespace Myce.Wrappers.Contracts
+﻿using System.IO;
+
+namespace Myce.Wrappers.Contracts
 {
    internal interface IPathWrapper
    {
@@ -92,5 +94,30 @@
       /// <param name="basePath">The beginning of a fully qualified path.</param>
       /// <returns>The absolute path.</returns>
       string GetFullPath(string path, string basePath);
+
+      /// <summary>
+      /// Gets the root directory information from the path contained in the specified string.
+      /// </summary>
+      /// <param name="path">A string containing the path from which to obtain root directory information.</param>
+      /// <returns>The root directory of PATH if it is rooted. 
+      /// -or-
+      /// Empty if PATH does not contain root directory information.
+      /// -or-
+      /// NULL if PATH is null or is effectively empty.
+      /// </returns>
+      string? GetPathRoot(string? path);
+
+      /// <summary>
+      /// Gets the root directory information from the path contained in the specified character span.
+      /// </summary>
+      /// <param name="path">A read-only span of characters containing the path from which to obtain root directory information.</param>
+      /// <returns>A read-only span of characters containing the root directory of PATH.</returns>
+      ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path);
+
+      /// <summary>
+      /// Returns the path of the current user's temporary folder.
+      /// </summary>
+      /// <returns>The path to the temporary folder, ending with a DirectorySeparatorChar.</returns>
+      string GetTempPath();
    }
 }

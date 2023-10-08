@@ -56,6 +56,9 @@ if you find any information inconsistent or out of date, please contact us.
     - GetFileNameWithoutExtension(String path) - Returns the file name of the specified path string without the extension.
     - GetFullPath(String path) - Returns the absolute path for the specified path string.
     - GetFullPath(String path, String basePath) - Returns an absolute path from a relative path and a fully qualified base path.
+    - GetPathRoot(string? path) - Gets the root directory information from the path contained in the specified string.
+    - GetPathRoot(ReadOnlySpan<char> path) - Gets the root directory information from the path contained in the specified character span.
+    - GetTempPath() - Returns the path of the current user's temporary folder.
 
 ## Dependencies
 - None

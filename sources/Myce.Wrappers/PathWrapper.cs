@@ -69,5 +69,23 @@ namespace Myce.Wrappers
       {
          return Path.GetFullPath(path, basePath);
       }
+
+      /// <inheritdoc/>
+      public string? GetPathRoot(string? path)
+      {
+         return Path.GetPathRoot(path);
+      }
+
+      /// <inheritdoc/>
+      public ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path)
+      {
+         return Path.GetPathRoot(path);
+      }
+
+      /// <inheritdoc/>
+      public string GetTempPath()
+      {
+         return Path.GetTempPath();
+      }
    }
 }
