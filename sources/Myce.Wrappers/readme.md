@@ -44,6 +44,29 @@ if you find any information inconsistent or out of date, please contact us.
     - WriteAllTextAsync(string path, string? contents, CancellationToken cancellationToken = default) - Asynchronously creates a new file, writes the specified string to the file, and then closes the file. If the target file already exists, it is overwritten.
     - WriteAllTextAsync(string path, string? contents, Encoding encoding, CancellationToken cancellationToken = default) - Asynchronously creates a new file, writes the specified string to the file, and then closes the file. If the target file already exists, it is overwritten.
 
+### Path
+    - ChangeExtension(string? path, string? extension) - Changes the extension of a path string.
+    - Combine(params string[] paths) - Combines an array of strings into a path.
+    - Combine(string path1, string path2) - Combines two strings into a path.
+    - Combine(string path1, string path2, string path3) - Combines three strings into a path.
+    - Combine(string path1, string path2, string path3, string path4) - Combines four strings into a path.
+    - GetFileName (ReadOnlySpan<char> path) - Returns the file name and extension of a file path that is represented by a read-only character span.
+    - GetFileName (string? path) - Returns the file name and extension of the specified path string.
+    - GetFileNameWithoutExtension(ReadOnlySpan<Char> path) - Returns the file name without the extension of a file path that is represented by a read-only character span.
+    - GetFileNameWithoutExtension(String path) - Returns the file name of the specified path string without the extension.
+    - GetFullPath(String path) - Returns the absolute path for the specified path string.
+    - GetFullPath(String path, String basePath) - Returns an absolute path from a relative path and a fully qualified base path.
+    - GetPathRoot(string? path) - Gets the root directory information from the path contained in the specified string.
+    - GetPathRoot(ReadOnlySpan<char> path) - Gets the root directory information from the path contained in the specified character span.
+    - GetTempPath() - Returns the path of the current user's temporary folder.
+    - Join(params string?[] paths) - Concatenates an array of paths into a single path.
+    - Join(string? path1, string? path2) - Concatenates two paths into a single path.
+    - Join(string? path1, string? path2, string? path3) - Concatenates three paths into a single path.
+    - Join(string? path1, string? path2, string? path3, string? path4) - Concatenates four paths into a single path.
+    - Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2) - Concatenates two path components into a single path.
+    - Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3) - Concatenates three path components into a single path.
+    - Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3, ReadOnlySpan<char> path4) - Concatenates four path components into a single path.
+
 ## Dependencies
 - None
 
