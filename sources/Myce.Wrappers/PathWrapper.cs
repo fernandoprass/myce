@@ -87,5 +87,47 @@ namespace Myce.Wrappers
       {
          return Path.GetTempPath();
       }
+
+      /// <inheritdoc/>
+      public string Join(params string?[] paths)
+      {
+         return Path.Join(paths);
+      }
+
+      /// <inheritdoc/>
+      public string Join(string? path1, string? path2)
+      {
+         return Path.Join(path1,path2);
+      }
+
+      /// <inheritdoc/>
+      public string Join(string? path1, string? path2, string? path3)
+      {
+         return Path.Join(path1,path2,path3);
+      }
+
+      /// <inheritdoc/>
+      public string Join(string? path1, string? path2, string? path3, string? path4)
+      {
+         return Path.Join(path1, path2, path3, path4);
+      }
+
+      /// <inheritdoc/>
+      public string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2)
+      {
+         return Path.Join(path1, path2);
+      }
+
+      /// <inheritdoc/>
+      public string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3)
+      {
+         return Path.Join(path1, path2, path3);
+      }
+
+      /// <inheritdoc/>
+      public string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3, ReadOnlySpan<char> path4)
+      {
+         return Path.Join(path1, path2, path3, path4);
+      }
    }
 }

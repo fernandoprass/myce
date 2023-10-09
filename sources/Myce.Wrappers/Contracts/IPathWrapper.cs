@@ -119,5 +119,67 @@ namespace Myce.Wrappers.Contracts
       /// </summary>
       /// <returns>The path to the temporary folder, ending with a DirectorySeparatorChar.</returns>
       string GetTempPath();
+
+      /// <summary>
+      /// Concatenates an array of paths into a single path.
+      /// </summary>
+      /// <param name="paths">An array of paths.</param>
+      /// <returns>The concatenated path.</returns>
+      string Join(params string?[] paths);
+
+      /// <summary>
+      /// Concatenates two paths into a single path.
+      /// </summary>
+      /// <param name="path1">The first path to join.</param>
+      /// <param name="path2">The second path to join.</param>
+      /// <returns>The concatenated path.</returns>
+      string Join(string? path1, string? path2);
+
+      /// <summary>
+      /// Concatenates three paths into a single path.
+      /// </summary>
+      /// <param name="path1">The first path to join.</param>
+      /// <param name="path2">The second path to join.</param>
+      /// <param name="path3">The third path to join.</param>
+      /// <returns>The concatenated path.</returns>
+      string Join(string? path1, string? path2, string? path3);
+
+      /// <summary>
+      /// Concatenates four paths into a single path.
+      /// </summary>
+      /// <param name="path1">The first path to join.</param>
+      /// <param name="path2">The second path to join.</param>
+      /// <param name="path3">The third path to join.</param>
+      /// <param name="path4">The fourth path to join.</param>
+      /// <returns>The concatenated path.</returns>
+      string Join(string? path1, string? path2, string? path3, string? path4);
+
+      /// <summary>
+      /// Concatenates two path components into a single path.
+      /// </summary>
+      /// <param name="path1">A character span that contains the first path to join.</param>
+      /// <param name="path2">A character span that contains the second path to join.</param>
+      /// <returns>The concatenated path.</returns>
+
+      string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2);
+
+      /// <summary>
+      /// Concatenates three path components into a single path.
+      /// </summary>
+      /// <param name="path1">A character span that contains the first path to join.</param>
+      /// <param name="path2">A character span that contains the second path to join.</param>
+      /// <param name="path3">A character span that contains the third path to join.</param>
+      /// <returns>The concatenated path.</returns>
+      string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3);
+
+      /// <summary>
+      /// Concatenates four path components into a single path.
+      /// </summary>
+      /// <param name="path1">A character span that contains the first path to join.</param>
+      /// <param name="path2">A character span that contains the second path to join.</param>
+      /// <param name="path3">A character span that contains the third path to join.</param>
+      /// <param name="path4">A character span that contains the fourth path to join.</param>
+      /// <returns>The concatenated path.</returns>
+      string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3, ReadOnlySpan<char> path4);
    }
 }

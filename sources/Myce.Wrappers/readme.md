@@ -59,6 +59,13 @@ if you find any information inconsistent or out of date, please contact us.
     - GetPathRoot(string? path) - Gets the root directory information from the path contained in the specified string.
     - GetPathRoot(ReadOnlySpan<char> path) - Gets the root directory information from the path contained in the specified character span.
     - GetTempPath() - Returns the path of the current user's temporary folder.
+    - Join(params string?[] paths) - Concatenates an array of paths into a single path.
+    - Join(string? path1, string? path2) - Concatenates two paths into a single path.
+    - Join(string? path1, string? path2, string? path3) - Concatenates three paths into a single path.
+    - Join(string? path1, string? path2, string? path3, string? path4) - Concatenates four paths into a single path.
+    - Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2) - Concatenates two path components into a single path.
+    - Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3) - Concatenates three path components into a single path.
+    - Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3, ReadOnlySpan<char> path4) - Concatenates four path components into a single path.
 
 ## Dependencies
 - None
