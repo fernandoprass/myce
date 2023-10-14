@@ -2,7 +2,7 @@
 
 namespace Myce.Wrappers.Contracts
 {
-   internal interface IPathWrapper
+   public interface IPathWrapper
    {
       /// <summary>
       /// Changes the extension of a path string.

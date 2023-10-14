@@ -4,7 +4,7 @@ using Myce.Wrappers.Contracts;
 namespace Myce.Wrappers
 {
     public class FileWrapper : IFileWrapper
-   {
+    {
       /// <inheritdoc/>
       public void Copy(string sourceFileName, string destFileName)
       {

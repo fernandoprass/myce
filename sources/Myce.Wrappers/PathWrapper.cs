@@ -2,7 +2,7 @@
 
 namespace Myce.Wrappers
 {
-   internal class PathWrapper : IPathWrapper
+   public class PathWrapper : IPathWrapper
    {
       /// <inheritdoc/>
       public string? ChangeExtension(string? path, string? extension)
