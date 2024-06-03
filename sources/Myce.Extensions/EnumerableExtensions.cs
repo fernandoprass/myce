@@ -61,7 +61,7 @@
       /// <param name="enumerable">The enumerable</param>
       /// <param name="keySelector">The distinct property</param>
       /// <returns></returns>
-      public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector)
+      public static IEnumerable<TSource> DistinctRowsBy<TSource, TKey>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector)
       {
          HashSet<TKey> seenKeys = new HashSet<TKey>(enumerable.Count());
          foreach (TSource element in enumerable)
