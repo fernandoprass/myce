@@ -79,7 +79,7 @@ namespace Myce.Extensions.Tests
       {
          var list = MockData.GetListOfPeopleWithDuplicateNames();
 
-         var result = list.DistinctBy(x => x.Name);
+         var result = list.DistinctRowsBy(x => x.Name);
          Assert.Equal(2, result.Count());
          Assert.Equal("Paul", result.First().Name);
          Assert.Equal("John", result.Last().Name);

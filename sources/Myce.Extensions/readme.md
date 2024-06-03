@@ -35,7 +35,7 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
 - EnumerableExtensions
     - Chunk() - Splits an enumerable into chunks of a specified size
     - ContainsDuplicates() - Return true the if the enumerable constains a duplicate element
-    - DistinctBy() - Return an enumerable of elements distinct by specific property
+    - DistinctRowsBy() - Return an enumerable of elements distinct by specific property
     - ForEach<T>() - The foreach loop
     - GetDuplicates() - Return the duplicate elements in an enumerable
     - HasData() - Return true the if the enumerable object is not null and has any record
@@ -68,6 +68,9 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
     - RemoveSimbols() Remove simbols keeping only numbers, letters and spaces (if asked)
     - RemoveAccents() - Remove accents
     - ToEnum() - Converts string to Enum object
+
+## Notes
+- In version 0.5.1 the Enumerable Extension *DistinctBy* was renamed to *DistinctRowsBy* to avoid the exception *"CS0121 The call is ambiguous between the following methods or properties..."*.
 
 ## Dependencies
 - None
