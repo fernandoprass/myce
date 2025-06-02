@@ -2,12 +2,12 @@
 
 namespace Myce.Validation.ErrorMessages
 {
-   public class ErrorNotContainsOnlyNumber : ErrorMessage
+   public class ErrorShouldContainOnlyNumber : ErrorMessage
    {
-      public ErrorNotContainsOnlyNumber(string value) 
-         : base("ERROR_NOT_CONTAINS_ONLY_NUMBERS", "The string '{value}' does not contains only numbers")
+      public ErrorShouldContainOnlyNumber(string fieldName) 
+         : base("ERROR_SHOULD_CONTAIN_ONLY_NUMBERS", "'{fieldName}' should contain only number.")
       {
-         AddVariable("value", value);
+         AddVariable("fieldName", fieldName);
       }
    }
 
@@ -21,10 +21,10 @@ namespace Myce.Validation.ErrorMessages
       }
    }
 
-   public class ErrorIsMandatory : ErrorMessage
+   public class ErrorIsRequired : ErrorMessage
    {
-      public ErrorIsMandatory(string fieldName)
-         : base("ERROR_NOT_FILLED", "The field '{fieldName}' is mandatory")
+      public ErrorIsRequired(string fieldName)
+         : base("ERROR_NOT_FILLED", "T'{fieldName}' is required")
       {
          AddVariable("fieldName", fieldName);
       }
