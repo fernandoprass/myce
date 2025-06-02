@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.ComponentModel;
+using System.Reflection;
 
 namespace Myce.Extensions
 {
@@ -9,13 +10,18 @@ namespace Myce.Extensions
       /// <summary> Return the enumerator description as a string </summary>
       /// <param name="value">Enumerator value</param>
       /// <returns></returns>
-      public static string GetDescription(this IEnumerator value)
+      public static string GetDescription(this Enum value)
       {
-         DescriptionAttribute[] attributes = (DescriptionAttribute[])value
-            .GetType()
-            .GetField(value.ToString())
-            .GetCustomAttributes(typeof(DescriptionAttribute), false);
-         return attributes.Length > 0 ? attributes[0].Description : string.Empty;
+         FieldInfo fi = value.GetType().GetField(value.ToString());
+
+         DescriptionAttribute[] attributes = fi.GetCustomAttributes(typeof(DescriptionAttribute), false) as DescriptionAttribute[];
+
+         if (attributes != null && attributes.Any())
+         {
+            return attributes.First().Description;
+         }
+
+         return value.ToString();
       }
    }
 }
