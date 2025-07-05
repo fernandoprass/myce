@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace Myce.Wrappers.Contracts
+﻿namespace Myce.Wrappers.Contracts
 {
    public interface IPathWrapper
    {
@@ -11,9 +9,9 @@ namespace Myce.Wrappers.Contracts
       /// <param name="extension">The new extension (with or without a leading period). Specify null to remove an existing extension from path.</param>
       /// <returns>
       /// The modified path information. 
-      /// On Windows-based desktop platforms, if PATH is null or an empty string (), the path information is returned unmodified.
-      /// If EXTENSION is null, the returned string contains the specified path with its extension removed. If PATH has no extension, 
-      /// and EXTENSION is not null, the returned path string contains EXTENSION appended to the end of PATH.
+      /// On Windows-based desktop platforms, if path is null or an empty string (), the path information is returned unmodified.
+      /// If EXTENSION is null, the returned string contains the specified path with its extension removed. If path has no extension, 
+      /// and EXTENSION is not null, the returned path string contains EXTENSION appended to the end of path.
       /// </returns>
       string? ChangeExtension(string? path, string? extension);
 
@@ -52,18 +50,48 @@ namespace Myce.Wrappers.Contracts
       string Combine(string path1, string path2, string path3, string path4);
 
       /// <summary>
+      /// Returns the directory information for the specified path.
+      /// </summary>
+      /// <param name="path">The path of a file or directory.</param>
+      /// <returns>Directory information for path, or null if path denotes a root directory or is null. 
+      /// Returns Empty if path does not contain directory information.</returns>
+      string? GetDirectoryName(string? path);
+
+      /// <summary>
+      /// Returns the directory information for the specified path represented by a character span.
+      /// </summary>
+      /// <param name="path">The path to retrieve the directory information from.</param>
+      /// <returns>Directory information for path, or an empty span if path is null, an empty span, or a root (such as \, C:, or \server\share).</returns>
+      ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path);
+
+            /// <summary>
+      /// Returns the extension (including the period ".") of the specified path string.
+      /// </summary>
+      /// <param name="path">The path string from which to get the extension.</param>
+      /// <returns>The extension of the specified path (including the period "."), or null, or Empty. 
+      /// If path is null, returns null. If path does not have extension information, returns Empty.</returns>
+      string? GetExtension(string? path);
+
+      /// <summary>
       /// Returns the file name and extension of a file path that is represented by a read-only character span.
       /// </summary>
+      /// <param name="path">The file path from which to get the extension.</param>
+      /// <returns>The extension of the specified path (including the period, "."), or Empty if path does not have extension information.</returns>
+      ReadOnlySpan<char> GetExtension(ReadOnlySpan<char> path);
+
+      /// <summary>
+      /// Returns the extension of a file path that is represented by a read-only character span.
+      /// </summary>
       /// <param name="path">A read-only span that contains the path from which to obtain the file name and extension.</param>
-      /// <returns>The characters after the last directory separator character in PATH.</returns>
+      /// <returns>The characters after the last directory separator character in path.</returns>   
       ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path);
 
       /// <summary>
       /// Returns the file name and extension of the specified path string.
       /// </summary>
       /// <param name="path">The path string from which to obtain the file name and extension.</param>
-      /// <returns>The characters after the last directory separator character in PATH. If the last character of PATH is a directory 
-      /// or volume separator character, this method returns Empty. If PATH is null, this method returns null.</returns>
+      /// <returns>The characters after the last directory separator character in path. If the last character of path is a directory 
+      /// or volume separator character, this method returns Empty. If path is null, this method returns null.</returns>
       string? GetFileName(string? path);
 
       /// <summary>
@@ -84,26 +112,26 @@ namespace Myce.Wrappers.Contracts
       /// Returns the absolute path for the specified path string.
       /// </summary>
       /// <param name="path">The file or directory for which to obtain absolute path information.</param>
-      /// <returns>The fully qualified location of PATH, such as "C:\MyFile.txt".</returns>
+      /// <returns>The fully qualified location of path, such as "C:\MyFile.txt".</returns>
       string GetFullPath(string path);
 
       /// <summary>
       /// Returns an absolute path from a relative path and a fully qualified base path.
       /// </summary>
-      /// <param name="path">A relative path to concatenate to BASEPATH.</param>
-      /// <param name="basePath">The beginning of a fully qualified path.</param>
+      /// <param name="path">A relative path to concatenate to BASEpath.</param>
+      /// <param name="basepath">The beginning of a fully qualified path.</param>
       /// <returns>The absolute path.</returns>
-      string GetFullPath(string path, string basePath);
+      string GetFullPath(string path, string basepath);
 
       /// <summary>
       /// Gets the root directory information from the path contained in the specified string.
       /// </summary>
       /// <param name="path">A string containing the path from which to obtain root directory information.</param>
-      /// <returns>The root directory of PATH if it is rooted. 
+      /// <returns>The root directory of path if it is rooted. 
       /// -or-
-      /// Empty if PATH does not contain root directory information.
+      /// Empty if path does not contain root directory information.
       /// -or-
-      /// NULL if PATH is null or is effectively empty.
+      /// NULL if path is null or is effectively empty.
       /// </returns>
       string? GetPathRoot(string? path);
 
@@ -111,7 +139,7 @@ namespace Myce.Wrappers.Contracts
       /// Gets the root directory information from the path contained in the specified character span.
       /// </summary>
       /// <param name="path">A read-only span of characters containing the path from which to obtain root directory information.</param>
-      /// <returns>A read-only span of characters containing the root directory of PATH.</returns>
+      /// <returns>A read-only span of characters containing the root directory of path.</returns>
       ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path);
 
       /// <summary>
