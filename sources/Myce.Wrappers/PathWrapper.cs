@@ -35,6 +35,30 @@ namespace Myce.Wrappers
       }
 
       /// <inheritdoc/>
+      public string? GetDirectoryName(string? path)
+      {
+         return Path.GetDirectoryName(path);
+      }
+
+      /// <inheritdoc/>
+      public ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path)
+      {
+         return Path.GetDirectoryName(path);
+      }
+
+      /// <inheritdoc/>
+      public ReadOnlySpan<char> GetExtension(ReadOnlySpan<char> path)
+      {
+         return Path.GetExtension(path);
+      }
+
+      /// <inheritdoc/>
+      public string? GetExtension(string? path)
+      {
+         return Path.GetExtension(path);
+      }
+
+      /// <inheritdoc/>
       public ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path)
       {
          return Path.GetFileName(path); ;

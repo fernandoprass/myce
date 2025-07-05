@@ -50,6 +50,10 @@ if you find any information inconsistent or out of date, please contact us.
     - Combine(string path1, string path2) - Combines two strings into a path.
     - Combine(string path1, string path2, string path3) - Combines three strings into a path.
     - Combine(string path1, string path2, string path3, string path4) - Combines four strings into a path.
+    - GetDirectoryName(string? path) - Returns the directory information for the specified path.
+    - GetDirectoryName(ReadOnlySpan<char> path) - Returns the directory information for the specified path represented by a character span.
+    - GetExtension(ReadOnlySpan<char> path) - Returns the file name and extension of a file path that is represented by a read-only character span.
+    - GetExtension(string? path) - Returns the extension (including the period ".") of the specified path string.
     - GetFileName (ReadOnlySpan<char> path) - Returns the file name and extension of a file path that is represented by a read-only character span.
     - GetFileName (string? path) - Returns the file name and extension of the specified path string.
     - GetFileNameWithoutExtension(ReadOnlySpan<Char> path) - Returns the file name without the extension of a file path that is represented by a read-only character span.
