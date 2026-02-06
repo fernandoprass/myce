@@ -6,7 +6,11 @@ namespace Myce.Response
    {
       public static Result<IEnumerable<T>> Merge<T>(this IEnumerable<Result<T>> results)
       {
-         return new Result<IEnumerable<T>>(results.Select(x => x.Data), results.SelectMany(x => x.Messages));
+         var resultList = results.ToList();
+         var data = resultList.Select(x => x.Data);
+         var messages = resultList.SelectMany(x => x.Messages);
+
+         return new Result<IEnumerable<T>>(data, messages);
       }
 
       public static bool HasHttpStatusCode(this Result result, HttpStatusCode statusCode)

@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Myce.Response.Messages
 {
    public abstract class Message
@@ -52,18 +54,25 @@ namespace Myce.Response.Messages
       /// </summary>
       public string Show()
       {
-         string text = Text;
+         if (string.IsNullOrWhiteSpace(Text))
+            return string.Empty;
 
-         if (_variables != null && _variables.Any())
+         if (_variables == null || !_variables.Any())
+            return Text;
+         
+         var builder = new StringBuilder(Text);
+
+         foreach (var variable in _variables)
          {
-            foreach (var variable in _variables)
-            {
-               text = text.Replace("{" + variable.Name + "}", variable.Value);
-               text = text.Replace("[" + variable.Name + "]", variable.Value);
-            }
+            if (string.IsNullOrEmpty(variable.Name)) continue;
+
+            string valueToReplace = variable.Value ?? string.Empty;
+
+            builder.Replace("{" + variable.Name + "}", valueToReplace);
+            builder.Replace("[" + variable.Name + "]", valueToReplace);
          }
 
-         return text;
+         return builder.ToString();
       }
    }
 }
