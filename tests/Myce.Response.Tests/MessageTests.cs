@@ -46,5 +46,52 @@ namespace Myce.Response.Messages.Tests
          var result = message.Show();
          Assert.Equal(text, result);
       }
+
+      [Fact]
+      public void Title_ShouldReturnExplicitValue_WhenSetManually()
+      {
+         var expectedTitle = "Manual Operation Title";
+         var result = new Result { Title = expectedTitle };
+         result.AddMessage(new InformationMessage("Background details"));
+
+         var title = result.Title;
+
+         Assert.Equal(expectedTitle, title);
+      }
+
+      [Fact]
+      public void Title_ShouldReturnFirstMessageText_WhenTitleIsNull()
+      {
+         var result = new Result();
+         var firstMessageText = "First error occurred";
+         result.AddMessage(new ErrorMessage(firstMessageText));
+         result.AddMessage(new ErrorMessage("Second error occurred"));
+
+         var title = result.Title;
+
+         Assert.Equal(firstMessageText, title);
+      }
+
+      [Fact]
+      public void Title_ShouldReturnNull_WhenTitleIsNullAndMessagesAreEmpty()
+      {
+         var result = new Result();
+
+         Assert.Null(result.Title);
+      }
+
+      [Fact]
+      public void Title_ShouldBeOverridden_EvenIfMessagesExist()
+      {
+         var result = new Result();
+         result.AddMessage(new ErrorMessage("Message text that should be ignored by getter"));
+
+         var manualTitle = "Important Override";
+
+         result.Title = manualTitle;
+         var title = result.Title;
+
+         Assert.Equal(manualTitle, title);
+      }
    }
 }
