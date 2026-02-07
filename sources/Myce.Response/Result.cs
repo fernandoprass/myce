@@ -84,9 +84,9 @@ namespace Myce.Response
 
       public static Result<T> Success(T data, string message) => new Result<T>(data, message);
 
-      public static Result<T> Failure(Message message) => new Result<T>(message);
+      public static new Result<T> Failure(Message message) => new Result<T>(message);
 
-      public static Result<T> Failure(IEnumerable<Message> messages) => new Result<T>(messages);
+      public static new Result<T> Failure(IEnumerable<Message> messages) => new Result<T>(messages);
 
       public static Result<T> FromResult(Result result) => new Result<T>(result.Messages);
 

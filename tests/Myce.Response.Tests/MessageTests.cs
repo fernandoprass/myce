@@ -26,6 +26,12 @@ namespace Myce.Response.Messages.Tests
          Assert.Equal(expected, result);
       }
 
+      /// <summary>
+      /// Verifies that the Show method of ErrorMessage returns the message text when no variables are provided.
+      /// </summary>
+      /// <remarks>This test ensures that the ErrorMessage instance correctly exposes its Code and Text
+      /// properties and that the Variables collection is empty when no variables are supplied. It also confirms that
+      /// calling Show returns the original message text without variable substitution.</remarks>
       [Fact]
       public void Show_MessageWitoutVariables_ShouldShowText()
       {
