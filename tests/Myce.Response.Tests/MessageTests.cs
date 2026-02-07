@@ -26,6 +26,12 @@ namespace Myce.Response.Messages.Tests
          Assert.Equal(expected, result);
       }
 
+      /// <summary>
+      /// Verifies that the Show method of ErrorMessage returns the message text when no variables are provided.
+      /// </summary>
+      /// <remarks>This test ensures that the ErrorMessage instance correctly exposes its Code and Text
+      /// properties and that the Variables collection is empty when no variables are supplied. It also confirms that
+      /// calling Show returns the original message text without variable substitution.</remarks>
       [Fact]
       public void Show_MessageWitoutVariables_ShouldShowText()
       {
@@ -39,6 +45,53 @@ namespace Myce.Response.Messages.Tests
 
          var result = message.Show();
          Assert.Equal(text, result);
+      }
+
+      [Fact]
+      public void Title_ShouldReturnExplicitValue_WhenSetManually()
+      {
+         var expectedTitle = "Manual Operation Title";
+         var result = new Result { Title = expectedTitle };
+         result.AddMessage(new InformationMessage("Background details"));
+
+         var title = result.Title;
+
+         Assert.Equal(expectedTitle, title);
+      }
+
+      [Fact]
+      public void Title_ShouldReturnFirstMessageText_WhenTitleIsNull()
+      {
+         var result = new Result();
+         var firstMessageText = "First error occurred";
+         result.AddMessage(new ErrorMessage(firstMessageText));
+         result.AddMessage(new ErrorMessage("Second error occurred"));
+
+         var title = result.Title;
+
+         Assert.Equal(firstMessageText, title);
+      }
+
+      [Fact]
+      public void Title_ShouldReturnNull_WhenTitleIsNullAndMessagesAreEmpty()
+      {
+         var result = new Result();
+
+         Assert.Null(result.Title);
+      }
+
+      [Fact]
+      public void Title_ShouldBeOverridden_EvenIfMessagesExist()
+      {
+         var result = new Result();
+         result.AddMessage(new ErrorMessage("Message text that should be ignored by getter"));
+
+         var manualTitle = "Important Override";
+
+         result.Title = manualTitle;
+         var title = result.Title;
+
+         Assert.Equal(manualTitle, title);
       }
    }
 }

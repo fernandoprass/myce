@@ -15,7 +15,7 @@ namespace Myce.Response.Tests
          string message = "text message";
          var result = new Result(message);
 
-         Assert.Equal(message, result.Message);
+         Assert.Equal(message, result.Title);
          Assert.False(result.HasError);
          Assert.False(result.HasWarning);
          Assert.False(result.HasMessage);
@@ -29,7 +29,7 @@ namespace Myce.Response.Tests
       {
          var result = new Result<int>(20);
 
-         Assert.Null(result.Message);
+         Assert.Null(result.Title);
          Assert.Empty(result.Messages);
          Assert.False(result.HasErrorOrDataIsNull);
          Assert.False(result.HasError);
@@ -46,7 +46,7 @@ namespace Myce.Response.Tests
       {
          var result = new Result<string>();
 
-         Assert.Null(result.Message);
+         Assert.Null(result.Title);
          Assert.Null(result.Data);
          Assert.Empty(result.Messages);
          Assert.False(result.HasData);
@@ -63,15 +63,14 @@ namespace Myce.Response.Tests
       {
          var errorMessage = new ErrorMessage("code1","error1" );
 
-         var result = new Result();
-         result.AddMessage(errorMessage);
+         var result = Result.Failure(errorMessage);
 
-         Assert.Null(result.Message);
          Assert.Single(result.Messages);
          Assert.False(result.HasWarning);
          Assert.False(result.IsValid);
          Assert.True(result.HasError);
          Assert.True(result.HasMessage);
+         Assert.Equal(result.Messages.First().Text, result.Title);
          Assert.Equal("code1", result.Messages.First().Code);
          Assert.Equal("error1", result.Messages.First().Text);
          Assert.IsType<ErrorMessage>(result.Messages.First());
@@ -85,12 +84,12 @@ namespace Myce.Response.Tests
 
          var result = new Result(warningMessage);
 
-         Assert.Null(result.Message);
          Assert.Single(result.Messages);
          Assert.False(result.HasError);
          Assert.True(result.HasWarning);
          Assert.True(result.IsValid);
          Assert.True(result.HasMessage);
+         Assert.Equal(result.Messages.First().Text, result.Title);
          Assert.Equal("code1", result.Messages.First().Code);
          Assert.Equal("warning1", result.Messages.First().Text);
          Assert.IsType<WarningMessage>(result.Messages.First());
@@ -104,12 +103,12 @@ namespace Myce.Response.Tests
 
          var result = new Result(infoMessage);
 
-         Assert.Null(result.Message);
          Assert.Single(result.Messages);
          Assert.False(result.HasError);
          Assert.False(result.HasWarning);
          Assert.True(result.IsValid);
          Assert.True(result.HasMessage);
+         Assert.Equal(result.Messages.First().Text, result.Title);
          Assert.Equal("code1", result.Messages.First().Code);
          Assert.Equal("info1", result.Messages.First().Text);
          Assert.IsType<InformationMessage>(result.Messages.First());
@@ -128,12 +127,47 @@ namespace Myce.Response.Tests
          result.AddMessage(warningMessage);
          result.AddMessage(infoMessage);
 
-         Assert.Null(result.Message);
          Assert.False(result.IsValid);
          Assert.True(result.HasError);
          Assert.True(result.HasWarning);
          Assert.True(result.HasMessage);
+         Assert.Equal(result.Messages.First().Text, result.Title);
          Assert.Equal(3, result.Messages.Count);
+      }
+      /// <summary>Validate if MapData preserves messages </summary>
+      [Fact]
+      public void ToResult_ShouldMapDataAndPreserveMessages()
+      {
+         var initialData = 10;
+         var resultInt = Result<int>.Success(initialData);
+         resultInt.AddMessage(new InformationMessage("MSG01", "Initial message"));
+         resultInt.AddMessage(new WarningMessage("MSG02", "Warning message"));
+
+         string MapIntToString(int value) => $"Value is {value}";
+
+         var resultString = resultInt.ToResult(MapIntToString);
+
+         Assert.Equal("Value is 10", resultString.Data);
+
+         Assert.Equal(resultInt.Messages.Count, resultString.Messages.Count);
+         Assert.Equal(resultInt.Messages.First().Code, resultString.Messages.First().Code);
+         Assert.Equal(resultInt.Messages.Last().Type, resultString.Messages.Last().Type);
+      }
+
+      /// <summary> Validade if return default data when source is null </summary>
+      [Fact]
+      public void ToResult_ShouldReturnDefaultData_WhenSourceDataIsNull()
+      {
+         var resultNull = new Result<object>((object)null);
+         resultNull.AddMessage(new ErrorMessage("ERR01", "Error occurred"));
+
+         // Mapping object (null) to int
+         var resultInt = resultNull.ToResult(obj => 100);
+
+         // Since Data is null, the map function is not executed and returns default(int)
+         Assert.False(resultInt.IsValid);
+         Assert.Equal(0, resultInt.Data);         
+         Assert.Equal("ERR01", resultInt.Messages.First().Code);
       }
    }
 }
