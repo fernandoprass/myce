@@ -143,10 +143,64 @@
       ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path);
 
       /// <summary>
+      /// Returns a random folder name or file name.
+      /// </summary>
+      /// <returns>A random folder name or file name.</returns>
+      string GetRandomFileName();
+
+      /// <summary>
+      /// Creates a uniquely named, zero-byte temporary file on disk and returns the full path of that file.
+      /// </summary>
+      /// <returns>The full path of the temporary file.</returns>
+      string GetTempFileName();
+
+      /// <summary>
       /// Returns the path of the current user's temporary folder.
       /// </summary>
       /// <returns>The path to the temporary folder, ending with a DirectorySeparatorChar.</returns>
       string GetTempPath();
+
+      /// <summary>
+      /// Determines whether a path includes a file name extension.
+      /// </summary>
+      /// <param name="path">The path to search for an extension.</param>
+      /// <returns>TRUE if the characters that follow the last directory separator (\\ or /) or volume separator (:) in the path include a period (.) followed by one or more characters; otherwise, FALSE.</returns>
+      bool HasExtension(string? path);
+
+      /// <summary>
+      /// Determines whether a path includes a file name extension.
+      /// </summary>
+      /// <param name="path">The path to search for an extension.</param>
+      /// <returns>TRUE if the characters that follow the last directory separator (\\ or /) or volume separator (:) in the path include a period (.) followed by one or more characters; otherwise, FALSE.</returns>
+      bool HasExtension(ReadOnlySpan<char> path);
+
+      /// <summary>
+      /// Gets a value indicating whether the specified path string contains a root.
+      /// </summary>
+      /// <param name="path">The path to test.</param>
+      /// <returns>TRUE if path contains a root; otherwise, FALSE.</returns>
+      bool IsPathRooted(string? path);
+
+      /// <summary>
+      /// Gets a value indicating whether the specified path string contains a root.
+      /// </summary>
+      /// <param name="path">The path to test.</param>
+      /// <returns>TRUE if path contains a root; otherwise, FALSE.</returns>
+      bool IsPathRooted(ReadOnlySpan<char> path);
+
+      /// <summary>
+      /// Returns a value indicating whether the specified path is fully qualified.
+      /// </summary>
+      /// <param name="path">The path to test.</param>
+      /// <returns>TRUE if path is a fully qualified path; otherwise, FALSE.</returns>
+      bool IsPathFullyQualified(string path);
+
+      /// <summary>
+      /// Returns a value indicating whether the specified path is fully qualified.
+      /// </summary>
+      /// <param name="path">The path to test.</param>
+      /// <returns>TRUE if path is a fully qualified path; otherwise, FALSE.</returns>
+      bool IsPathFullyQualified(ReadOnlySpan<char> path);
 
       /// <summary>
       /// Concatenates an array of paths into a single path.
@@ -209,5 +263,53 @@
       /// <param name="path4">A character span that contains the fourth path to join.</param>
       /// <returns>The concatenated path.</returns>
       string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3, ReadOnlySpan<char> path4);
+
+      /// <summary>
+      /// Returns a relative path from one path to another.
+      /// </summary>
+      /// <param name="relativeTo">The source path the result should be relative to. This path is always considered to be a directory.</param>
+      /// <param name="path">The destination path.</param>
+      /// <returns>The relative path, or path if the paths don't share the same root.</returns>
+      string GetRelativePath(string relativeTo, string path);
+
+      /// <summary>
+      /// Trims the trailing directory separator character from a path.
+      /// </summary>
+      /// <param name="path">The path to trim.</param>
+      /// <returns>The path without the trailing directory separator. If the path is null, empty, or a root directory, the path is returned unchanged.</returns>
+      string TrimEndingDirectorySeparator(string path);
+
+      /// <summary>
+      /// Trims the trailing directory separator character from a path.
+      /// </summary>
+      /// <param name="path">The path to trim.</param>
+      /// <returns>The path without the trailing directory separator. If the path is null, empty, or a root directory, the path is returned unchanged.</returns>
+      ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path);
+
+      /// <summary>
+      /// Returns a value indicating if the path ends in a directory separator.
+      /// </summary>
+      /// <param name="path">The path to check.</param>
+      /// <returns>TRUE if the path ends in a directory separator; otherwise, FALSE.</returns>
+      bool EndsInDirectorySeparator(string path);
+
+      /// <summary>
+      /// Returns a value indicating if the path ends in a directory separator.
+      /// </summary>
+      /// <param name="path">The path to check.</param>
+      /// <returns>TRUE if the path ends in a directory separator; otherwise, FALSE.</returns>
+      bool EndsInDirectorySeparator(ReadOnlySpan<char> path);
+
+      /// <summary>
+      /// Gets an array containing the characters that are not allowed in file names.
+      /// </summary>
+      /// <returns>An array containing the characters that are not allowed in file names.</returns>
+      char[] GetInvalidFileNameChars();
+
+      /// <summary>
+      /// Gets an array containing the characters that are not allowed in path names.
+      /// </summary>
+      /// <returns>An array containing the characters that are not allowed in path names.</returns>
+      char[] GetInvalidPathChars();
    }
 }
