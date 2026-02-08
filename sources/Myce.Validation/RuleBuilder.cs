@@ -8,12 +8,14 @@ namespace Myce.Validation
    {
       private readonly EntityValidator<T> _validator;
       private readonly Expression<Func<T, TAttribute>> _attribute;
+      private readonly Func<T, TAttribute> _attributeFunc;
       private readonly List<(Func<T, bool> rule, ErrorMessage errorMessage)> _rules = new();
 
       public RuleBuilder(EntityValidator<T> validator, Expression<Func<T, TAttribute>> attribute)
       {
          _validator = validator;
          _attribute = attribute;
+         _attributeFunc = attribute.Compile();
       }
 
       private RuleBuilder<T, TAttribute> Compare(object value, Func<double, double, bool> comparison)
@@ -60,8 +62,10 @@ namespace Myce.Validation
       public RuleBuilder<T, TAttribute> IsEqualTo(TAttribute value)
       {
          var attributeName = GetAttributeName();
-         _rules.Add((instance => GeAttribute(instance).Equals(value),
-                     new ErrorMessage($"'{attributeName}' must be equal to {value}.")));
+         _rules.Add(((T instance) => {
+             var attrValue = GetAttributeValue(instance);
+             return attrValue != null && attrValue.Equals(value);
+         }, new ErrorMessage($"'{attributeName}' must be equal to {value}.")));
          return this;
       }
 
@@ -71,16 +75,20 @@ namespace Myce.Validation
       /// <param name="value">The value to be found in the sequence</param>
       /// <param name="values">The sequence</param>
       /// <param name="message">The message to be returned in case of an error</param>
-      public  RuleBuilder<T, TAttribute> Contains(string[] values, ErrorMessage message)
+      public RuleBuilder<T, TAttribute> Contains(string[] values, ErrorMessage message)
       {
-         return this;// If(!values.Contains(value), message);
+         Func<T, bool> rule = (instance) => {
+            var val = GetAttributeValue(instance)?.ToString();
+            return val != null && values.Contains(val);
+         };
+         _rules.Add((rule, message));
+         return this;
       }
-
       /// <summary>
       /// Determines whether a sequence contains only numeric characters
       /// </summary>
       /// <param name="value">The value to be found in the sequence</param>
-      public  RuleBuilder<T, TAttribute> ContainsOnlyNumber()
+      public RuleBuilder<T, TAttribute> ContainsOnlyNumber()
       {
          return ContainsOnlyNumber(new ErrorShouldContainOnlyNumber(GetAttributeName()));
       }
@@ -90,63 +98,66 @@ namespace Myce.Validation
       /// </summary>
       /// <param name="value">The value to be found in the sequence</param>
       /// <param name="message">The message to be returned in case of an error</param>
-      public  RuleBuilder<T, TAttribute> ContainsOnlyNumber(ErrorMessage message)
+      public RuleBuilder<T, TAttribute> ContainsOnlyNumber(ErrorMessage message)
       {
-         var attributeName = GetAttributeName();
-         _rules.Add((instance => _attribute.Compile()(instance).ToString().Any(c => !char.IsNumber(c)), message));
+         Func<T, bool> rule = (instance) => {
+             var val = GetAttributeValue(instance)?.ToString();
+             return string.IsNullOrEmpty(val) || val.All(char.IsNumber);
+         };
+         _rules.Add((rule, message));
          return this;
       }
 
       /// <summary>
       /// Determines whether a string has an exact character length
       /// </summary>
-      /// <param name="value">The string to be validated</param>
-      /// <param name="lenght">Expected size</param>
-      public  RuleBuilder<T, TAttribute> ExactNumberOfCharacteres(string value, int lenght)
+      /// <param name="length">Expected size</param>
+      public RuleBuilder<T, TAttribute> ExactNumberOfCharacters(int length)
       {
-         return ExactNumberOfCharacteres(value, lenght, new ErrorNotExactNumberOfCharacteres(value, lenght));
+         var attributeName = GetAttributeName();
+         return ExactNumberOfCharacters(length, new ErrorNotExactNumberOfCharacters(attributeName, length));
       }
 
       /// <summary>
       /// Determines whether a string has an exact character length
       /// </summary>
-      /// <param name="value">The string to be validated</param>
-      /// <param name="lenght">Expected size</param>
+      /// <param name="length">Expected size</param>
       /// <param name="message">The message to be returned in case of an error</param>
-      public  RuleBuilder<T, TAttribute> ExactNumberOfCharacteres(string value, int lenght, Message message)
+      public RuleBuilder<T, TAttribute> ExactNumberOfCharacters(int length, ErrorMessage message)
       {
-         return this;//If(!string.IsNullOrEmpty(value) && value.Length != lenght, message);
+         _rules.Add(((T instance) => {
+            var value = GetAttributeValue(instance)?.ToString();
+            return string.IsNullOrEmpty(value) || value.Length == length;
+         }, message));
+         return this;
       }
 
       /// <summary>
-      ///  Determines whether a string has an exact character length if a given condition is true
+      /// Determines whether a string has an exact character length if a given condition is true
       /// </summary>
-      /// <param name="value">The string to be validated</param>
-      /// <param name="lenght">Expected size</param>
+      /// <param name="length">Expected size</param>
       /// <param name="expression">The condition necessary to apply the rule</param>
-      public  RuleBuilder<T, TAttribute> ExactNumberOfCharacteresIf(string value, int lenght, bool expression)
+      public RuleBuilder<T, TAttribute> ExactNumberOfCharactersIf(int length, bool expression)
       {
-         return ExactNumberOfCharacteresIf(value, lenght, expression, new ErrorNotExactNumberOfCharacteres(value, lenght));
+         var attributeName = GetAttributeName();
+         return ExactNumberOfCharactersIf(length, expression, new ErrorNotExactNumberOfCharacters(attributeName, length));
       }
 
       /// <summary>
-      ///  Determines whether a string has an exact character length if a given condition is true
+      /// Determines whether a string has an exact character length if a given condition is true
       /// </summary>
-      /// <param name="value">The string to be validated</param>
-      /// <param name="lenght">Expected size</param>
+      /// <param name="length">Expected size</param>
       /// <param name="expression">The condition necessary to apply the rule</param>
       /// <param name="message">The message to be returned in case of an error</param>
-      public  RuleBuilder<T, TAttribute> ExactNumberOfCharacteresIf(string value, int lenght, bool expression, Message message)
+      public RuleBuilder<T, TAttribute> ExactNumberOfCharactersIf(int length, bool expression, ErrorMessage message)
       {
-         return expression ? MaxLenght(value, lenght, message) : this;
+         return expression ? ExactNumberOfCharacters(length, message) : this;
       }
 
       /// <summary>
       ///  Determines whether was filled if a given condition is true
       /// </summary>
-      /// <param name="value">The value</param>
-      /// <param name="fieldName">The field name</param>
-      public  RuleBuilder<T, TAttribute> IsRequired()
+      public RuleBuilder<T, TAttribute> IsRequired()
       {
          return IsRequired(new ErrorIsRequired(GetAttributeName()));
       }
@@ -154,179 +165,167 @@ namespace Myce.Validation
       /// <summary>
       ///  Determines whether a value was filled
       /// </summary>
-      /// <param name="value">The value</param>
       /// <param name="message">The message to be returned in case of an error</param>
-      public  RuleBuilder<T, TAttribute> IsRequired(ErrorMessage message)
+      public RuleBuilder<T, TAttribute> IsRequired(ErrorMessage message)
+      {
+         _rules.Add(((T instance) => {
+            var value = GetAttributeValue(instance);
+            return value != null && !string.IsNullOrEmpty(value.ToString());
+         }, message));
+         return this;
+      }
+
+      /// <summary>
+      /// Determines whether the property is required if a given condition is true
+      /// </summary>
+      public RuleBuilder<T, TAttribute> IsRequiredIf(bool expression)
+      {
+         return IsRequiredIf(expression, new ErrorIsRequired(GetAttributeName()));
+      }
+
+      /// <summary>
+      /// Determines whether the property is required if a given condition is true
+      /// </summary>
+      public RuleBuilder<T, TAttribute> IsRequiredIf(bool expression, ErrorMessage message)
+      {
+         return expression ? IsRequired(message) : this;
+      }
+
+      /// <summary>
+      /// Determines whether a string is a valid date
+      /// </summary>
+      public RuleBuilder<T, TAttribute> IsValidDate()
       {
          var attributeName = GetAttributeName();
-         _rules.Add((instance => _attribute.Compile()(instance) != null &&
-                                  !string.IsNullOrEmpty(_attribute.Compile()(instance).ToString()), message));
-         return this;
-      }
-
-      /// <summary>
-      /// Determines whether was filled if a given condition is true
-      /// </summary>
-      /// <param name="value">The value</param>
-      /// <param name="fieldName">The field name</param>
-      /// <param name="expression">The condition necessary to apply the rule</param>
-      public  RuleBuilder<T, TAttribute> IsMandatoryIf(string value, string fieldName, bool expression)
-      {
-         return default;
-         //return expression ? IsRequired(value, fieldName) : this;
-      }
-
-      /// <summary>
-      /// Determines whether was filled if a given condition is true
-      /// </summary>
-      /// <param name="value">The value</param>
-      /// <param name="expression">The condition necessary to apply the rule</param>
-      /// <param name="message">The message to be returned in case of an error</param>
-      public  RuleBuilder<T, TAttribute> IsMandatoryIf(string value, bool expression, Message message)
-      {
-         return default;
-         //return expression ? IsRequired(value, message) : this;
+         return IsValidDate(new ErrorInvalidDate(attributeName));
       }
 
       /// <summary>
       /// Determines whether a string is a valid date
       /// </summary>
-      /// <param name="date">The date value</param>
-      public  RuleBuilder<T, TAttribute> IsValidDate(string date)
-      {
-         return IsValidDate(date, new ErrorInvalidDate(date));
-      }
-
-      /// <summary>
-      /// Determines whether a string is a valid date
-      /// </summary>
-      /// <param name="date">The date value</param>
       /// <param name="message">The message to be returned in case of an error</param>
-      public  RuleBuilder<T, TAttribute> IsValidDate(string date, Message message)
+      public RuleBuilder<T, TAttribute> IsValidDate(ErrorMessage message)
       {
-         if (!string.IsNullOrEmpty(date))
-         {
-            var result = DateTime.TryParse(date, out var dateTime);
-            return this;//If(!result, message);
-         }
+         _rules.Add(((T instance) => {
+            var value = GetAttributeValue(instance)?.ToString();
+            return string.IsNullOrEmpty(value) || DateTime.TryParse(value, out _);
+         }, message));
          return this;
       }
 
       /// <summary>
       /// Determines whether a string is a valid email address
       /// </summary>
-      /// <param name="value">The value</param>
-      public  RuleBuilder<T, TAttribute> IsValidEmailAddress(string email)
+      public RuleBuilder<T, TAttribute> IsValidEmailAddress()
       {
-         return IsValidEmailAddress(email, new ErrorInvalidEmail(email));
+         var attributeName = GetAttributeName();
+         return IsValidEmailAddress(new ErrorInvalidEmail(attributeName));
       }
 
       /// <summary>
       /// Determines whether a string is a valid email address
       /// </summary>
-      /// <param name="value">The value</param>
       /// <param name="message">The message to be returned in case of an error</param>
-      public  RuleBuilder<T, TAttribute> IsValidEmailAddress(string email, Message message)
+      public RuleBuilder<T, TAttribute> IsValidEmailAddress(ErrorMessage message)
       {
+         _rules.Add(((T instance) => {
+            var email = GetAttributeValue(instance)?.ToString();
+            if (string.IsNullOrEmpty(email)) return true;
+            return System.Text.RegularExpressions.Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+         }, message));
          return this;
-         //if (!string.IsNullOrEmpty(email))
-         //{
-         //   var regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
-         //   var match = regex.Match(email);
-         //   return If(!match.Success, message);
-         //}
-         //return this;
       }
 
       /// <summary>
       /// Determines whether a string has the maximum size allowed
       /// </summary>
-      /// <param name="value">The string to be validated</param>
-      /// <param name="maxLenght">Expected maximum size</param>
-      public  RuleBuilder<T, TAttribute> MaxLenght(string value, int maxLenght)
+      /// <param name="maxLength">Expected maximum size</param>
+      public RuleBuilder<T, TAttribute> MaxLength(int maxLength)
       {
-         return MaxLenght(value, maxLenght, new ErrorMoreCharactersThanExpected(value, maxLenght));
+         var attributeName = GetAttributeName();
+         return MaxLength(maxLength, new ErrorMoreCharactersThanExpected(attributeName, maxLength));
       }
 
       /// <summary>
       /// Determines whether a string has the maximum size allowed
       /// </summary>
-      /// <param name="value">The string to be validated</param>
-      /// <param name="maxLenght">Expected maximum size</param>
+      /// <param name="maxLength">Expected maximum size</param>
       /// <param name="message">The message to be returned in case of an error</param>
-      public  RuleBuilder<T, TAttribute> MaxLenght(string value, int maxLenght, Message message)
+      public RuleBuilder<T, TAttribute> MaxLength(int maxLength, ErrorMessage message)
       {
+         _rules.Add(((T instance) => {
+            var value = GetAttributeValue(instance)?.ToString();
+            return string.IsNullOrEmpty(value) || value.Length <= maxLength;
+         }, message));
          return this;
-         //return If(!string.IsNullOrEmpty(value) && value.Length > maxLenght, message);
       }
 
       /// <summary>
       /// Determines whether a string has the maximum size allowed if a given condition is true
       /// </summary>
-      /// <param name="value">The string to be validated</param>
-      /// <param name="maxLenght">Expected maximum size</param>
+      /// <param name="maxLength">Expected maximum size</param>
       /// <param name="expression">The condition necessary to apply the rule</param>
-      public  RuleBuilder<T, TAttribute> MaxLenghtIf(string value, int maxLenght, bool expression)
+      public RuleBuilder<T, TAttribute> MaxLengthIf(int maxLength, bool expression)
       {
-         return MaxLenghtIf(value, maxLenght, expression, new ErrorMoreCharactersThanExpected(value, maxLenght));
+         var attributeName = GetAttributeName();
+         return MaxLengthIf(maxLength, expression, new ErrorMoreCharactersThanExpected(attributeName, maxLength));
       }
 
       /// <summary>
       /// Determines whether a string has the maximum size allowed if a given condition is true
       /// </summary>
-      /// <param name="value">The string to be validated</param>
-      /// <param name="maxLenght">Expected maximum size</param>
+      /// <param name="maxLength">Expected maximum size</param>
       /// <param name="expression">The condition necessary to apply the rule</param>
       /// <param name="message">The message to be returned in case of an error</param>
-      /// <returns></returns>
-      public  RuleBuilder<T, TAttribute> MaxLenghtIf(string value, int maxLenght, bool expression, Message message)
+      public RuleBuilder<T, TAttribute> MaxLengthIf(int maxLength, bool expression, ErrorMessage message)
       {
-         return expression ? MaxLenght(value, maxLenght, message) : this;
+         return expression ? MaxLength(maxLength, message) : this;
       }
 
       /// <summary>
       /// Determines whether a string has the minimum size allowed
       /// </summary>
-      /// <param name="value">The string to be validated</param>
-      /// <param name="minLenght">Expected minimum size</param>
-      public  RuleBuilder<T, TAttribute> MinLenght(string value, int minLenght)
+      /// <param name="minLength">Expected minimum size</param>
+      public RuleBuilder<T, TAttribute> MinLength(int minLength)
       {
-         return MinLenght(value, minLenght, new ErrorFewerCharactersThanExpected(value, minLenght));
+         var attributeName = GetAttributeName();
+         return MinLength(minLength, new ErrorFewerCharactersThanExpected(attributeName, minLength));
       }
 
       /// <summary>
       /// Determines whether a string has the minimum size allowed
       /// </summary>
-      /// <param name="value">The string to be validated</param>
-      /// <param name="minLenght">Expected minimum size</param>
+      /// <param name="minLength">Expected minimum size</param>
       /// <param name="message">The message to be returned in case of an error</param>
-      public  RuleBuilder<T, TAttribute> MinLenght(string value, int minLenght, Message message)
+      public RuleBuilder<T, TAttribute> MinLength(int minLength, ErrorMessage message)
       {
+         _rules.Add(((T instance) => {
+            var value = GetAttributeValue(instance)?.ToString();
+            return !string.IsNullOrEmpty(value) && value.Length >= minLength;
+         }, message));
          return this;
-         //return If(string.IsNullOrEmpty(value) || value.Length < minLenght, message);
       }
 
       /// <summary>
       /// Determines whether a string has the minimum size allowed if a given condition is true
       /// </summary>
-      /// <param name="value">The string to be validated</param>
-      /// <param name="minLenght">Expected minimum size</param>
+      /// <param name="minLength">Expected minimum size</param>
       /// <param name="expression">The condition necessary to apply the rule</param>
-      public  RuleBuilder<T, TAttribute> MinLenghtIf(string value, int minLenght, bool expression)
+      public RuleBuilder<T, TAttribute> MinLengthIf(int minLength, bool expression)
       {
-         return MinLenghtIf(value, minLenght, expression, new ErrorFewerCharactersThanExpected(value, minLenght));
+         var attributeName = GetAttributeName();
+         return MinLengthIf(minLength, expression, new ErrorFewerCharactersThanExpected(attributeName, minLength));
       }
 
       /// <summary>
       /// Determines whether a string has the minimum size allowed if a given condition is true
       /// </summary>
-      /// <param name="value">The string to be validated</param>
-      /// <param name="minLenght">Expected minimum size</param>
+      /// <param name="minLength">Expected minimum size</param>
       /// <param name="expression">The condition necessary to apply the rule</param>
       /// <param name="message">The message to be returned in case of an error</param>
-      public  RuleBuilder<T, TAttribute> MinLenghtIf(string value, int minLenght, bool expression, Message message)
+      public RuleBuilder<T, TAttribute> MinLengthIf(int minLength, bool expression, ErrorMessage message)
       {
-         return expression ? MinLenght(value, minLenght, message) : this;
+         return expression ? MinLength(minLength, message) : this;
       }
 
       public EntityValidator<T> Apply()
@@ -337,11 +336,9 @@ namespace Myce.Validation
          }
          return _validator;
       }
-      private TAttribute GeAttribute(T instance)
+      private object GetAttributeValue(T instance)
       {
-         var attribute = _attribute.Compile()(instance);
-         ArgumentNullException.ThrowIfNull(attribute, $"Invalid attribute name {instance}");
-         return attribute;
+         return _attributeFunc(instance);
       }
 
       private string GetAttributeName()

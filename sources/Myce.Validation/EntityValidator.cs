@@ -15,6 +15,7 @@ namespace Myce.Validation
          ErrorFound = show;
       }
    }
+
    public class EntityValidator<T>
    {
       private readonly List<Func<T, bool>> _globalRules = new();

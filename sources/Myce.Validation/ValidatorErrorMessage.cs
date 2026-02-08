@@ -11,20 +11,20 @@ namespace Myce.Validation.ErrorMessages
       }
    }
 
-   public class ErrorNotExactNumberOfCharacteres : ErrorMessage
+   public class ErrorNotExactNumberOfCharacters : ErrorMessage
    {
-      public ErrorNotExactNumberOfCharacteres(string value, int lenght) 
-         : base("ERROR_NOT_EXACT_NUMBER_OF_CHARACTERES", "The string '{value}' does not have the expected number of characters ({lenght})")
+      public ErrorNotExactNumberOfCharacters(string fieldName, int length) 
+         : base("ERROR_NOT_EXACT_NUMBER_OF_CHARACTERS", "The field '{fieldName}' does not have the expected number of characters ({length})")
       {
-         AddVariable("value", value);
-         AddVariable("lenght", lenght.ToString());
+         AddVariable("fieldName", fieldName);
+         AddVariable("length", length.ToString());
       }
    }
 
    public class ErrorIsRequired : ErrorMessage
    {
       public ErrorIsRequired(string fieldName)
-         : base("ERROR_NOT_FILLED", "T'{fieldName}' is required")
+         : base("ERROR_NOT_FILLED", "The field '{fieldName}' is required")
       {
          AddVariable("fieldName", fieldName);
       }
@@ -32,39 +32,39 @@ namespace Myce.Validation.ErrorMessages
 
    public class ErrorInvalidDate : ErrorMessage
    {
-      public ErrorInvalidDate(string date)
-         : base("ERROR_INVALID_DATE", "The date '{date}' is not valid")
+      public ErrorInvalidDate(string fieldName)
+         : base("ERROR_INVALID_DATE", "The field '{fieldName}' is not a valid date")
       {
-         AddVariable("date", date);
+         AddVariable("fieldName", fieldName);
       }
    }
 
    public class ErrorInvalidEmail : ErrorMessage
    {
-      public ErrorInvalidEmail(string email)
-         : base("ERROR_INVALID_EMAIL", "The email '{email}' is not valid")
+      public ErrorInvalidEmail(string fieldName)
+         : base("ERROR_INVALID_EMAIL", "The field '{fieldName}' is not a valid email")
       {
-         AddVariable("email", email);
+         AddVariable("fieldName", fieldName);
       }
    }
 
    public class ErrorMoreCharactersThanExpected : ErrorMessage
    {
-      public ErrorMoreCharactersThanExpected(string value, int maxLenght)
-         : base("ERROR_MORE_CHARACTERES_THAN_EXPECTED", "The string '{value}' has more characters than expected ({max.lenght})")
+      public ErrorMoreCharactersThanExpected(string fieldName, int maxLength)
+         : base("ERROR_MORE_CHARACTERS_THAN_EXPECTED", "The field '{fieldName}' has more characters than expected ({max.length})")
       {
-         AddVariable("value", value);
-         AddVariable("max.lenght", maxLenght.ToString());
+         AddVariable("fieldName", fieldName);
+         AddVariable("max.length", maxLength.ToString());
       }
    }
 
    public class ErrorFewerCharactersThanExpected : ErrorMessage
    {
-      public ErrorFewerCharactersThanExpected(string value, int minLenght)
-         : base("ERROR_FEWER_CHARACTERES_THAN_EXPECTED", "The string '{value}' has fewer characters than expected ({min.lenght})")
+      public ErrorFewerCharactersThanExpected(string fieldName, int minLength)
+         : base("ERROR_FEWER_CHARACTERS_THAN_EXPECTED", "The field '{fieldName}' has fewer characters than expected ({min.length})")
       {
-         AddVariable("value", value);
-         AddVariable("min.lenght", minLenght.ToString());
+         AddVariable("fieldName", fieldName);
+         AddVariable("min.length", minLength.ToString());
       }
    }
 }
