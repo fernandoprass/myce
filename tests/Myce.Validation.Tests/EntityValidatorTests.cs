@@ -32,10 +32,9 @@ namespace Myce.Validation.Tests
 
          var person = new Person { Code = value };
 
-         var validator = new EntityValidator<Person>()
-            .RuleFor(x => x.Code)
-            .Contains(collection, errorMessage)
-            .Apply();
+         var validator = new EntityValidator<Person>();
+
+         validator.RuleFor(x => x.Code).Contains(collection, errorMessage);
 
          var result = validator.Validate(person);
 
@@ -58,10 +57,10 @@ namespace Myce.Validation.Tests
 
          var person = new Person { Code = value };
 
-         var validator = new EntityValidator<Person>()
-            .RuleFor(x => x.Code)
-            .ContainsOnlyNumber(errorMessage)
-            .Apply();
+         var validator = new EntityValidator<Person>();
+
+         validator.RuleFor(x => x.Code)
+            .ContainsOnlyNumber(errorMessage);
 
          var result = validator.Validate(person);
 
@@ -83,11 +82,11 @@ namespace Myce.Validation.Tests
          ErrorMessage errorMessage = GetGenericErrorMessage();
          var person = new Person { Code = value };
 
-         var validator = new EntityValidator<Person>()
-            .RuleFor(x => x.Code)
+         var validator = new EntityValidator<Person>();
+
+         validator.RuleFor(x => x.Code)
             .ExactNumberOfCharacters(length, errorMessage)
-            .ExactNumberOfCharactersIf(length, expression, errorMessage)
-            .Apply();
+            .ExactNumberOfCharactersIf(length, expression, errorMessage);
 
          var result = validator.Validate(person);
 
@@ -98,10 +97,11 @@ namespace Myce.Validation.Tests
       public void ContainsOnlyNumber_WithDefaultMessage()
       {
          var person = new Person { Code = "ab12" };
-         var validator = new EntityValidator<Person>()
-               .RuleFor(x => x.Code)
-               .ContainsOnlyNumber()
-               .Apply();
+
+         var validator = new EntityValidator<Person>();
+
+         validator.RuleFor(x => x.Code)
+               .ContainsOnlyNumber();
 
          var result = validator.Validate(person);
 
@@ -122,11 +122,11 @@ namespace Myce.Validation.Tests
          ErrorMessage errorMessage = GetGenericErrorMessage();
          var person = new Person { Code = value };
 
-         var validator = new EntityValidator<Person>()
-            .RuleFor(x => x.Code)
+         var validator = new EntityValidator<Person>();
+
+         validator.RuleFor(x => x.Code)
             .IsRequired(errorMessage)
-            .IsRequiredIf(expression, errorMessage)
-            .Apply();
+            .IsRequiredIf(expression, errorMessage);
 
          var result = validator.Validate(person);
 
@@ -138,13 +138,12 @@ namespace Myce.Validation.Tests
       {
          var person = new Person { Code = string.Empty, Name = null };
 
-         var validator = new EntityValidator<Person>()
-         .RuleFor(x => x.Code)
+         var validator = new EntityValidator<Person>();
+
+         validator.RuleFor(x => x.Code)
             .IsRequired()
-            .Apply()
-         .RuleFor(x => x.Name)
-            .IsRequired()
-            .Apply();
+            .RuleFor(x => x.Name)
+            .IsRequired();
 
          var result = validator.Validate(person);
 
@@ -162,21 +161,18 @@ namespace Myce.Validation.Tests
       {
          var person = new Person { Code = "123A", Name = "John Smith", Age = 17, IsSingle = true, Salary = -100 };
 
-         var validator = new EntityValidator<Person>()
-            .RuleFor(x => x.Code)
+         var validator = new EntityValidator<Person>();
+
+         validator.RuleFor(x => x.Code)
                .IsRequired()
                .ContainsOnlyNumber()
-               .Apply()
             .RuleFor(x => x.Name)
                .IsRequired()
-               .Apply()
              .RuleFor(x => x.Age)
                .IsGreaterThanOrEqualTo(18)
                .IsLessThanOrEqualTo(65)
-               .Apply()
              .RuleFor(x => x.Salary)
-               .IsGreaterThanOrEqualTo(500)
-               .Apply();
+               .IsGreaterThanOrEqualTo(500);
 
          var result = validator.Validate(person);
 
@@ -209,10 +205,9 @@ namespace Myce.Validation.Tests
          ErrorMessage errorMessage = GetGenericErrorMessage();
          var person = new Person { Code = value };
 
-         var validator = new EntityValidator<Person>()
-            .RuleFor(x => x.Code)
-            .IsValidDate(errorMessage)
-            .Apply();
+         var validator = new EntityValidator<Person>();
+
+         validator.RuleFor(x => x.Code).IsValidDate(errorMessage);
 
          var result = validator.Validate(person);
 
@@ -223,10 +218,10 @@ namespace Myce.Validation.Tests
       public void IsValidDate_WithDefaultMessage()
       {
          var person = new Person { Code = "31/04/2022" };
-         var validator = new EntityValidator<Person>()
-            .RuleFor(x => x.Code)
-            .IsValidDate()
-            .Apply();
+         
+         var validator = new EntityValidator<Person>();
+
+         validator.RuleFor(x => x.Code) .IsValidDate();
 
          var result = validator.Validate(person);
 
@@ -247,11 +242,11 @@ namespace Myce.Validation.Tests
       {
          ErrorMessage errorMessage = GetGenericErrorMessage();
          var person = new Person { Code = value };
-         
-         var validator = new EntityValidator<Person>()
-            .RuleFor(x => x.Code)
-            .IsValidEmailAddress(errorMessage)
-            .Apply();
+
+         var validator = new EntityValidator<Person>();
+
+         validator.RuleFor(x => x.Code)
+            .IsValidEmailAddress(errorMessage);
 
          var result = validator.Validate(person);
          
@@ -262,10 +257,10 @@ namespace Myce.Validation.Tests
       public void IsValidEmail_WithDefaultMessage()
       {
          var person = new Person { Code = "a@b" };
-         var validator = new EntityValidator<Person>()
-            .RuleFor(x => x.Code)
-            .IsValidEmailAddress()
-            .Apply();
+
+         var validator = new EntityValidator<Person>();
+
+         validator.RuleFor(x => x.Code).IsValidEmailAddress();
 
          var result = validator.Validate(person);
 
@@ -286,11 +281,11 @@ namespace Myce.Validation.Tests
          ErrorMessage errorMessage = GetGenericErrorMessage();
          var person = new Person { Code = value };
 
-         var validator = new EntityValidator<Person>()
-            .RuleFor(x => x.Code)
+         var validator = new EntityValidator<Person>();
+
+         validator.RuleFor(x => x.Code)
             .MaxLength(length, errorMessage)
-            .MaxLengthIf(length, expression, errorMessage)
-            .Apply();
+            .MaxLengthIf(length, expression, errorMessage);
 
          var result = validator.Validate(person);
 
@@ -301,20 +296,20 @@ namespace Myce.Validation.Tests
       public void MaxLength_and_MaxLengthIf_WithDefaultMessage()
       {
          var person1 = new Person { Code = "abcd" };
-         var validator1 = new EntityValidator<Person>()
-            .RuleFor(x => x.Code)
-            .MaxLength(3)
-            .Apply();
+
+         var validator1 = new EntityValidator<Person>();
+
+         validator1.RuleFor(x => x.Code).MaxLength(3);
             
          validator1.Validate(person1);
          Assert.Single(validator1.Messages);
          Assert.IsType<ErrorMoreCharactersThanExpected>(validator1.Messages.First());
 
          var person2 = new Person { Code = "abc" };
-         var validator2 = new EntityValidator<Person>()
-             .RuleFor(x => x.Code)
-             .MaxLengthIf(2, true)
-             .Apply();
+         
+         var validator2 = new EntityValidator<Person>();
+
+         validator2.RuleFor(x => x.Code).MaxLengthIf(2, true);
              
          validator2.Validate(person2);
          Assert.Single(validator2.Messages);
@@ -343,8 +338,7 @@ namespace Myce.Validation.Tests
          var validator = new EntityValidator<Person>()
             .RuleFor(x => x.Code)
             .MinLength(length, errorMessage)
-            .MinLengthIf(length, expression, errorMessage)
-            .Apply();
+            .MinLengthIf(length, expression, errorMessage);
 
          var result = validator.Validate(person);
 
@@ -357,8 +351,7 @@ namespace Myce.Validation.Tests
          var person1 = new Person { Code = "abcd" };
          var validator1 = new EntityValidator<Person>()
             .RuleFor(x => x.Code)
-            .MinLength(5)
-            .Apply();
+            .MinLength(5);
          
          validator1.Validate(person1);
          Assert.Single(validator1.Messages);
@@ -367,8 +360,7 @@ namespace Myce.Validation.Tests
          var person2 = new Person { Code = "abc" };
          var validator2 = new EntityValidator<Person>()
             .RuleFor(x => x.Code)
-            .MinLengthIf(4, true)
-            .Apply();
+            .MinLengthIf(4, true);
             
          validator2.Validate(person2);
          Assert.Single(validator2.Messages);

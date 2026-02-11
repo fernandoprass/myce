@@ -31,24 +31,22 @@ Use the `EntityValidator` to define rules for your entity properties.
 ```csharp
 var person = new Person { Name = "John Doe", Age = 30, Email = "john.doe@example.com", Code = "A123" };
 
-var validator = new EntityValidator<Person>()
+var validator = new EntityValidator<Person>();
+
+validator
     .RuleFor(x => x.Name)
         .IsRequired()
         .MinLength(3)
         .MaxLength(50)
-        .Apply()
     .RuleFor(x => x.Age)
         .IsGreaterThanOrEqualTo(18)
         .IsLessThanOrEqualTo(100)
-        .Apply()
     .RuleFor(x => x.Email)
         .IsRequired()
         .IsValidEmailAddress()
-        .Apply()
     .RuleFor(x => x.Code)
         .ExactNumberOfCharacters(4)
-        .ContainsOnlyNumber()
-        .Apply();
+        .ContainsOnlyNumber();
 
 var result = validator.Validate(person);
 
