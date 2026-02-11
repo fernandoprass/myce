@@ -7,8 +7,8 @@ A set of extensions for the most common types.
 ## [MYCE.Response](https://github.com/fernandoprass/myce/tree/main/sources/Myce.Response)
 A set of classes to be used as a return in APIs.
 
-## [MYCE.Validation](https://github.com/fernandoprass/myce/tree/main/sources/Myce.Validation)
-A fluent validation library.
+## [MYCE.FluentValidator](https://github.com/fernandoprass/myce/tree/main/sources/Myce.FluentValidator)
+A fluent validation library designed to simplify entity validation in .NET applications..
 
 ## [MYCE.Wrappers](https://github.com/fernandoprass/myce/tree/main/sources/Myce.Wrappers)
 A set of wrappers for the most common IO classes,  which is especially useful for mock methods in unit tests..

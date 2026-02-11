@@ -1,7 +1,7 @@
 ﻿using Myce.Response.Messages;
 using System.Linq.Expressions;
 
-namespace Myce.Validation
+namespace Myce.FluentValidator
 {
    /// <summary>
    /// Internal class to track validation rules and their state.
@@ -18,7 +18,7 @@ namespace Myce.Validation
       }
    }
 
-   public class EntityValidator<T>
+   public class FluentValidator<T>
    {
       private readonly List<Func<T, bool>> _globalRules = new();
       private readonly List<ValidatorErrors> _globalErrorMessages = new();
@@ -42,7 +42,7 @@ namespace Myce.Validation
       /// <summary>
       /// Internal method used by RuleBuilder to register new rules.
       /// </summary>
-      internal EntityValidator<T> AddRule(Func<T, bool> rule, ErrorMessage errorMessage)
+      internal FluentValidator<T> AddRule(Func<T, bool> rule, ErrorMessage errorMessage)
       {
          _globalRules.Add(rule);
          _globalErrorMessages.Add(new ValidatorErrors(errorMessage, false));

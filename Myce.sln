@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Myce.Extensions", "sources\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Myce.Response", "sources\Myce.Response\Myce.Response.csproj", "{813A0C37-52A6-49C6-9177-D5159BF4F1D0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Myce.Validation", "sources\Myce.Validation\Myce.Validation.csproj", "{4D4FFA1A-12C5-4167-B9AB-9F23B7A5F4F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Myce.FluentValidator", "sources\Myce.FluentValidator\Myce.FluentValidator.csproj", "{4D4FFA1A-12C5-4167-B9AB-9F23B7A5F4F4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Myce.Wrappers", "sources\Myce.Wrappers\Myce.Wrappers.csproj", "{6EC434BE-92B3-45C8-AE75-2DC0081FBA4E}"
 EndProject
@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Myce.Extensions.Tests", "te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Myce.Response.Tests", "tests\Myce.Response.Tests\Myce.Response.Tests.csproj", "{2A849B90-6FC1-4FE8-BD26-448DFD532C5E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Myce.Validation.Tests", "tests\Myce.Validation.Tests\Myce.Validation.Tests.csproj", "{035C9B18-D0D3-492B-B3B7-7799A7F83CF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Myce.FluentValidator.Tests", "tests\Myce.FluentValidator.Tests\Myce.FluentValidator.Tests.csproj", "{035C9B18-D0D3-492B-B3B7-7799A7F83CF0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2C385F15-ABAF-4621-9C09-E7B226F30E32}"
 	ProjectSection(SolutionItems) = preProject

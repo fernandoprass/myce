@@ -1,8 +1,8 @@
-using Myce.Validation.ErrorMessages;
+using Myce.FluentValidator.ErrorMessages;
+using Myce.Response.Messages;
 using Xunit;
-using ErrorMessage = Myce.Response.Messages.ErrorMessage;
 
-namespace Myce.Validation.Tests
+namespace Myce.FluentValidator.Tests
 {
    /// <summary> Test Entity Validator </summary>
 
@@ -32,7 +32,7 @@ namespace Myce.Validation.Tests
 
          var person = new Person { Code = value };
 
-         var validator = new EntityValidator<Person>();
+         var validator = new FluentValidator<Person>();
 
          validator.RuleFor(x => x.Code).Contains(collection, errorMessage);
 
@@ -57,7 +57,7 @@ namespace Myce.Validation.Tests
 
          var person = new Person { Code = value };
 
-         var validator = new EntityValidator<Person>();
+         var validator = new FluentValidator<Person>();
 
          validator.RuleFor(x => x.Code)
             .ContainsOnlyNumber(errorMessage);
@@ -82,7 +82,7 @@ namespace Myce.Validation.Tests
          ErrorMessage errorMessage = GetGenericErrorMessage();
          var person = new Person { Code = value };
 
-         var validator = new EntityValidator<Person>();
+         var validator = new FluentValidator<Person>();
 
          validator.RuleFor(x => x.Code)
             .ExactNumberOfCharacters(length, errorMessage)
@@ -98,7 +98,7 @@ namespace Myce.Validation.Tests
       {
          var person = new Person { Code = "ab12" };
 
-         var validator = new EntityValidator<Person>();
+         var validator = new FluentValidator<Person>();
 
          validator.RuleFor(x => x.Code)
                .ContainsOnlyNumber();
@@ -122,7 +122,7 @@ namespace Myce.Validation.Tests
          ErrorMessage errorMessage = GetGenericErrorMessage();
          var person = new Person { Code = value };
 
-         var validator = new EntityValidator<Person>();
+         var validator = new FluentValidator<Person>();
 
          validator.RuleFor(x => x.Code)
             .IsRequired(errorMessage)
@@ -138,7 +138,7 @@ namespace Myce.Validation.Tests
       {
          var person = new Person { Code = string.Empty, Name = null };
 
-         var validator = new EntityValidator<Person>();
+         var validator = new FluentValidator<Person>();
 
          validator.RuleFor(x => x.Code)
             .IsRequired()
@@ -161,7 +161,7 @@ namespace Myce.Validation.Tests
       {
          var person = new Person { Code = "123A", Name = "John Smith", Age = 17, IsSingle = true, Salary = -100 };
 
-         var validator = new EntityValidator<Person>();
+         var validator = new FluentValidator<Person>();
 
          validator.RuleFor(x => x.Code)
                .IsRequired()
@@ -205,7 +205,7 @@ namespace Myce.Validation.Tests
          ErrorMessage errorMessage = GetGenericErrorMessage();
          var person = new Person { Code = value };
 
-         var validator = new EntityValidator<Person>();
+         var validator = new FluentValidator<Person>();
 
          validator.RuleFor(x => x.Code).IsValidDate(errorMessage);
 
@@ -219,7 +219,7 @@ namespace Myce.Validation.Tests
       {
          var person = new Person { Code = "31/04/2022" };
          
-         var validator = new EntityValidator<Person>();
+         var validator = new FluentValidator<Person>();
 
          validator.RuleFor(x => x.Code) .IsValidDate();
 
@@ -243,7 +243,7 @@ namespace Myce.Validation.Tests
          ErrorMessage errorMessage = GetGenericErrorMessage();
          var person = new Person { Code = value };
 
-         var validator = new EntityValidator<Person>();
+         var validator = new FluentValidator<Person>();
 
          validator.RuleFor(x => x.Code)
             .IsValidEmailAddress(errorMessage);
@@ -258,7 +258,7 @@ namespace Myce.Validation.Tests
       {
          var person = new Person { Code = "a@b" };
 
-         var validator = new EntityValidator<Person>();
+         var validator = new FluentValidator<Person>();
 
          validator.RuleFor(x => x.Code).IsValidEmailAddress();
 
@@ -281,7 +281,7 @@ namespace Myce.Validation.Tests
          ErrorMessage errorMessage = GetGenericErrorMessage();
          var person = new Person { Code = value };
 
-         var validator = new EntityValidator<Person>();
+         var validator = new FluentValidator<Person>();
 
          validator.RuleFor(x => x.Code)
             .MaxLength(length, errorMessage)
@@ -297,7 +297,7 @@ namespace Myce.Validation.Tests
       {
          var person1 = new Person { Code = "abcd" };
 
-         var validator1 = new EntityValidator<Person>();
+         var validator1 = new FluentValidator<Person>();
 
          validator1.RuleFor(x => x.Code).MaxLength(3);
             
@@ -307,7 +307,7 @@ namespace Myce.Validation.Tests
 
          var person2 = new Person { Code = "abc" };
          
-         var validator2 = new EntityValidator<Person>();
+         var validator2 = new FluentValidator<Person>();
 
          validator2.RuleFor(x => x.Code).MaxLengthIf(2, true);
              
@@ -335,7 +335,7 @@ namespace Myce.Validation.Tests
          ErrorMessage errorMessage = GetGenericErrorMessage();
          var person = new Person { Code = value };
 
-         var validator = new EntityValidator<Person>()
+         var validator = new FluentValidator<Person>()
             .RuleFor(x => x.Code)
             .MinLength(length, errorMessage)
             .MinLengthIf(length, expression, errorMessage);
@@ -349,7 +349,7 @@ namespace Myce.Validation.Tests
       public void MinLength_and_MinLengthIf_WithDefaultMessage()
       {
          var person1 = new Person { Code = "abcd" };
-         var validator1 = new EntityValidator<Person>()
+         var validator1 = new FluentValidator<Person>()
             .RuleFor(x => x.Code)
             .MinLength(5);
          
@@ -358,7 +358,7 @@ namespace Myce.Validation.Tests
          Assert.IsType<ErrorFewerCharactersThanExpected>(validator1.Messages.First());
 
          var person2 = new Person { Code = "abc" };
-         var validator2 = new EntityValidator<Person>()
+         var validator2 = new FluentValidator<Person>()
             .RuleFor(x => x.Code)
             .MinLengthIf(4, true);
             
