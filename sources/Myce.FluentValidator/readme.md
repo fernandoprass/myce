@@ -60,6 +60,7 @@ if (result.HasError)
 
 | Validator | Description |
 | :--- | :--- |
+| `IsEqualTo` | Validates equality to a given value. |
 | `IsRequired` | Validates that the property is not null or empty. |
 | `IsRequiredIf` | Validates that the property is required if a condition is true. |
 | `MaxLength` | Validates the maximum length of a string. |
@@ -77,6 +78,7 @@ if (result.HasError)
 | `IsGreaterThanOrEqualTo` | Validates that the value is greater than or equal to a specified value. |
 | `IsLessThan` | Validates that the value is less than a specified value. |
 | `IsLessThanOrEqualTo` | Validates that the value is less than or equal to a specified value. |
+| `IsNotEqualTo` | Validates if the property value is not equal to a fixed value. |
 
 ## Dependencies
 - Myce.Extensions
