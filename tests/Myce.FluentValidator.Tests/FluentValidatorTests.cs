@@ -140,10 +140,11 @@ namespace Myce.FluentValidator.Tests
 
          var validator = new FluentValidator<Person>();
 
-         validator.RuleFor(x => x.Code)
-            .IsRequired()
+         validator
+            .RuleFor(x => x.Code)
+               .IsRequired()
             .RuleFor(x => x.Name)
-            .IsRequired();
+               .IsRequired();
 
          var result = validator.Validate(person);
 
@@ -168,6 +169,7 @@ namespace Myce.FluentValidator.Tests
                .ContainsOnlyNumber()
             .RuleFor(x => x.Name)
                .IsRequired()
+               .IsEqualTo("John Smith")
              .RuleFor(x => x.Age)
                .IsGreaterThanOrEqualTo(18)
                .IsLessThanOrEqualTo(65)
