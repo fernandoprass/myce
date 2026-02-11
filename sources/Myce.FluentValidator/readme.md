@@ -1,15 +1,14 @@
-# MYCE.Validation
-MYCE (Makes Your Coding Easier) Validation is a fluent validation library designed to simplify entity validation in .NET applications.
+# MYCE.FluentValidator
+MYCE (Makes Your Coding Easier) FluentValidator is a fluent validation library designed to simplify entity validation in .NET applications.
 
 ## Installation
 Package Manager Console:
 ```powershell
-Install-Package Myce.Validation
+Install-Package Myce.FluentValidator
 ```
 
 ## Features
-- **Validator**: Basic class for validation
-- **EntityValidator**: Fluent validation class for entities
+- **FluentValidator**: Fluent validation class for entities
 - **ValidatorBuilder**: Orchestrates multiple validations in a single process
 
 ## Usage
@@ -31,24 +30,20 @@ Use the `EntityValidator` to define rules for your entity properties.
 ```csharp
 var person = new Person { Name = "John Doe", Age = 30, Email = "john.doe@example.com", Code = "A123" };
 
-var validator = new EntityValidator<Person>()
+var validator = new EntityValidator<Person>();
     .RuleFor(x => x.Name)
         .IsRequired()
         .MinLength(3)
         .MaxLength(50)
-        .Apply()
     .RuleFor(x => x.Age)
         .IsGreaterThanOrEqualTo(18)
         .IsLessThanOrEqualTo(100)
-        .Apply()
     .RuleFor(x => x.Email)
         .IsRequired()
         .IsValidEmailAddress()
-        .Apply()
     .RuleFor(x => x.Code)
         .ExactNumberOfCharacters(4)
-        .ContainsOnlyNumber()
-        .Apply();
+        .ContainsOnlyNumber();
 
 var result = validator.Validate(person);
 

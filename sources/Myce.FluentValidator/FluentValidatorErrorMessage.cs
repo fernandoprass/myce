@@ -1,6 +1,6 @@
 ﻿using Myce.Response.Messages;
 
-namespace Myce.Validation.ErrorMessages
+namespace Myce.FluentValidator.ErrorMessages
 {
    public class ErrorShouldContainOnlyNumber : ErrorMessage
    {
