@@ -9,7 +9,7 @@ namespace Myce.FluentValidator
    /// </summary>
    /// <typeparam name="T">The type of the entity being validated.</typeparam>
    /// <typeparam name="TAttribute">The type of the property being validated.</typeparam>
-   public class RuleBuilder<T, TAttribute>
+   public class RuleBuilder<T, TAttribute> where T : class
    {
       private readonly FluentValidator<T> _validator;
       private readonly Expression<Func<T, TAttribute>> _attribute;
@@ -240,8 +240,8 @@ namespace Myce.FluentValidator
       public RuleBuilder<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> attribute) => _validator.RuleFor(attribute);
 
       /// <summary>
-      /// Allows automatic conversion of RuleBuilder to EntityValidator.
-      // This makes it possible to instantiate and configure in a single line.
+      /// Allows automatic conversion of RuleBuilder to FluentValidator.
+      /// This makes it possible to instantiate and configure in a single line.
       /// </summary>
       public static implicit operator FluentValidator<T>(RuleBuilder<T, TAttribute> builder)
       {
@@ -267,11 +267,5 @@ namespace Myce.FluentValidator
 
          return "Unknown";
       }
-
-      /// <summary>
-      /// Returns the original validator. (Registration is now automatic).
-      /// </summary>
-      [Obsolete("Apply() is no longer required. Rules are applied automatically.")]
-      public FluentValidator<T> Apply() => _validator;
    }
 }

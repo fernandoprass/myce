@@ -15,7 +15,7 @@ namespace Myce.FluentValidator.Tests
       public bool IsSingle { get; set; }
    }
 
-   public class EntityValidatorTests
+   public class FluentValidatorTests
    {
       /// <summary> Verify Contains validator </summary>
       [Theory]
