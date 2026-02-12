@@ -1,4 +1,6 @@
-﻿namespace Myce.Extensions
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Myce.Extensions
 {
    /// <summary>
    /// Extensions for Object type
@@ -10,7 +12,11 @@
       /// </summary>
       /// <param name="obj">The object</param>
       /// <returns>Return TRUE if the object is null</returns>
-      public static bool IsNull(this object obj)
+      public static bool IsNull(
+#if !NETSTANDARD2_0
+         [NotNullWhen(false)] 
+#endif
+         this object? obj)
       {
          return obj == null;
       }
@@ -20,7 +26,11 @@
       /// </summary>
       /// <param name="obj">The object value</param>
       /// <returns>Return TRUE if the object is NOT null</returns>
-      public static bool IsNotNull(this object obj)
+      public static bool IsNotNull(
+#if !NETSTANDARD2_0
+         [NotNullWhen(true)] 
+#endif
+         this object? obj)
       {
          return obj != null;
       }
