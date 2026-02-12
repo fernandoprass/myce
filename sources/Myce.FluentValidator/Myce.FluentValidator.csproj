@@ -1,36 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net7.0;net8.0;net9.0;netstandard2.0</TargetFrameworks>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+		<Version>1.1.0</Version>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>MYCE (Makes Your Coding Easier) FluentValidator is fluent validation class</Title>
+		<Authors>Fernando Prass</Authors>
+		<Description>MYCE (Makes Your Coding Easier) FluentValidator is fluent validation class</Description>
+		<Copyright>Fernando Prass</Copyright>
+		<PackageProjectUrl>https://github.com/fernandoprass/myce</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/fernandoprass/myce</RepositoryUrl>
+		<PackageTags>extensions; validator; validation; fluent; entity</PackageTags>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+		<PackageLicenseFile>license.txt</PackageLicenseFile>
+	</PropertyGroup>
 
-  <PropertyGroup>
-	  <TargetFramework>net8.0</TargetFramework>
-	  <ImplicitUsings>enable</ImplicitUsings>
-	  <Nullable>enable</Nullable>
-	  <Version>$(VersionPrefix)1.0.1</Version>
-	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	  <Title>MYCE (Makes Your Coding Easier) FluentValidator is fluent validation class</Title>
-	  <Authors>Fernando Prass</Authors>
-	  <Description>MYCE (Makes Your Coding Easier) FluentValidator is fluent validation class</Description>
-	  <Copyright>Fernando Prass</Copyright>
-	  <PackageProjectUrl>https://github.com/fernandoprass/myce</PackageProjectUrl>
-	  <RepositoryUrl>https://github.com/fernandoprass/myce</RepositoryUrl>
-	  <PackageTags>extensions; validator; validation; fluent; entity</PackageTags>
-	  <PackageReadmeFile>readme.md</PackageReadmeFile>
-	  <PackageLicenseFile>license.txt</PackageLicenseFile>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Myce.Extensions" Version="0.2.7" />
-    <PackageReference Include="Myce.Response" Version="0.1.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="license.txt">
-      <PackagePath>\</PackagePath>
-      <Pack>True</Pack>
-    </None>
-    <None Update="readme.md">
-      <PackagePath>\</PackagePath>
-      <Pack>True</Pack>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Myce.Extensions\Myce.Extensions.csproj" />
+		<ProjectReference Include="..\Myce.Response\Myce.Response.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="license.txt" Pack="True" PackagePath="\" />
+		<None Include="readme.md" Pack="True" PackagePath="\" />
+	</ItemGroup>
 
 </Project>

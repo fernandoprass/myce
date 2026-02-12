@@ -1,6 +1,9 @@
 ﻿using Myce.FluentValidator;
 using Myce.FluentValidator.ErrorMessages;
 using Myce.Response.Messages;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Myce.FluentValidator
@@ -76,7 +79,7 @@ namespace Myce.FluentValidator
          return AddRule(instance =>
          {
             var value = GetAttributeValue(instance)?.ToString();
-            return string.IsNullOrEmpty(value) || value.Length == length;
+            return string.IsNullOrEmpty(value) || value!.Length == length;
          }, message);
       }
 
@@ -227,7 +230,7 @@ namespace Myce.FluentValidator
          return AddRule(instance =>
          {
             var value = GetAttributeValue(instance)?.ToString();
-            return string.IsNullOrEmpty(value) || value.Length <= maxLength;
+            return string.IsNullOrEmpty(value) || value!.Length <= maxLength;
          }, message);
       }
 
@@ -259,7 +262,7 @@ namespace Myce.FluentValidator
          return AddRule(instance =>
          {
             var value = GetAttributeValue(instance)?.ToString();
-            return !string.IsNullOrEmpty(value) && value.Length >= minLength;
+            return !string.IsNullOrEmpty(value) && value!.Length >= minLength;
          }, message);
       }
 

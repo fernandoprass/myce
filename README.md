@@ -1,5 +1,5 @@
 # MYCE
-MYCE (Makes Your Coding Easier) is a collection of NuGet packages with a set of useful functions
+MYCE (Makes Your Coding Easier) is a collection of NuGet packages with a set of useful functions. All packages target `net6.0`, `net8.0`, `net9.0`, and `netstandard2.0`.
 
 ## [MYCE.Extensions](https://github.com/fernandoprass/myce/tree/main/sources/Myce.Extensions)
 A set of extensions for the most common types.
