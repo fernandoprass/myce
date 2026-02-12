@@ -6,8 +6,8 @@ namespace Myce.Response.Messages
    {
       private readonly List<Variable> _variables = new List<Variable>();
       public MessageType Type { get; protected set; }
-      public string Code { get; set; }
-      public string Text { get; set; }
+      public string Code { get; set; } = string.Empty;
+      public string Text { get; set; } = string.Empty;
       public IReadOnlyCollection<Variable> Variables => _variables.AsReadOnly();
 
       /// <summary>
@@ -28,8 +28,8 @@ namespace Myce.Response.Messages
       public Message(MessageType type, string code, string text)
       {
          Type = type;
-         Code = code;
-         Text = text;
+         Code = code ?? string.Empty;
+         Text = text ?? string.Empty;
       }
 
       /// <summary>

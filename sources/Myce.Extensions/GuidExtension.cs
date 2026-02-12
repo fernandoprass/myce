@@ -1,4 +1,6 @@
-﻿namespace Myce.Extensions
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Myce.Extensions
 {
    /// <summary>
    /// Extensions for Guid type
@@ -24,17 +26,25 @@
       /// <summary> Return TRUE if a nullable guid is empty</summary>
       /// <param name="value"></param>
       /// <returns></returns>
-      public static bool IsEmpty(this Guid? guid)
+      public static bool IsEmpty(
+#if !NETSTANDARD2_0
+         [NotNullWhen(false)] 
+#endif
+         this Guid? guid)
       {
-         return guid.IsNull() || guid.Value.IsEmpty();
+         return guid == null || guid.Value.IsEmpty();
       }
 
       /// <summary> Return TRUE if a nullable guid is empty</summary>
       /// <param name="value"></param>
       /// <returns></returns>
-      public static bool IsNotEmpty(this Guid? guid)
+      public static bool IsNotEmpty(
+#if !NETSTANDARD2_0
+         [NotNullWhen(true)] 
+#endif
+         this Guid? guid)
       {
-         return guid.IsNotNull() && guid.Value.IsNotEmpty();
+         return guid != null && guid.Value.IsNotEmpty();
       }
    }
 }

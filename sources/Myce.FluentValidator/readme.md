@@ -1,6 +1,8 @@
 # MYCE.FluentValidator
 MYCE (Makes Your Coding Easier) FluentValidator is a fluent validation library designed to simplify entity validation in .NET applications.
 
+Supports `net6.0`, `net8.0`, `net9.0`, and `netstandard2.0`.
+
 ## Installation
 Package Manager Console:
 ```powershell
@@ -25,12 +27,12 @@ public class Person
 ```
 
 ### 2. Define Validation Rules
-Use the `EntityValidator` to define rules for your entity properties.
+Use the `FluentValidator` to define rules for your entity properties.
 
 ```csharp
 var person = new Person { Name = "John Doe", Age = 30, Email = "john.doe@example.com", Code = "A123" };
 
-var validator = new EntityValidator<Person>();
+var validator = new FluentValidator<Person>();
     .RuleFor(x => x.Name)
         .IsRequired()
         .MinLength(3)
@@ -47,9 +49,9 @@ var validator = new EntityValidator<Person>();
 
 var result = validator.Validate(person);
 
-if (result.HasError)
+if (validator.Messages.Any())
 {
-    foreach (var message in result.Messages)
+    foreach (var message in validator.Messages)
     {
         Console.WriteLine(message.Text);
     }

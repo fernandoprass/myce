@@ -70,11 +70,13 @@ namespace Myce.Wrappers
          return Directory.GetDirectories(path, searchPattern, searchOption);
       }
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public string[] GetDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
       {
          return Directory.GetDirectories(path, searchPattern, enumerationOptions);
       }
+#endif
 
       /// <inheritdoc/>
       public string[] GetFiles(string path)
@@ -88,11 +90,13 @@ namespace Myce.Wrappers
          return Directory.GetFiles(path, searchPattern);
       }
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public string[] GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
       {
          return Directory.GetFiles(path, searchPattern, enumerationOptions);
       }
+#endif
 
       /// <inheritdoc/>
       public string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
@@ -118,11 +122,13 @@ namespace Myce.Wrappers
          return Directory.GetFileSystemEntries(path, searchPattern, searchOption);
       }
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public string[] GetFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
       {
          return Directory.GetFileSystemEntries(path, searchPattern, enumerationOptions);
       }
+#endif
 
       /// <inheritdoc/>
       public DirectoryInfo? GetParent(string path)
@@ -225,11 +231,13 @@ namespace Myce.Wrappers
          return Directory.EnumerateDirectories(path, searchPattern, searchOption);
       }
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
       {
          return Directory.EnumerateDirectories(path, searchPattern, enumerationOptions);
       }
+#endif
 
       /// <inheritdoc/>
       public IEnumerable<string> EnumerateFiles(string path)
@@ -249,11 +257,13 @@ namespace Myce.Wrappers
          return Directory.EnumerateFiles(path, searchPattern, searchOption);
       }
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
       {
          return Directory.EnumerateFiles(path, searchPattern, enumerationOptions);
       }
+#endif
 
       /// <inheritdoc/>
       public IEnumerable<string> EnumerateFileSystemEntries(string path)
@@ -273,10 +283,12 @@ namespace Myce.Wrappers
          return Directory.EnumerateFileSystemEntries(path, searchPattern, searchOption);
       }
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
       {
          return Directory.EnumerateFileSystemEntries(path, searchPattern, enumerationOptions);
       }
+#endif
    }
 }

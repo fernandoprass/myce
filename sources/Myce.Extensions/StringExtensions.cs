@@ -10,9 +10,9 @@ namespace Myce.Extensions
       /// </summary>
       /// <param name="value">The string value</param>
       /// <returns>Returns an empty string if the string is null</returns>
-      public static string EmptyIfIsNull(this string value)
+      public static string EmptyIfIsNull(this string? value)
       {
-         return value.IsNull() ? string.Empty : value;
+         return value == null ? string.Empty : value;
       }
 
       /// <summary>
@@ -20,7 +20,7 @@ namespace Myce.Extensions
       /// </summary>
       /// <param name="value"></param>
       /// <returns>Returns a string with only numbers</returns>
-      public static string KeepOnlyNumbers(this string value)
+      public static string? KeepOnlyNumbers(this string? value)
       {
          if (value.IsNull())
          {
@@ -34,7 +34,7 @@ namespace Myce.Extensions
       /// </summary>
       /// <param name="value">The string value</param>
       /// <returns>Returns a string with only numbers and letters</returns>
-      public static string KeepOnlyNumbersAndLetters(this string value)
+      public static string? KeepOnlyNumbersAndLetters(this string? value)
       {
          return RemoveSimbols(value, false);
       }
@@ -44,7 +44,7 @@ namespace Myce.Extensions
       /// </summary>
       /// <param name="value"></param>
       /// <returns>Returns a string with only numbers, letters, and spaces</returns>
-      public static string KeepOnlyNumbersAndLettersAndSpaces(this string value)
+      public static string? KeepOnlyNumbersAndLettersAndSpaces(this string? value)
       {
          return RemoveSimbols(value, true);
       }
@@ -55,9 +55,9 @@ namespace Myce.Extensions
       /// <param name="value">The string value</param>
       /// <param name="keepSpaces">If TRUE white spaces are NOT removed</param>
       /// <returns>Returns a string with only numbers, letters, and spaces if required</returns>
-      private static string RemoveSimbols(string value, bool keepSpaces)
+      private static string? RemoveSimbols(string? value, bool keepSpaces)
       {
-         if (value.IsNull())
+         if (value == null)
          {
             return null;
          }
@@ -79,7 +79,7 @@ namespace Myce.Extensions
       /// </summary>
       /// <param name="value">The string value</param>
       /// <returns>Returns a string without accents</returns>
-      public static string RemoveAccents(this string value)
+      public static string? RemoveAccents(this string? value)
       {
          if (value.IsNull())
          {

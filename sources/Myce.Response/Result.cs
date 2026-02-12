@@ -12,7 +12,7 @@ namespace Myce.Response
 
    public class Result : IResult
    {
-      private string _title;
+      private string _title = string.Empty;
 
       private readonly List<Message> _messages = new List<Message>();
 
@@ -49,10 +49,10 @@ namespace Myce.Response
       /// </summary>
       /// <remarks>If the title has not been explicitly set, getting this property returns the text of the
       /// first message in the collection, if available; otherwise, it returns null.</remarks>
-      public string Title
+      public string? Title
       {
-         get => _title ?? _messages.FirstOrDefault()?.Text;
-         set => _title = value;
+         get => string.IsNullOrWhiteSpace(_title) ? _messages.FirstOrDefault()?.Text : _title;
+         set => _title = value ?? string.Empty;
       }
 
       /// <summary>
@@ -124,13 +124,13 @@ namespace Myce.Response
       /// Gets a value indicating whether the object is valid and its associated data is not null.
       /// </summary>
       [JsonIgnore]
-      public bool IsValidAndDataIsNotNull => IsValid && Data.IsNotNull();
+      public bool IsValidAndDataIsNotNull => IsValid && Data != null;
 
       /// <summary>
       /// Gets a value indicating whether the object is valid and its data is null.
       /// </summary>
       [JsonIgnore]
-      public bool IsValidAndDataIsNull => IsValid && Data.IsNull();
+      public bool IsValidAndDataIsNull => IsValid && Data == null;
 
       /// <summary>
       /// Gets a value indicating whether the current instance contains data.
@@ -147,7 +147,7 @@ namespace Myce.Response
       /// <summary>
       /// Gets or sets the data associated with the current instance.
       /// </summary>
-      public T Data { get; set; }
+      public T? Data { get; set; }
 
       /// <summary>
       /// Initializes a new instance of the Result class.
@@ -158,7 +158,7 @@ namespace Myce.Response
       /// Initializes a new instance of the Result class with the specified data.
       /// </summary>
       /// <param name="data">The data value to be associated with this result. Can be null for reference types.</param>
-      public Result(T data) => Data = data;
+      public Result(T? data) => Data = data;
 
       /// <summary>
       /// Initializes a new instance of the Result class with the specified title message.
@@ -177,7 +177,7 @@ namespace Myce.Response
       /// </summary>
       /// <param name="data">The data value to associate with the result. This value is assigned to the Data property.</param>
       /// <param name="title">The title that describes the result. This value is passed to the base class.</param>
-      public Result(T data, string title) : base(title) => Data = data;
+      public Result(T? data, string title) : base(title) => Data = data;
 
       /// <summary>
       /// Initializes a new instance of the Result class with the specified data and message.
@@ -185,21 +185,21 @@ namespace Myce.Response
       /// <param name="data">The data value associated with the result. This value represents the result's payload and may be null
       /// depending on the operation.</param>
       /// <param name="message">The message that describes the result. Cannot be null.</param>
-      public Result(T data, Message message) : base(message) => Data = data;
+      public Result(T? data, Message message) : base(message) => Data = data;
 
       /// <summary>
       /// Initializes a new instance of the Result class with the specified data and associated messages.
       /// </summary>
       /// <param name="data">The result data to be encapsulated by this instance.</param>
       /// <param name="messages">A collection of messages that provide additional information about the result. Cannot be null.</param>
-      public Result(T data, IEnumerable<Message> messages) : base(messages) => Data = data;
+      public Result(T? data, IEnumerable<Message> messages) : base(messages) => Data = data;
 
       /// <summary>
       /// Creates a successful result containing the specified data.
       /// </summary>
       /// <param name="data">The data to include in the successful result. Can be null if the result type allows null values.</param>
       /// <returns>A Result<T> instance representing a successful operation with the provided data.</returns>
-      public static Result<T> Success(T data) => new Result<T>(data);
+      public static Result<T> Success(T? data) => new Result<T>(data);
 
       /// <summary>
       /// Creates a successful result containing the specified data and title.
@@ -207,7 +207,7 @@ namespace Myce.Response
       /// <param name="data">The data to include in the successful result.</param>
       /// <param name="title">The title that describes the result.</param>
       /// <returns>A Result<T> instance representing a successful outcome with the provided data and title.</returns>
-      public static Result<T> Success(T data, string title) => new Result<T>(data, title);
+      public static Result<T> Success(T? data, string title) => new Result<T>(data, title);
 
       /// <summary>
       /// Creates a failed result with the specified error message.
@@ -240,7 +240,7 @@ namespace Myce.Response
       /// <returns>A new Result<V> containing the mapped value and the original messages.</returns>
       public Result<V> ToResult<V>(Func<T, V> map)
       {
-         var mappedData = Data != null ? map(Data) : default;
+         V? mappedData = Data != null ? map(Data) : default;
 
          return new Result<V>(mappedData, Messages);
       }

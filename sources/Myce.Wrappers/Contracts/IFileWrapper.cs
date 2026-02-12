@@ -72,6 +72,7 @@ namespace Myce.Wrappers.Contracts
       /// <param name="destFileName">The new path and name for the file.</param>
       void Move(string sourceFileName, string destFileName);
 
+#if !NETSTANDARD2_0
       /// <summary>
       /// Moves a specified file to a new location, providing the options to specify a new file name and to overwrite the destination file if it already exists.
       /// </summary>
@@ -79,6 +80,7 @@ namespace Myce.Wrappers.Contracts
       /// <param name="destFileName">The new path and name for the file.</param>
       /// <param name="overwrite">TRUE to overwrite the destination file if it already exists; FALSE otherwise.</param>
       void Move(string sourceFileName, string destFileName, bool overwrite);
+#endif
 
       /// <summary>
       /// Opens a FileStream on the specified path with read/write access with no sharing.
@@ -88,6 +90,7 @@ namespace Myce.Wrappers.Contracts
       /// <returns>A FileStream opened in the specified mode and path, with read/write access and not shared.</returns>
       FileStream Open(string path, FileMode mode);
 
+#if !NETSTANDARD2_0
       /// <summary>
       /// Initializes a new instance of the FileStream class with the specified path, creation mode, read/write and sharing permission, the access other FileStreams can have to the same file, the buffer size, additional file options and the allocation size.
       /// </summary>
@@ -95,6 +98,7 @@ namespace Myce.Wrappers.Contracts
       /// <param name="options">An object that describes optional FileStream parameters to use.</param>
       /// <returns>A FileStream instance that wraps the opened file.</returns>
       FileStream Open(string path, FileStreamOptions options);
+#endif
 
       /// <summary>
       /// Opens a FileStream on the specified path, with the specified mode and access with no sharing.
@@ -130,6 +134,7 @@ namespace Myce.Wrappers.Contracts
       /// <returns>A string containing all the text in the file.</returns>
       string ReadAllText(string path, Encoding encoding);
 
+#if !NETSTANDARD2_0
       /// <summary>
       /// Asynchronously opens a text file, reads all the text in the file, and then closes the file.
       /// </summary>
@@ -146,6 +151,7 @@ namespace Myce.Wrappers.Contracts
       /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
       /// <returns>A string containing all the text in the file.</returns>
       Task<string> ReadAllTextAsync(string path, Encoding encoding, CancellationToken cancellationToken = default);
+#endif
 
       /// <summary>
       /// Creates a new file, write the contents to the file, and then closes the file. If the target file already exists, it is overwritten.
@@ -162,6 +168,7 @@ namespace Myce.Wrappers.Contracts
       /// <param name="encoding">The encoding to apply to the string.</param>
       void WriteAllText(string path, string? contents, Encoding encoding);
 
+#if !NETSTANDARD2_0
       /// <summary>
       /// Asynchronously creates a new file, writes the specified string to the file, and then closes the file. If the target file already exists, 
       /// it is overwritten.
@@ -182,5 +189,6 @@ namespace Myce.Wrappers.Contracts
       /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
       /// <returns>A task that represents the asynchronous write operation.</returns>
       Task WriteAllTextAsync(string path, string? contents, Encoding encoding, CancellationToken cancellationToken = default);
+#endif
    }
 }

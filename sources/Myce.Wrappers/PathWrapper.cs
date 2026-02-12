@@ -40,17 +40,21 @@ namespace Myce.Wrappers
          return Path.GetDirectoryName(path);
       }
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path)
       {
          return Path.GetDirectoryName(path);
       }
+#endif
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public ReadOnlySpan<char> GetExtension(ReadOnlySpan<char> path)
       {
          return Path.GetExtension(path);
       }
+#endif
 
       /// <inheritdoc/>
       public string? GetExtension(string? path)
@@ -58,11 +62,13 @@ namespace Myce.Wrappers
          return Path.GetExtension(path);
       }
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path)
       {
-         return Path.GetFileName(path); ;
+         return Path.GetFileName(path);
       }
+#endif
 
       /// <inheritdoc/>
       public string? GetFileName(string? path)
@@ -70,11 +76,13 @@ namespace Myce.Wrappers
          return Path.GetFileName(path);
       }
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public ReadOnlySpan<char> GetFileNameWithoutExtension(ReadOnlySpan<char> path)
       {
          return Path.GetFileNameWithoutExtension(path); 
       }
+#endif
 
       /// <inheritdoc/>
       public string? GetFileNameWithoutExtension(string? path)
@@ -88,11 +96,13 @@ namespace Myce.Wrappers
          return Path.GetFullPath(path);
       }
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public string GetFullPath(string path, string basePath)
       {
          return Path.GetFullPath(path, basePath);
       }
+#endif
 
       /// <inheritdoc/>
       public string? GetPathRoot(string? path)
@@ -100,11 +110,13 @@ namespace Myce.Wrappers
          return Path.GetPathRoot(path);
       }
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path)
       {
          return Path.GetPathRoot(path);
       }
+#endif
 
       /// <inheritdoc/>
       public string GetRandomFileName()
@@ -130,11 +142,13 @@ namespace Myce.Wrappers
          return Path.HasExtension(path);
       }
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public bool HasExtension(ReadOnlySpan<char> path)
       {
          return Path.HasExtension(path);
       }
+#endif
 
       /// <inheritdoc/>
       public bool IsPathRooted(string? path)
@@ -142,24 +156,31 @@ namespace Myce.Wrappers
          return Path.IsPathRooted(path);
       }
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public bool IsPathRooted(ReadOnlySpan<char> path)
       {
          return Path.IsPathRooted(path);
       }
+#endif
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public bool IsPathFullyQualified(string path)
       {
          return Path.IsPathFullyQualified(path);
       }
+#endif
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public bool IsPathFullyQualified(ReadOnlySpan<char> path)
       {
          return Path.IsPathFullyQualified(path);
       }
+#endif
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public string Join(params string?[] paths)
       {
@@ -183,7 +204,9 @@ namespace Myce.Wrappers
       {
          return Path.Join(path1, path2, path3, path4);
       }
+#endif
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2)
       {
@@ -201,36 +224,47 @@ namespace Myce.Wrappers
       {
          return Path.Join(path1, path2, path3, path4);
       }
+#endif
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public string GetRelativePath(string relativeTo, string path)
       {
          return Path.GetRelativePath(relativeTo, path);
       }
+#endif
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public string TrimEndingDirectorySeparator(string path)
       {
          return Path.TrimEndingDirectorySeparator(path);
       }
+#endif
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path)
       {
          return Path.TrimEndingDirectorySeparator(path);
       }
+#endif
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public bool EndsInDirectorySeparator(string path)
       {
          return Path.EndsInDirectorySeparator(path);
       }
+#endif
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public bool EndsInDirectorySeparator(ReadOnlySpan<char> path)
       {
          return Path.EndsInDirectorySeparator(path);
       }
+#endif
 
       /// <inheritdoc/>
       public char[] GetInvalidFileNameChars()

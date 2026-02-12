@@ -1,4 +1,6 @@
-﻿namespace Myce.Extensions
+﻿using System.Linq;
+
+namespace Myce.Extensions
 {
    /// <summary>
    /// Extensions for IEnumerable type
@@ -17,7 +19,11 @@
             return false;
          }
 
+#if NETSTANDARD2_0
+         var knownElements = new HashSet<T>();
+#else
          var knownElements = new HashSet<T>(enumerable.Count());
+#endif
 
          if (enumerable.HasData())
          {
@@ -63,7 +69,11 @@
       /// <returns></returns>
       public static IEnumerable<TSource> DistinctRowsBy<TSource, TKey>(this IEnumerable<TSource> enumerable, Func<TSource, TKey> keySelector)
       {
+#if NETSTANDARD2_0
+         HashSet<TKey> seenKeys = new HashSet<TKey>();
+#else
          HashSet<TKey> seenKeys = new HashSet<TKey>(enumerable.Count());
+#endif
          foreach (TSource element in enumerable)
          {
             if (seenKeys.Add(keySelector(element)))
@@ -94,16 +104,20 @@
 
       /// <summary>
       /// Return the duplicate elements in an enumerable
-      /// </summary>
+     /// </summary>
       /// <typeparam name="T"></typeparam>
       /// <param name="enumerable"></param>
       /// <returns></returns>
       public static IEnumerable<T> GetDuplicates<T>(this IEnumerable<T> enumerable)
       {
          int size = enumerable.Count();
+#if NETSTANDARD2_0
+         HashSet<T> itemsSeen = new HashSet<T>();
+         HashSet<T> itemsYielded = new HashSet<T>();
+#else
          HashSet<T> itemsSeen = new HashSet<T>(size);
          HashSet<T> itemsYielded = new HashSet<T>(size/2);
-
+#endif
          foreach (T item in enumerable)
          {
             if (!itemsSeen.Add(item))
