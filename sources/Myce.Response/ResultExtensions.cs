@@ -7,7 +7,7 @@ namespace Myce.Response
       public static Result<IEnumerable<T>> Merge<T>(this IEnumerable<Result<T>> results)
       {
          var resultList = results.ToList();
-         var data = resultList.Select(x => x.Data);
+         var data = resultList.Select(x => x.Data!).ToList();
          var messages = resultList.SelectMany(x => x.Messages);
 
          return new Result<IEnumerable<T>>(data, messages);
