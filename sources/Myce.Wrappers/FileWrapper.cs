@@ -59,11 +59,13 @@ namespace Myce.Wrappers
          File.Move(sourceFileName, destFileName);
       }
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public void Move(string sourceFileName, string destFileName, bool overwrite)
       {
          File.Move(sourceFileName, destFileName, overwrite);
       }
+#endif
 
       /// <inheritdoc/>
       public FileStream Open(string path, FileMode mode)
@@ -71,11 +73,13 @@ namespace Myce.Wrappers
          return File.Open(path, mode);
       }
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public FileStream Open(string path, FileStreamOptions options)
       {
          return File.Open(path, options);
       }
+#endif
 
       /// <inheritdoc/>
       public FileStream Open(string path, FileMode mode, FileAccess access)
@@ -101,6 +105,7 @@ namespace Myce.Wrappers
          return File.ReadAllText(path, encoding);
       }
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken = default)
       {
@@ -112,6 +117,7 @@ namespace Myce.Wrappers
       {
          return File.ReadAllTextAsync(path, encoding, cancellationToken);
       }
+#endif
 
       /// <inheritdoc/>
       public void WriteAllText(string path, string? contents)
@@ -125,6 +131,7 @@ namespace Myce.Wrappers
          File.WriteAllText(path, contents, encoding);
       }
 
+#if !NETSTANDARD2_0
       /// <inheritdoc/>
       public Task WriteAllTextAsync(string path, string? contents, CancellationToken cancellationToken = default)
       {
@@ -136,5 +143,6 @@ namespace Myce.Wrappers
       {
          return File.WriteAllTextAsync(path, contents, encoding, cancellationToken);
       }
+#endif
    }
 }

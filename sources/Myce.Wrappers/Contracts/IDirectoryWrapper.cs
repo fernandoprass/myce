@@ -78,6 +78,7 @@
       /// <returns>An array of the full names (including paths) for the subdirectories in the specified directory that match the specified search pattern and option, or an empty array if no subdirectories are found.</returns>
       string[] GetDirectories(string path, string searchPattern, SearchOption searchOption);
 
+#if !NETSTANDARD2_0
       /// <summary>
       /// Returns the names of subdirectories (including their paths) that match the specified search pattern and enumeration options in the specified directory.
       /// </summary>
@@ -86,6 +87,7 @@
       /// <param name="enumerationOptions">An object that describes the search and enumeration configuration to use.</param>
       /// <returns>An array of the full names (including paths) for the subdirectories in the specified directory that match the specified search pattern and enumeration options, or an empty array if no subdirectories are found.</returns>
       string[] GetDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions);
+#endif
 
       /// <summary>
       /// Returns the names of files (including their paths) that match the specified search pattern and enumeration options in the specified directory.
@@ -106,17 +108,19 @@
       /// pattern and option, or an empty array if no files are found. </returns>    
       string[] GetFiles(string path, string searchPattern);
 
+#if !NETSTANDARD2_0
       /// <summary>
       /// Returns the names of files (including their paths) that match the specified search pattern and enumeration options in the 
       /// specified directory.
       /// </summary>
       /// <param name="path">The relative or absolute path to the directory to search. This string is not case-sensitive.</param>
-      /// <param name="seacrhPattern">The search string to match against the names of files in path. This parameter can contain a
+      /// <param name="searchPattern">The search string to match against the names of files in path. This parameter can contain a
       /// combination of valid literal path and wildcard (* and ?) characters, but it doesn't support regular expressions.</param>
       /// <param name="enumerationOptions">An object that describes the search and enumeration configuration to use.</param>
       /// <returns>An array of the full names (including paths) for the files in the specified directory that match the specified search 
       /// pattern and option, or an empty array if no files are found. </returns>
       string[] GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions);
+#endif
 
       /// <summary>
       /// Returns the names of files (including their paths) that match the specified search pattern in the specified directory, 
@@ -155,6 +159,7 @@
       /// <returns>An array of the full names (including paths) for the files and subdirectories in the specified directory that match the specified search pattern and option, or an empty array if no files or subdirectories are found.</returns>
       string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
 
+#if !NETSTANDARD2_0
       /// <summary>
       /// Returns an array of file-system entries that match a search pattern and enumeration options in a specified path.
       /// </summary>
@@ -163,6 +168,7 @@
       /// <param name="enumerationOptions">An object that describes the search and enumeration configuration to use.</param>
       /// <returns>An array of the full names (including paths) for the files and subdirectories in the specified directory that match the specified search pattern and enumeration options, or an empty array if no files or subdirectories are found.</returns>
       string[] GetFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions);
+#endif
 
       /// <summary>
       /// Retrieves the parent directory of the specified path, including both absolute and relative paths.
@@ -286,6 +292,7 @@
       /// <returns>An enumerable collection of the full names (including paths) for the directories in the directory specified by path that match the specified search pattern and option.</returns>
       IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
 
+#if !NETSTANDARD2_0
       /// <summary>
       /// Returns an enumerable collection of directory names that match a search pattern and enumeration options in a specified path.
       /// </summary>
@@ -294,6 +301,7 @@
       /// <param name="enumerationOptions">An object that describes the search and enumeration configuration to use.</param>
       /// <returns>An enumerable collection of the full names (including paths) for the directories in the directory specified by path that match the specified search pattern and enumeration options.</returns>
       IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions);
+#endif
 
       /// <summary>
       /// Returns an enumerable collection of file names in a specified path.
@@ -319,6 +327,7 @@
       /// <returns>An enumerable collection of the full names (including paths) for the files in the directory specified by path that match the specified search pattern and option.</returns>
       IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
 
+#if !NETSTANDARD2_0
       /// <summary>
       /// Returns an enumerable collection of file names that match a search pattern and enumeration options in a specified path.
       /// </summary>
@@ -327,6 +336,7 @@
       /// <param name="enumerationOptions">An object that describes the search and enumeration configuration to use.</param>
       /// <returns>An enumerable collection of the full names (including paths) for the files in the directory specified by path that match the specified search pattern and enumeration options.</returns>
       IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions);
+#endif
 
       /// <summary>
       /// Returns an enumerable collection of file-system entries in a specified path.
@@ -352,6 +362,7 @@
       /// <returns>An enumerable collection of the full names (including paths) for the file-system entries in the directory specified by path that match the specified search pattern and option.</returns>
       IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
 
+#if !NETSTANDARD2_0
       /// <summary>
       /// Returns an enumerable collection of file-system entries that match a search pattern and enumeration options in a specified path.
       /// </summary>
@@ -360,5 +371,6 @@
       /// <param name="enumerationOptions">An object that describes the search and enumeration configuration to use.</param>
       /// <returns>An enumerable collection of the full names (including paths) for the file-system entries in the directory specified by path that match the specified search pattern and enumeration options.</returns>
       IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions);
+#endif
    }
 }
