@@ -1,11 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
-using Xunit;
+﻿using Xunit;
 
 namespace Myce.FluentValidator.Tests
 {
    public class NullValidationTests
    {
-      public class TestEntity
+      private class TestEntity
       {
          public string? StringValue { get; set; }
          public int? NullableIntValue { get; set; }
