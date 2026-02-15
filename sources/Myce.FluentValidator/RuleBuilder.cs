@@ -156,6 +156,32 @@ namespace Myce.FluentValidator
          => EqualityCompare(comparisonProperty, false, "not be equal to");
 
       /// <summary>
+      /// Validates if the property value is not null.
+      /// </summary>
+      public RuleBuilder<T, TAttribute> IsNotNull()
+      {
+         var attributeName = GetAttributeName();
+         return AddRule(instance =>
+         {
+            var attrValue = GetAttributeValue(instance);
+            return attrValue is not null;
+         }, new ErrorMessage($"'{attributeName}' is null."));
+      }
+
+      /// <summary>
+      /// Validates if the property value is null.
+      /// </summary>
+      public RuleBuilder<T, TAttribute> IsNull()
+      {
+         var attributeName = GetAttributeName();
+         return AddRule(instance =>
+         {
+            var attrValue = GetAttributeValue(instance);
+            return attrValue is null;
+         }, new ErrorMessage($"'{attributeName}' is not null."));
+      }
+
+      /// <summary>
       /// Determines whether a value was filled.
       /// </summary>
       public RuleBuilder<T, TAttribute> IsRequired() => IsRequired(new ErrorIsRequired(GetAttributeName()));
