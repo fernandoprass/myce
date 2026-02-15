@@ -4,7 +4,7 @@
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>$(VersionPrefix)1.0.1</Version>
+		<Version>$(VersionPrefix)1.0.2</Version>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>MYCE (Makes Your Coding Easier) Response is a response object with Error, Warning and Information messages</Title>
 		<Authors>Fernando Prass</Authors>
@@ -20,7 +20,7 @@
 	  <ProjectReference Include="..\Myce.Extensions\Myce.Extensions.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-	  <PackageReference Include="System.Text.Json" Version="8.0.5" />
+	  <PackageReference Include="System.Text.Json" Version="10.0.3" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="license.txt" Pack="True" PackagePath="\" />
