@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Myce.FluentValidator.Tests
 {
-   public class StringExtensionValidationTests
+   public class RuleBuilderStringExtensionTests
    {
       private class Person
       {

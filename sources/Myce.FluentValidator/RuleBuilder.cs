@@ -1,9 +1,6 @@
-﻿using Myce.FluentValidator;
-using Myce.FluentValidator.ErrorMessages;
-using Myce.Response.Messages;
+﻿using Myce.Response.Messages;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace Myce.FluentValidator
@@ -30,121 +27,6 @@ namespace Myce.FluentValidator
          _attribute = attribute;
          _attributeFunc = attribute.Compile();
       }
-
-      /// <summary>
-      /// Validates equality to a fixed value.
-      /// </summary>
-      /// <param name="value">The value to compare against.</param>
-      public RuleBuilder<T, TAttribute> IsEqualTo(TAttribute value)
-      {
-         var attributeName = GetAttributeName();
-         return AddRule(instance =>
-         {
-            var attrValue = GetAttributeValue(instance);
-            if (attrValue is null && value is null) return true;
-            return attrValue is not null && attrValue.Equals(value);
-         }, new ErrorMessage($"'{attributeName}' must be equal to {value}."));
-      }
-
-      /// <summary>
-      /// Validates if the property value is equal to another property value.
-      /// </summary>
-      /// <param name="comparisonProperty">Expression representing the property to compare with.</param>
-      public RuleBuilder<T, TAttribute> IsEqualTo(Expression<Func<T, TAttribute>> comparisonProperty)
-         => EqualityCompare(comparisonProperty, true, "be equal to");
-
-      /// <summary>
-      /// Validates that the value is greater than a specified value.
-      /// </summary>
-      public RuleBuilder<T, TAttribute> IsGreaterThan(object value) => CompareNumericValues(value, (attr, val) => attr > val, "greater than");
-
-      /// <summary>
-      /// Validates that the value is greater than or equal to a specified value.
-      /// </summary>
-      public RuleBuilder<T, TAttribute> IsGreaterThanOrEqualTo(object value) => CompareNumericValues(value, (attr, val) => attr >= val, "greater than or equal to");
-
-      /// <summary>
-      /// Validates that the value is less than a specified value.
-      /// </summary>
-      public RuleBuilder<T, TAttribute> IsLessThan(object value) => CompareNumericValues(value, (attr, val) => attr < val, "less than");
-
-      /// <summary>
-      /// Validates that the value is less than or equal to a specified value.
-      /// </summary>
-      public RuleBuilder<T, TAttribute> IsLessThanOrEqualTo(object value) => CompareNumericValues(value, (attr, val) => attr <= val, "less than or equal to");
-
-      /// <summary>
-      /// Validates if the property value is not equal to a fixed value.
-      /// </summary>
-      public RuleBuilder<T, TAttribute> IsNotEqualTo(TAttribute value)
-      {
-         var attributeName = GetAttributeName();
-         return AddRule(instance =>
-         {
-            var attrValue = GetAttributeValue(instance);
-            if (attrValue is null && value is null) return false;
-            return attrValue is null || !attrValue.Equals(value);
-         }, new ErrorMessage($"'{attributeName}' must not be equal to {value}."));
-      }
-
-      /// <summary>
-      /// Validates if the property value is not equal to another property value.
-      /// </summary>
-      public RuleBuilder<T, TAttribute> IsNotEqualTo(Expression<Func<T, TAttribute>> comparisonProperty)
-         => EqualityCompare(comparisonProperty, false, "not be equal to");
-
-      /// <summary>
-      /// Validates if the property value is not null.
-      /// </summary>
-      public RuleBuilder<T, TAttribute> IsNotNull()
-      {
-         var attributeName = GetAttributeName();
-         return AddRule(instance =>
-         {
-            var attrValue = GetAttributeValue(instance);
-            return attrValue is not null;
-         }, new ErrorMessage($"'{attributeName}' is null."));
-      }
-
-      /// <summary>
-      /// Validates if the property value is null.
-      /// </summary>
-      public RuleBuilder<T, TAttribute> IsNull()
-      {
-         var attributeName = GetAttributeName();
-         return AddRule(instance =>
-         {
-            var attrValue = GetAttributeValue(instance);
-            return attrValue is null;
-         }, new ErrorMessage($"'{attributeName}' is not null."));
-      }
-
-      /// <summary>
-      /// Determines whether a value was filled.
-      /// </summary>
-      public RuleBuilder<T, TAttribute> IsRequired() => IsRequired(new ErrorIsRequired(GetAttributeName()));
-
-      /// <summary>
-      /// Determines whether a value was filled with a custom message.
-      /// </summary>
-      public RuleBuilder<T, TAttribute> IsRequired(ErrorMessage message)
-      {
-         return AddRule(instance =>
-         {
-            var value = GetAttributeValue(instance);
-            return value is not null && !string.IsNullOrWhiteSpace(value.ToString());
-         }, message);
-      }
-
-      /// <summary>
-      /// Determines whether the property is required if a given condition is true.
-      /// </summary>
-      public RuleBuilder<T, TAttribute> IsRequiredIf(bool expression) => expression ? IsRequired() : this;
-
-      /// <summary>
-      /// Determines whether the property is required if a condition is true with a custom message.
-      /// </summary>
-      public RuleBuilder<T, TAttribute> IsRequiredIf(bool expression, ErrorMessage message) => expression ? IsRequired(message) : this;
 
       /// <summary>
       /// Shortcut to access error messages from the parent validator.
@@ -190,25 +72,6 @@ namespace Myce.FluentValidator
       /// Executes the attribute function to get the current value.
       /// </summary>
       internal object? GetAttributeValue(T instance) => _attributeFunc(instance);
-
-      /// <summary>
-      /// Core logic for numeric comparisons.
-      /// </summary>
-      private RuleBuilder<T, TAttribute> CompareNumericValues(object value, Func<double, double, bool> comparison, string label)
-      {
-         var attributeName = GetAttributeName();
-         return AddRule(instance =>
-         {
-            var attrValue = GetAttributeValue(instance);
-            if (attrValue is null || value is null) return false;
-
-            try
-            {
-               return comparison(Convert.ToDouble(attrValue), Convert.ToDouble(value));
-            }
-            catch { return false; }
-         }, new ErrorMessage($"'{attributeName}' must be {label} {value}."));
-      }
 
       /// <summary>
       /// Core logic for equality/inequality comparisons.

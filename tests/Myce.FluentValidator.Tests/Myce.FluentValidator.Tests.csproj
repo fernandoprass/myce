@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="NullValidationTests.cs" />
+    <None Include="RuleBuilderCommonExtensionsTests.cs" />
   </ItemGroup>
 
   <ItemGroup>
