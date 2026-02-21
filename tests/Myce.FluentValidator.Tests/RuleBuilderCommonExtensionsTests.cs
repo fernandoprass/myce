@@ -2,7 +2,7 @@
 
 namespace Myce.FluentValidator.Tests
 {
-   public class NullValidationTests
+   public class RuleBuilderCommonExtensionsTests
    {
       private class TestEntity
       {

@@ -1,5 +1,4 @@
-﻿using Myce.Extensions;
-using Myce.FluentValidator.ErrorMessages;
+﻿using Myce.FluentValidator.ErrorMessages;
 using Myce.Response.Messages;
 using System;
 using System.Linq;
@@ -7,6 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace Myce.FluentValidator
 {
+   /// <summary>
+   /// Extension methods for RuleBuilder with string attributes.
+   /// </summary>
    public static partial class RuleBuilderStringExtensions
    {
       /// <summary>

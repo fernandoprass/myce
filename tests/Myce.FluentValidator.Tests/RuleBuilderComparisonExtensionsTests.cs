@@ -1,9 +1,8 @@
-﻿using Myce.FluentValidator;
-using Xunit;
+﻿using Xunit;
 
 namespace Myce.FluentValidator.Tests
 {
-   public class EqualityValidationTests
+   public class RuleBuilderComparisonExtensionsTests
    {
       internal class TestEntity
       {
