@@ -113,6 +113,14 @@ namespace Myce.Extensions.Tests
 
          Assert.Equal(Season.Summer, result);
       }
+
+      /// <summary> Check if the value of the object is BETWEEN other two values </summary>
+      [Fact]
+      public void IsBetween()
+      {
+         Assert.True("b".IsBetween("a", "c"));
+         Assert.True("ab".IsBetween("aa", "bb"));
+      }
    }
 }
 

@@ -14,7 +14,7 @@ namespace Myce.Extensions
       /// <returns></returns>
       public static bool ContainsDuplicates<T>(this IEnumerable<T> enumerable)
       {
-         if (enumerable.IsNull())
+         if (enumerable == null)
          {
             return false;
          }
@@ -136,7 +136,7 @@ namespace Myce.Extensions
       /// <param name="enumerable">The enumerable</param>
       public static bool HasData<T>(this IEnumerable<T> enumerable)
       {
-         return enumerable.IsNotNull() && enumerable.Any();
+         return enumerable != null && enumerable.Any();
       }
 
       /// <summary>
@@ -145,7 +145,7 @@ namespace Myce.Extensions
       /// <param name="enumerable">The enumerable</param>
       public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
       {
-         return enumerable.IsNull() || !enumerable.Any();
+         return enumerable == null || !enumerable.Any();
       }
    }
 }

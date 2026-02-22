@@ -85,5 +85,30 @@
          return value.HasValue && value.Value.LessThanOrEqualZero();
       }
 
+      /// <summary>
+      /// Compare object values is between other two values (inclusive)
+      /// </summary>
+      /// <typeparam name="T">Any object that implements IComparable</typeparam>
+      /// <param name="value">The object value</param>
+      /// <param name="from">The FROM value</param>
+      /// <param name="to">The TO value</param>
+      /// <returns>Return TRUE if the value of the object is BETWEEN other two values (inclusive)</returns>
+      public static bool IsBetween<T>(this T value, T from, T to) where T : IComparable<T>
+      {
+         return value.CompareTo(from) >= 0 && value.CompareTo(to) <= 0;
+      }
+
+      /// <summary>
+      /// Compare int values is between other two values (inclusive)
+      /// </summary>
+      /// <typeparam name="T">Any decimal that implements IComparable</typeparam>
+      /// <param name="value">The decimal value</param>
+      /// <param name="from">The FROM value</param>
+      /// <param name="to">The TO value</param>
+      /// <returns>Return TRUE if the value of the object is BETWEEN other two values (inclusive)</returns>
+      public static bool IsBetween<T>(this decimal value, T from, T to) where T : IComparable<T>
+      {
+         return value.CompareTo(from) >= 0 && value.CompareTo(to) <= 0;
+      }
    }
 }

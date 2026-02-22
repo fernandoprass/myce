@@ -84,6 +84,7 @@ if (validator.Messages.Any())
 | `MinLengthIf` | Validates minimum length if a condition is true. |
 
 ## Notes
+- Version 1.2.o adds RuleForValue, which allows you to validate a property based on the value of another property or variable.
 - Version 1.1.1 adds new validators: `IsNotNull`, and `IsNull`.
 - Version 1.1.0 introduces multi-targeting support (`net6.0`, `net7.0`, `net8.0`, `net9.0`, and `netstandard2.0`) and full nullability support.
 - Version 1.0.0 was the initial release of Myce.FluentValidator, providing basic validation capabilities for .NET applications.

@@ -22,7 +22,7 @@ namespace Myce.Extensions
       /// <returns>Returns a string with only numbers</returns>
       public static string? KeepOnlyNumbers(this string? value)
       {
-         if (value.IsNull())
+         if (value == null)
          {
             return null;
          }
@@ -81,7 +81,7 @@ namespace Myce.Extensions
       /// <returns>Returns a string without accents</returns>
       public static string? RemoveAccents(this string? value)
       {
-         if (value.IsNull())
+         if (value == null)
          {
             return null;
          }
@@ -102,6 +102,19 @@ namespace Myce.Extensions
           where T : struct
       {
          return (T)System.Enum.Parse(typeof(T), value, true);
+      }
+
+      /// <summary>
+      /// Compare string values is between other two values (inclusive)
+      /// </summary>
+      /// <typeparam name="T">Any int that implements IComparable</typeparam>
+      /// <param name="value">The int value</param>
+      /// <param name="from">The FROM value</param>
+      /// <param name="to">The TO value</param>
+      /// <returns>Return TRUE if the value of the object is BETWEEN other two values (inclusive)</returns>
+      public static bool IsBetween<T>(this string value, T from, T to) where T : IComparable<T>
+      {
+         return value.CompareTo(from) >= 0 && value.CompareTo(to) <= 0;
       }
    }
 }

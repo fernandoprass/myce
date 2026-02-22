@@ -91,5 +91,15 @@ namespace Myce.Extensions.Tests
          result = Int32Extension.LessThanOrEqualZero(null);
          Assert.False(result);
       }
+
+      /// <summary> Check if the value of the integer is BETWEEN other two values </summary>
+      [Fact]
+      public void IsBetween()
+      {
+         int negative = -1;
+         Assert.True(0.IsBetween(-1, 1));
+         Assert.True(1.IsBetween(0, 2));
+         Assert.True(negative.IsBetween(-2,0));
+      }
    }
 }

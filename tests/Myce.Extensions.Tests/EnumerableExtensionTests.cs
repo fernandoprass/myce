@@ -57,6 +57,15 @@ namespace Myce.Extensions.Tests
          Assert.True(result);
       }
 
+      /// <summary> Receive a list of strings without duplicates elements and return False </summary>
+      [Fact]
+      public void ContainsDuplicates_ReceiveListOfStringsWithoutDuplicates_ReturnFalse()
+      {
+         var list = new List<string> { "a", "b", "c" };
+         var result = list.ContainsDuplicates();
+         Assert.False(result);
+      }
+
       #endregion
 
       /// <summary> Receive a list and a positive chunk size and split it</summary>

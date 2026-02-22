@@ -12,7 +12,7 @@
       /// <param name="item">The new item</param>
       public static void AddIfIsNotNull<T>(this ICollection<T> collection, T item)
       {
-         if (item.IsNotNull())
+         if (item is not null)
          {
             collection.Add(item);
          }
