@@ -12,6 +12,7 @@ namespace Myce.FluentValidator
    /// <typeparam name="TAttribute">The type of the property being validated.</typeparam>
    public class RuleBuilder<T, TAttribute> where T : class
    {
+      private readonly string _manualName = string.Empty;
       private readonly FluentValidator<T> _validator;
       private readonly Expression<Func<T, TAttribute>> _attribute;
       private readonly Func<T, TAttribute> _attributeFunc;
@@ -26,6 +27,12 @@ namespace Myce.FluentValidator
          _validator = validator;
          _attribute = attribute;
          _attributeFunc = attribute.Compile();
+      }
+
+      internal RuleBuilder(FluentValidator<T> validator, Expression<Func<T, TAttribute>> attribute, string manualName)
+      : this(validator, attribute)
+      {
+         _manualName = manualName;
       }
 
       /// <summary>
@@ -63,8 +70,15 @@ namespace Myce.FluentValidator
       /// </summary>
       internal string GetAttributeName()
       {
-         if (_attribute.Body is MemberExpression me) return me.Member.Name;
-         if (_attribute.Body is UnaryExpression ue && ue.Operand is MemberExpression ume) return ume.Member.Name;
+         if (!string.IsNullOrEmpty(_manualName)) 
+            return _manualName;
+
+         if (_attribute.Body is MemberExpression me) 
+            return me.Member.Name;
+
+         if (_attribute.Body is UnaryExpression ue && ue.Operand is MemberExpression ume) 
+            return ume.Member.Name;
+         
          return "Unknown";
       }
 
@@ -73,31 +87,6 @@ namespace Myce.FluentValidator
       /// </summary>
       internal object? GetAttributeValue(T instance) => _attributeFunc(instance);
 
-      /// <summary>
-      /// Core logic for equality/inequality comparisons.
-      /// </summary>
-      private RuleBuilder<T, TAttribute> EqualityCompare(Expression<Func<T, TAttribute>> comparisonProperty, bool expected, string label)
-      {
-         var attributeName = GetAttributeName();
-         var (comparisonFunc, comparisonName) = GetComparisonInfo(comparisonProperty);
-
-         return AddRule(instance =>
-         {
-            var attrValue = GetAttributeValue(instance);
-            var compValue = comparisonFunc(instance);
-            bool areEqual = (attrValue is null && compValue is null) || (attrValue is not null && attrValue.Equals(compValue));
-            return areEqual == expected;
-         }, new ErrorMessage($"'{attributeName}' must {label} '{comparisonName}'."));
-      }
-
-      /// <summary>
-      /// Compiles the comparison property expression and extracts its name.
-      /// </summary>
-      private (Func<T, TAttribute> func, string name) GetComparisonInfo(Expression<Func<T, TAttribute>> expression)
-      {
-         var name = (expression.Body is MemberExpression me) ? me.Member.Name : "other property";
-         return (expression.Compile(), name);
-      }
       #endregion
    }
 }

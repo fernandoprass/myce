@@ -21,6 +21,18 @@ namespace Myce.FluentValidator
          return new RuleBuilder<T, TProperty>(this, attribute);
       }
 
+      /// <summary>
+      /// Starts a validation rule for an external value or variable.
+      /// </summary>
+      /// <typeparam name="TValue">The type of the value to validate.</typeparam>
+      /// <param name="value">The value/variable itself.</param>
+      /// <param name="paramName">A descriptive name for the variable (used in error messages).</param>
+      public RuleBuilder<T, TValue> RuleForValue<TValue>(TValue value, string paramName)
+      {
+         Expression<Func<T, TValue>> expression = _ => value;
+         return new RuleBuilder<T, TValue>(this, expression, paramName);
+      }
+
       public bool Validate(T instance)
       {
          var isValid = true;

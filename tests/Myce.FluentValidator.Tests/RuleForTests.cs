@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Myce.FluentValidator.Tests
 {
-   public class FluentValidatorTests
+   public class RuleForTests
    {
       private class Person
       {
