@@ -1,5 +1,6 @@
 ﻿using Myce.FluentValidator.ErrorMessages;
 using Myce.Response.Messages;
+using System;
 
 namespace Myce.FluentValidator
 {
@@ -8,6 +9,28 @@ namespace Myce.FluentValidator
    /// </summary>
    public static class RuleBuilderCommonExtensions
    {
+      /// <summary>
+      /// Validates the attribute using a custom logic function.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The type of the property being validated.</typeparam>
+      /// <param name="ruleBuilder">The rule builder instance.</param>
+      /// <param name="rule">The custom boolean rule function to execute.</param>
+      /// <param name="message">The error message if the custom rule fails.</param>
+      public static RuleBuilder<T, TAttribute> Custom<T, TAttribute>(
+         this RuleBuilder<T, TAttribute> ruleBuilder,
+         Func<TAttribute, bool> rule,
+         ErrorMessage message)
+         where T : class
+      {
+         return ruleBuilder.AddRule(instance =>
+         {
+            var value = (TAttribute)ruleBuilder.GetAttributeValue(instance)!;
+
+            return rule(value);
+         }, message);
+      }
+
       /// <summary>
       /// Validates if the property value is not null.
       /// </summary>
