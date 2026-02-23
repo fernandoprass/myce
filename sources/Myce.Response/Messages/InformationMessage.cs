@@ -8,6 +8,8 @@
 
       public InformationMessage(string code, string text) : base(MessageType.Information, code, text) { }
 
+      public InformationMessage(string code, string text, Variable variable) : base(MessageType.Information, code, text, variable) { }
+
       public InformationMessage(string code, string text, IEnumerable<Variable> variables) : base(MessageType.Information, code, text, variables) { }
    }
 }

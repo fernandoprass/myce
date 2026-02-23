@@ -8,6 +8,8 @@
 
       public ErrorMessage(string code, string text) : base(MessageType.Error, code, text) { }
 
+      public ErrorMessage(string code, string text, Variable variable) : base(MessageType.Error, code, text, variable) { }
+
       public ErrorMessage(string code, string text, IEnumerable<Variable> variables) : base(MessageType.Error, code, text, variables) { }
    }
 }
