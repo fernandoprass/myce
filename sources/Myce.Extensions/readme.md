@@ -24,7 +24,7 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
     - GreaterThanOrEqualZero() - Return true if the value is greater than or equal zero
     - LessThanZero() - Return true if the value is less than zero
     - LessThanOrEqualZero() - Return true if the value is less than or equal zero
-    - IsBetween() -  Compare object values is between other two values (inclusive)
+    - IsBetween() -  Compare if the decimal value is between other two values (inclusive)
 
 - DoubleExtension
     - EqualZero() - Return true if the value is equal zero
@@ -32,7 +32,7 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
     - GreaterThanOrEqualZero() - Return true if the value is greater than or equal zero
     - LessThanZero() - Return true if the value is less than zero
     - LessThanOrEqualZero() - Return true if the value is less than or equal zero
-    - IsBetween() -  Compare object values is between other two values (inclusive)
+    - IsBetween() -  Compare if the double value is between other two values (inclusive)
 
 - EnumerableExtensions
     - Chunk() - Splits an enumerable into chunks of a specified size
@@ -56,7 +56,7 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
     - GreaterThanOrEqualZero() - Return true if the value is greater than or equal zero
     - LessThanZero() - Return true if the value is less than zero
     - LessThanOrEqualZero() - Return true if the value is less than or equal zero
-    - IsBetween() -  Compare object values is between other two values (inclusive)
+    - IsBetween() -  Compare if the integer value is between other two values (inclusive)
 
 - StringExtension
     - EmptyIfIsNull() - Return an empty string if the string is null
