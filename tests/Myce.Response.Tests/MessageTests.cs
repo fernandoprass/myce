@@ -73,6 +73,18 @@ namespace Myce.Response.Messages.Tests
       }
 
       [Fact]
+      public void Title_ShouldReturnFirstMessageWithVariableReplaced_WhenTitleIsNull()
+      {
+         var result = new Result();
+         var messageText = "First error occurred, field {fieldname}";
+         result.AddMessage(new ErrorMessage("code", messageText, new Variable("fieldname", "fieldvalue")));
+
+         var title = result.Title;
+
+         Assert.Equal("First error occurred, field fieldvalue", title);
+      }
+
+      [Fact]
       public void Title_ShouldReturnNull_WhenTitleIsNullAndMessagesAreEmpty()
       {
          var result = new Result();

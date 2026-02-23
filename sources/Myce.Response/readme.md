@@ -87,8 +87,5 @@ This library follows a **Client-Side Translation** strategy. The backend provide
 ## Best Practices
 
 1.  **Explicit Titles**: Set the `Title` property when you want a specific summary for the UI that differs from individual error messages.  
-2.  **Controller Mapping**: Use the `ToActionResult()` extension to automatically map your `Result` to the appropriate HTTP status code (200 OK, 204 No Content, 400 Bad Request, or 404 Not Found).    
-3.  **ToResult Mapping**: Use `.ToResult<V>(map)` to convert between types (e.g., Entity to DTO) while preserving all messages and state.
+2.  **ToResult Mapping**: Use `.ToResult<V>(map)` to convert between types (e.g., Entity to DTO) while preserving all messages and state.
 
-    [HttpGet("{id}")]
-    public IActionResult Get(int id) => _userService.GetById(id).ToActionResult();
