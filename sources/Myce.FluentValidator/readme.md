@@ -60,22 +60,40 @@ if (validator.Messages.Any())
 
 ## Supported Validators
 
+Common validators available:
+| Validator | Description |
+| :--- | :--- |
+| `Custom` | Allows you to define a custom validation function. |
+| `IsNull` |Validates if the property value is null. |
+| `IsNotNull` |Validates if the property value is not null. |
+| `IsRequired` | Validates that the property is not null or empty. |
+| `IsRequiredIf` | Validates that the property is required if a condition is true. |
+
+Comparison validators:
+| Validator | Description |
+| :--- | :--- |
+| `IsEqualTo` | Validates equality to a specific value. |
+| `IsNotEqualTo` | Validates if the property value is not equal to a fixed value. |
+
+Numeric validators:
+| Validator | Description |
+| :--- | :--- |
+| `IsGreaterThan` | Validates that the value is greater than a specified value. |
+| `IsGreaterThanOrEqualTo` | Validates that the value is greater than or equal to a specified value. |
+| `IsLessThan` | Validates that the value is less than a specified value. |
+| `IsLessThanOrEqualTo` | Validates that the value is less than or equal to a specified value. |
+| `MaxLength` | Validates the maximum length of a string. |
+| `MaxLengthIf` | Validates maximum length if a condition is true. |
+| `MinLength` | Validates the minimum length of a string. |
+| `MinLengthIf` | Validates minimum length if a condition is true. |
+
+String validators:
 | Validator | Description |
 | :--- | :--- |
 | `Contains` | Validates that the value exists within a provided collection. |
 | `ContainsOnlyNumber` | Validates that a string contains only numeric characters. |
 | `ExactNumberOfCharacters` | Validates that a string has an exact length. |
 | `ExactNumberOfCharactersIf` | Validates exact length if a condition is true. |
-| `IsEqualTo` | Validates equality to a specific value. |
-| `IsGreaterThan` | Validates that the value is greater than a specified value. |
-| `IsGreaterThanOrEqualTo` | Validates that the value is greater than or equal to a specified value. |
-| `IsLessThan` | Validates that the value is less than a specified value. |
-| `IsLessThanOrEqualTo` | Validates that the value is less than or equal to a specified value. |
-| `IsNotEqualTo` | Validates if the property value is not equal to a fixed value. |
-| `IsRequired` | Validates that the property is not null or empty. |
-| `IsRequiredIf` | Validates that the property is required if a condition is true. |
-| `IsNotNull` |Validates if the property value is not null. |
-| `IsNull` |Validates if the property value is null. |
 | `IsValidDate` | Validates that a string can be parsed as a valid date. |
 | `IsValidEmailAddress` | Validates that a string is a valid email format. |
 | `MaxLength` | Validates the maximum length of a string. |
@@ -84,7 +102,7 @@ if (validator.Messages.Any())
 | `MinLengthIf` | Validates minimum length if a condition is true. |
 
 ## Notes
-- Version 1.2.o adds RuleForValue, which allows you to validate a property based on the value of another property or variable.
+- Version 1.2.0 adds RuleForValue, which allows you to validate a property based on the value of another property or variable.
 - Version 1.1.1 adds new validators: `IsNotNull`, and `IsNull`.
 - Version 1.1.0 introduces multi-targeting support (`net6.0`, `net7.0`, `net8.0`, `net9.0`, and `netstandard2.0`) and full nullability support.
 - Version 1.0.0 was the initial release of Myce.FluentValidator, providing basic validation capabilities for .NET applications.
