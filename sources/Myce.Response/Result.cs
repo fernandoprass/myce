@@ -51,7 +51,7 @@ namespace Myce.Response
       /// first message in the collection, if available; otherwise, it returns null.</remarks>
       public string? Title
       {
-         get => string.IsNullOrWhiteSpace(_title) ? _messages.FirstOrDefault()?.Text : _title;
+         get => string.IsNullOrWhiteSpace(_title) ? _messages.FirstOrDefault()?.Show() : _title;
          set => _title = value ?? string.Empty;
       }
 
@@ -92,18 +92,25 @@ namespace Myce.Response
       public static Result Success(string title) => new Result(title);
 
       /// <summary>
+      /// Creates a successful result with the specified information message.
+      /// </summary>
+      /// <param name="message">The message that confirm the operation. Cannot be null.</param>
+      /// <returns>A <see cref="Result"/> instance representing a failure with the provided error message.</returns>
+      public static Result Success(InformationMessage message) => new Result(message);
+
+      /// <summary>
       /// Creates a failed result with the specified error message.
       /// </summary>
       /// <param name="message">The error message that describes the reason for the failure. Cannot be null.</param>
       /// <returns>A <see cref="Result"/> instance representing a failure with the provided error message.</returns>
-      public static Result Failure(Message message) => new Result(message);
+      public static Result Failure(ErrorMessage message) => new Result(message);
 
       /// <summary>
       /// Creates a failed result containing the specified error messages.
       /// </summary>
       /// <param name="messages">A collection of messages that describe the reasons for the failure. Cannot be null or contain null elements.</param>
       /// <returns>A <see cref="Result"/> instance representing a failure with the provided error messages.</returns>
-      public static Result Failure(IEnumerable<Message> messages) => new Result(messages);
+      public static Result Failure(IEnumerable<ErrorMessage> messages) => new Result(messages);
 
       /// <summary>
       /// Adds a message to the collection.

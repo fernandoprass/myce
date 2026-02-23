@@ -8,6 +8,8 @@
 
       public WarningMessage(string code, string text) : base(MessageType.Warning, code, text) { }
 
+      public WarningMessage(string code, string text, Variable variable) : base(MessageType.Warning, code, text, variable) { }
+
       public WarningMessage(string code, string text, IEnumerable<Variable> variables) : base(MessageType.Warning, code, text, variables) { }
    }
 }
