@@ -89,6 +89,7 @@ Numeric validators:
 
 String validators:
 | Validator | Description |
+| :--- | :--- |
 | `Contains` | Validates that the value exists within a provided collection. |
 | `ContainsOnlyNumber` | Validates that a string contains only numeric characters. |
 | `ExactNumberOfCharacters` | Validates that a string has an exact length. |
