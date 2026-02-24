@@ -12,6 +12,9 @@ Install-Package Myce.FluentValidator
 ## Features
 - **FluentValidator**: Fluent validation class for entities
 - **ValidatorBuilder**: Orchestrates multiple validations in a single process
+- **High Performance**: Optimized with typed value access to avoid boxing/unboxing.
+- **Reusable Templates**: Define rules once and apply them to multiple DTOs.
+- **External Validation**: Validate standalone variables or external states with RuleForValue.
 
 ## Usage
 
@@ -58,9 +61,33 @@ if (validator.Messages.Any())
 }
 ```
 
+### 3. Reusable Templates (DRY Principle)
+You can define validation logic for common fields (like Email) and reuse them across different classes.
+```csharp
+public static class SharedRules 
+{
+    public static void NameTemplate<T>(RuleBuilder<T, string> rb) where T : class
+        => rb.IsRequired().MinLength(3).MaxLength(100);
+}
+
+// In your validator:
+validator.RuleFor(x => x.FirstName).ApplyTemplate(SharedRules.NameTemplate);
+validator.RuleFor(x => x.LastName).ApplyTemplate(SharedRules.NameTemplate);
+```
+
+### 4. External Value Validation
+Use `RuleForValue` to validate data that isn't a property of your main entity, such as checking if a record already exists in the database.
+```csharp
+bool emailAlreadyExists = service.CheckEmail(request.Email);
+
+var validator = new FluentValidator<Person>()
+    .RuleForValue(emailAlreadyExists, "Email Uniqueness")
+    .IsFalse(new ErrorMessage("This email is already taken"));
+```
+
 ## Supported Validators
 
-Common validators available:
+Core validators available:
 | Validator | Description |
 | :--- | :--- |
 | `Custom` | Allows you to define a custom validation function. |
@@ -68,6 +95,8 @@ Common validators available:
 | `IsNotNull` |Validates if the property value is not null. |
 | `IsRequired` | Validates that the property is not null or empty. |
 | `IsRequiredIf` | Validates that the property is required if a condition is true. |
+| `IsTrue` | Validates that the boolean attribute is true.|
+| `IsFalse` | Validates that the boolean attribute is false.|
 
 Comparison validators:
 | Validator | Description |
@@ -102,7 +131,8 @@ String validators:
 | `MinLengthIf` | Validates minimum length if a condition is true. |
 
 ## Notes
-- Version 1.2.0 adds RuleForValue, which allows you to validate a property based on the value of another property or variable.
+- Version 1.2.0 Internal engine updated to use `GetAttributeValue<T>` to eliminate boxing of primitive types.
+- Version 1.2.1 Added `RuleForValue` for external variable validation and `ApplyTemplate` for rule reuse.
 - Version 1.1.1 adds new validators: `IsNotNull`, and `IsNull`.
 - Version 1.1.0 introduces multi-targeting support (`net6.0`, `net7.0`, `net8.0`, `net9.0`, and `netstandard2.0`) and full nullability support.
 - Version 1.0.0 was the initial release of Myce.FluentValidator, providing basic validation capabilities for .NET applications.

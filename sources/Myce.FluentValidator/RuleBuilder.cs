@@ -55,6 +55,17 @@ namespace Myce.FluentValidator
       /// </summary>
       public static implicit operator FluentValidator<T>(RuleBuilder<T, TAttribute> builder) => builder._validator;
 
+      /// <summary>
+      /// Applies a predefined template of rules to the current property, enabling reuse of common validation logic.
+      /// </summary>
+      /// <param name="template">The template</param>
+      /// <returns></returns>
+      public RuleBuilder<T, TAttribute> ApplyTemplate(Action<RuleBuilder<T, TAttribute>> template)
+      {
+         template(this);
+         return this;
+      }
+
       #region InternalAndPrivateMethods
       /// <summary>
       /// Internal helper to register rules directly into the parent validator.
@@ -83,9 +94,14 @@ namespace Myce.FluentValidator
       }
 
       /// <summary>
-      /// Executes the attribute function to get the current value.
+      /// Returns the typed value of the property. (Fast, no boxing)
       /// </summary>
-      internal object? GetAttributeValue(T instance) => _attributeFunc(instance);
+      internal TAttribute GetAttributeValue(T instance) => _attributeFunc(instance);
+
+      /// <summary>
+      /// Returns the value as an object. (Keep for generic/legacy rules)
+      /// </summary>
+      internal object? GetAttributeValueAsObject(T instance) => GetAttributeValue(instance);
 
       #endregion
    }

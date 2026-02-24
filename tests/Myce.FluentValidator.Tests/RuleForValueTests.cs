@@ -1,3 +1,4 @@
+using Myce.Response.Messages;
 using Xunit;
 
 namespace Myce.FluentValidator.Tests
@@ -7,13 +8,29 @@ namespace Myce.FluentValidator.Tests
       private class SimpleEntity { }
 
       [Fact]
+      public void RuleForValue_WithSimpleObjectAndMultipleRules_ShouldAllowAnyRule()
+      {
+         var request = new SimpleEntity();
+         var externalEmail = "test@gmail.com";
+
+         var validator = new FluentValidator<SimpleEntity>()
+             .RuleForValue(externalEmail)
+             .IsRequired()
+             .Custom(e => e.Contains("@"), new ErrorMessage("Invalid format"));
+
+         var result = validator.Validate(request);
+
+         Assert.True(result);
+      }
+
+      [Fact]
       public void RuleForValue_ShouldValidateExternalVariable_WhenConditionIsMet()
       {
          var request = new SimpleEntity();
          bool emailExists = false; // Simulating result from a repository
 
          var validator = new FluentValidator<SimpleEntity>()
-             .RuleForValue(emailExists, "Email Availability").IsEqualTo(false);
+             .RuleForValue(emailExists).IsEqualTo(false);
 
          var isValid = validator.Validate(request);
 
@@ -44,7 +61,7 @@ namespace Myce.FluentValidator.Tests
       {
          var request = new SimpleEntity();
          var validator = new FluentValidator<SimpleEntity>()
-             .RuleForValue(externalCount, "ItemsCount").IsGreaterThan(7);
+             .RuleForValue(externalCount).IsGreaterThan(7);
 
          var isValid = validator.Validate(request);
 
@@ -58,15 +75,14 @@ namespace Myce.FluentValidator.Tests
          string externalToken = "ABC";
 
          var validator = new FluentValidator<SimpleEntity>()
-             .RuleForValue(externalToken, "SecurityToken")
+             .RuleForValue(externalToken, "token")
                  .IsRequired()
                  .MinLength(5);
 
          var isValid = validator.Validate(request);
 
          Assert.False(isValid);
-         // Should contain error from MinLength because "ABC" has length 3
-         Assert.Contains("SecurityToken", validator.Messages[0].Show());
+         Assert.Contains("token", validator.Messages.First().Show());
       }
    }
 }

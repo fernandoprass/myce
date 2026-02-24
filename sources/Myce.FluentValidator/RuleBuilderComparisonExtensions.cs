@@ -23,6 +23,7 @@ namespace Myce.FluentValidator
          return ruleBuilder.AddRule(instance =>
          {
             var attrValue = ruleBuilder.GetAttributeValue(instance);
+
             if (attrValue is null && value is null) return true;
             return attrValue is not null && attrValue.Equals(value);
          }, new ErrorMessage($"'{attributeName}' must be equal to {value}."));
