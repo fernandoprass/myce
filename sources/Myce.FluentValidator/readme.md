@@ -68,6 +68,8 @@ Common validators available:
 | `IsNotNull` |Validates if the property value is not null. |
 | `IsRequired` | Validates that the property is not null or empty. |
 | `IsRequiredIf` | Validates that the property is required if a condition is true. |
+| `IsTrue` | Validates that the boolean attribute is true.|
+| `IsFalse` | Validates that the boolean attribute is false.|
 
 Comparison validators:
 | Validator | Description |

@@ -17,6 +17,32 @@ namespace Myce.FluentValidator.Tests
       {
          public string Email { get; set; }
          public int Age { get; set; }
+         public bool IsActive { get; set; }
+         public bool HasPendingTerms { get; set; }
+      }
+
+      [Fact]
+      public void IsTrue_ShouldPass_WhenValueIsTrue()
+      {
+         var user = new Person { IsActive = true };
+         var validator = new FluentValidator<Person>()
+             .RuleFor(x => x.IsActive).IsTrue(new ErrorMessage("User must be active"));
+
+         var result = validator.Validate(user);
+
+         Assert.True(result);
+      }
+
+      [Fact]
+      public void IsFalse_ShouldPass_WhenValueIsFalse()
+      {
+         var user = new Person { HasPendingTerms = false };
+         var validator = new FluentValidator<Person>()
+             .RuleFor(x => x.HasPendingTerms).IsFalse(new ErrorMessage("No pending terms allowed"));
+
+         var result = validator.Validate(user);
+
+         Assert.True(result);
       }
 
       /// <summary>
