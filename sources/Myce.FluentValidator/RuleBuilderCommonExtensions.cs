@@ -25,7 +25,7 @@ namespace Myce.FluentValidator
       {
          return ruleBuilder.AddRule(instance =>
          {
-            var value = (TAttribute)ruleBuilder.GetAttributeValue(instance)!;
+            var value = (TAttribute)ruleBuilder.GetAttributeValueAsObject(instance)!;
 
             return rule(value);
          }, message);
@@ -40,7 +40,7 @@ namespace Myce.FluentValidator
          var attributeName = ruleBuilder.GetAttributeName();
          return ruleBuilder.AddRule(instance =>
          {
-            var attrValue = ruleBuilder.GetAttributeValue(instance);
+            var attrValue = ruleBuilder.GetAttributeValueAsObject(instance);
             return attrValue is not null;
          }, new ErrorMessage($"'{attributeName}' is null."));
       }
@@ -54,7 +54,7 @@ namespace Myce.FluentValidator
          var attributeName = ruleBuilder.GetAttributeName();
          return ruleBuilder.AddRule(instance =>
          {
-            var attrValue = ruleBuilder.GetAttributeValue(instance);
+            var attrValue = ruleBuilder.GetAttributeValueAsObject(instance);
             return attrValue is null;
          }, new ErrorMessage($"'{attributeName}' is not null."));
       }
@@ -76,7 +76,7 @@ namespace Myce.FluentValidator
       {
          return ruleBuilder.AddRule(instance =>
          {
-            var value = ruleBuilder.GetAttributeValue(instance);
+            var value = ruleBuilder.GetAttributeValueAsObject(instance);
             if (value is null) return false;
 
             // Check for empty strings or whitespace
@@ -102,6 +102,30 @@ namespace Myce.FluentValidator
          where T : class
       {
          return condition ? ruleBuilder.IsRequired(message) : ruleBuilder;
+      }
+
+      /// <summary>
+      /// Validates that the boolean attribute is true.
+      /// </summary>
+      public static RuleBuilder<T, bool> IsTrue<T>(this RuleBuilder<T, bool> ruleBuilder, ErrorMessage message)
+         where T : class
+      {
+         return ruleBuilder.AddRule(instance =>
+         {
+            return ruleBuilder.GetAttributeValue(instance);
+         }, message);
+      }
+
+      /// <summary>
+      /// Validates that the boolean attribute is false.
+      /// </summary>
+      public static RuleBuilder<T, bool> IsFalse<T>(this RuleBuilder<T, bool> ruleBuilder, ErrorMessage message)
+         where T : class
+      {
+         return ruleBuilder.AddRule(instance =>
+         {
+            return !ruleBuilder.GetAttributeValue(instance);
+         }, message);
       }
    }
 }

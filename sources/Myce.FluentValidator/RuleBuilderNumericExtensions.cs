@@ -130,7 +130,7 @@ namespace Myce.FluentValidator
          where TAttribute : struct, IComparable
       {
          var name = rb.GetAttributeName();
-         return rb.AddRule(instance => compare((TAttribute)rb.GetAttributeValue(instance), value),
+         return rb.AddRule(instance => compare(rb.GetAttributeValue(instance), value),
             new ErrorMessage($"'{name}' must be {label} {value}."));
       }
 
@@ -148,7 +148,7 @@ namespace Myce.FluentValidator
          var name = rb.GetAttributeName();
          return rb.AddRule(instance =>
          {
-            var attr = (TAttribute?)rb.GetAttributeValue(instance);
+            var attr = rb.GetAttributeValue(instance);
             return attr.HasValue && compare(attr.Value, value);
          }, new ErrorMessage($"'{name}' must be {label} {value}."));
       }

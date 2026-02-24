@@ -22,8 +22,8 @@ namespace Myce.FluentValidator
       {
          return ruleBuilder.AddRule(instance =>
          {
-            var val = ruleBuilder.GetAttributeValue(instance);
-            return val is not null && values.Contains(val);
+            var value = ruleBuilder.GetAttributeValue(instance);
+            return value is not null && values.Contains(value);
          }, message);
       }
 
@@ -47,8 +47,8 @@ namespace Myce.FluentValidator
       {
          return ruleBuilder.AddRule(instance =>
          {
-            var val = ruleBuilder.GetAttributeValue(instance)?.ToString();
-            return string.IsNullOrEmpty(val) || val.All(char.IsNumber);
+            var value = ruleBuilder.GetAttributeValue(instance);
+            return string.IsNullOrEmpty(value) || value.All(char.IsNumber);
          }, message);
       }
 
@@ -74,7 +74,7 @@ namespace Myce.FluentValidator
       {
          return ruleBuilder.AddRule(instance =>
          {
-            var value = ruleBuilder.GetAttributeValue(instance)?.ToString();
+            var value = ruleBuilder.GetAttributeValue(instance);
             return string.IsNullOrEmpty(value) || value.Length == length;
          }, message);
       }
@@ -125,7 +125,7 @@ namespace Myce.FluentValidator
       {
          return ruleBuilder.AddRule(instance =>
          {
-            var value = ruleBuilder.GetAttributeValue(instance)?.ToString();
+            var value = ruleBuilder.GetAttributeValue(instance);
             return string.IsNullOrEmpty(value) ? false : DateTime.TryParse(value, out _);
          }, message);
       }
@@ -146,7 +146,7 @@ namespace Myce.FluentValidator
       {
          return ruleBuilder.AddRule(instance =>
          {
-            var email = ruleBuilder.GetAttributeValue(instance)?.ToString();
+            var email = ruleBuilder.GetAttributeValue(instance);
             if (string.IsNullOrEmpty(email)) return false;
             return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]{2,}$");
          }, message);
@@ -167,7 +167,7 @@ namespace Myce.FluentValidator
       {
          return ruleBuilder.AddRule(instance =>
          {
-            var value = ruleBuilder.GetAttributeValue(instance)?.ToString();
+            var value = ruleBuilder.GetAttributeValue(instance);
             return string.IsNullOrEmpty(value) || value.Length <= maxLength;
          }, message);
       }
@@ -203,7 +203,7 @@ namespace Myce.FluentValidator
       {
          return ruleBuilder.AddRule(instance =>
          {
-            var value = ruleBuilder.GetAttributeValue(instance)?.ToString();
+            var value = ruleBuilder.GetAttributeValue(instance);
             return !string.IsNullOrEmpty(value) && value.Length >= minLength;
          }, message);
       }
