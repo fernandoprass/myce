@@ -9,6 +9,13 @@ namespace Myce.FluentValidator
    public static partial class RuleBuilderNumericExtensions
    {
       #region IntExtensions
+      /// <summary>Validates that the integer value is between a minimum and maximum (inclusive). </summary>
+      public static RuleBuilder<T, int> IsBetween<T>(this RuleBuilder<T, int> rb, int min, int max) where T : class
+         => rb.AddNumericRule(min, (attr, _) => attr >= min && attr <= max, $"between {min} and {max}");
+
+      /// <summary> Validates that the nullable integer value is between a minimum and maximum (inclusive). </summary>
+      public static RuleBuilder<T, int?> IsBetween<T>(this RuleBuilder<T, int?> rb, int min, int max) where T : class
+         => rb.AddNullableNumericRule(min, (attr, _) => attr >= min && attr <= max, $"between {min} and {max}");
 
       /// <summary> Validates that the integer value is greater than a specified value. </summary>
       public static RuleBuilder<T, int> IsGreaterThan<T>(this RuleBuilder<T, int> rb, int value) where T : class
@@ -41,10 +48,16 @@ namespace Myce.FluentValidator
       /// <summary> Validates that the nullable integer value is less than or equal to a specified value. </summary>
       public static RuleBuilder<T, int?> IsLessThanOrEqualTo<T>(this RuleBuilder<T, int?> rb, int value) where T : class
          => rb.AddNullableNumericRule(value, (a, v) => a <= v, "less than or equal to");
-
       #endregion
 
       #region DoubleExtensions
+      /// <summary>Validates that the double value is between a minimum and maximum (inclusive). </summary>
+      public static RuleBuilder<T, double> IsBetween<T>(this RuleBuilder<T, double> rb, double min, double max) where T : class
+         => rb.AddNumericRule(min, (attr, _) => attr >= min && attr <= max, $"between {min} and {max}");
+
+      /// <summary> Validates that the nullable double value is between a minimum and maximum (inclusive). </summary>
+      public static RuleBuilder<T, double?> IsBetween<T>(this RuleBuilder<T, double?> rb, double min, double max) where T : class
+         => rb.AddNullableNumericRule(min, (attr, _) => attr >= min && attr <= max, $"between {min} and {max}");
 
       /// <summary> Validates that the double value is greater than a specified value. </summary>
       public static RuleBuilder<T, double> IsGreaterThan<T>(this RuleBuilder<T, double> rb, double value) where T : class
@@ -77,10 +90,16 @@ namespace Myce.FluentValidator
       /// <summary> Validates that the nullable double value is less than or equal to a specified value. </summary>
       public static RuleBuilder<T, double?> IsLessThanOrEqualTo<T>(this RuleBuilder<T, double?> rb, double value) where T : class
          => rb.AddNullableNumericRule(value, (a, v) => a <= v, "less than or equal to");
-
       #endregion
 
       #region DecimalExtensions
+      /// <summary>Validates that the decimal value is between a minimum and maximum (inclusive). </summary>
+      public static RuleBuilder<T, decimal> IsBetween<T>(this RuleBuilder<T, decimal> rb, decimal min, decimal max) where T : class
+         => rb.AddNumericRule(min, (attr, _) => attr >= min && attr <= max, $"between {min} and {max}");
+
+      /// <summary> Validates that the nullable decimal value is between a minimum and maximum (inclusive). </summary>
+      public static RuleBuilder<T, decimal?> IsBetween<T>(this RuleBuilder<T, decimal?> rb, decimal min, decimal max) where T : class
+         => rb.AddNullableNumericRule(min, (attr, _) => attr >= min && attr <= max, $"between {min} and {max}");
 
       /// <summary> Validates that the decimal value is greater than a specified value. </summary>
       public static RuleBuilder<T, decimal> IsGreaterThan<T>(this RuleBuilder<T, decimal> rb, decimal value) where T : class
@@ -113,7 +132,6 @@ namespace Myce.FluentValidator
       /// <summary> Validates that the nullable decimal value is less than or equal to a specified value. </summary>
       public static RuleBuilder<T, decimal?> IsLessThanOrEqualTo<T>(this RuleBuilder<T, decimal?> rb, decimal value) where T : class
          => rb.AddNullableNumericRule(value, (a, v) => a <= v, "less than or equal to");
-
       #endregion
 
       #region PrivateHelpersForCodeReuse
