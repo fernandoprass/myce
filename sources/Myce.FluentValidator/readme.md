@@ -131,8 +131,8 @@ String validators:
 | `MinLengthIf` | Validates minimum length if a condition is true. |
 
 ## Notes
-- Version 1.2.0 Internal engine updated to use `GetAttributeValue<T>` to eliminate boxing of primitive types.
-- Version 1.2.1 Added `RuleForValue` for external variable validation and `ApplyTemplate` for rule reuse.
+- Version 1.2.1 Internal engine updated to use `GetAttributeValue<T>` to eliminate boxing of primitive types and improve performance.
+- Version 1.2.0 Added `RuleForValue` for external variable validation and `ApplyTemplate` for rule reuse.
 - Version 1.1.1 adds new validators: `IsNotNull`, and `IsNull`.
 - Version 1.1.0 introduces multi-targeting support (`net6.0`, `net7.0`, `net8.0`, `net9.0`, and `netstandard2.0`) and full nullability support.
 - Version 1.0.0 was the initial release of Myce.FluentValidator, providing basic validation capabilities for .NET applications.
