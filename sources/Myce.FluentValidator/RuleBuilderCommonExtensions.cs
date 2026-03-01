@@ -37,12 +37,23 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> IsNotNull<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder)
          where T : class
       {
+         var attributeName = ruleBuilder.GetAttributeName(); 
+         return ruleBuilder.IsNotNull(new ErrorMessage($"'{attributeName}' is null."));
+      }
+
+      /// <summary>
+      /// Validates if the property value is not null.
+      /// </summary>
+      /// <param name="message">The error message if the custom rule fails.</param>
+      public static RuleBuilder<T, TAttribute> IsNotNull<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder, ErrorMessage message)
+         where T : class
+      {
          var attributeName = ruleBuilder.GetAttributeName();
          return ruleBuilder.AddRule(instance =>
          {
             var attrValue = ruleBuilder.GetAttributeValueAsObject(instance);
             return attrValue is not null;
-         }, new ErrorMessage($"'{attributeName}' is null."));
+         }, message);
       }
 
       /// <summary>
@@ -52,11 +63,22 @@ namespace Myce.FluentValidator
          where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();
+         return ruleBuilder.IsNull(new ErrorMessage($"'{attributeName}' is not null."));
+      }
+
+      /// <summary>
+      /// Validates if the property value is null.
+      /// </summary>
+      /// <param name="message">The error message if the custom rule fails.</param>
+      public static RuleBuilder<T, TAttribute> IsNull<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder, ErrorMessage message)
+         where T : class
+      {
+         var attributeName = ruleBuilder.GetAttributeName();
          return ruleBuilder.AddRule(instance =>
          {
             var attrValue = ruleBuilder.GetAttributeValueAsObject(instance);
             return attrValue is null;
-         }, new ErrorMessage($"'{attributeName}' is not null."));
+         }, message);
       }
 
       /// <summary>

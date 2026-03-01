@@ -5,7 +5,7 @@ namespace Myce.FluentValidator.ErrorMessages
    public class ErrorShouldContainOnlyNumber : ErrorMessage
    {
       public ErrorShouldContainOnlyNumber(string fieldName) 
-         : base("ERROR_SHOULD_CONTAIN_ONLY_NUMBERS", "'{fieldName}' should contain only number.")
+         : base("ShouldContainOnlyNumbersError", "'{fieldName}' should contain only number.")
       {
          AddVariable("fieldName", fieldName);
       }
@@ -14,7 +14,7 @@ namespace Myce.FluentValidator.ErrorMessages
    public class ErrorNotExactNumberOfCharacters : ErrorMessage
    {
       public ErrorNotExactNumberOfCharacters(string fieldName, int length) 
-         : base("ERROR_NOT_EXACT_NUMBER_OF_CHARACTERS", "The field '{fieldName}' does not have the expected number of characters ({length})")
+         : base("NotExactNumberOfCharactersError", "The field '{fieldName}' does not have the expected number of characters ({length})")
       {
          AddVariable("fieldName", fieldName);
          AddVariable("length", length.ToString());
@@ -24,7 +24,7 @@ namespace Myce.FluentValidator.ErrorMessages
    public class ErrorIsRequired : ErrorMessage
    {
       public ErrorIsRequired(string fieldName)
-         : base("ERROR_NOT_FILLED", "The field '{fieldName}' is required")
+         : base("NotFilledError", "The field '{fieldName}' is required")
       {
          AddVariable("fieldName", fieldName);
       }
@@ -33,7 +33,7 @@ namespace Myce.FluentValidator.ErrorMessages
    public class ErrorInvalidDate : ErrorMessage
    {
       public ErrorInvalidDate(string fieldName)
-         : base("ERROR_INVALID_DATE", "The field '{fieldName}' is not a valid date")
+         : base("InvalidEmailError", "The field '{fieldName}' is not a valid date")
       {
          AddVariable("fieldName", fieldName);
       }
@@ -42,7 +42,7 @@ namespace Myce.FluentValidator.ErrorMessages
    public class ErrorInvalidEmail : ErrorMessage
    {
       public ErrorInvalidEmail(string fieldName)
-         : base("ERROR_INVALID_EMAIL", "The field '{fieldName}' is not a valid email")
+         : base("InvalidEmailError", "The field '{fieldName}' is not a valid email")
       {
          AddVariable("fieldName", fieldName);
       }
@@ -51,7 +51,7 @@ namespace Myce.FluentValidator.ErrorMessages
    public class ErrorMoreCharactersThanExpected : ErrorMessage
    {
       public ErrorMoreCharactersThanExpected(string fieldName, int maxLength)
-         : base("ERROR_MORE_CHARACTERS_THAN_EXPECTED", "The field '{fieldName}' has more characters than expected ({max.length})")
+         : base("MoreCharactersThanExpectedError", "The field '{fieldName}' has more characters than expected ({max.length})")
       {
          AddVariable("fieldName", fieldName);
          AddVariable("max.length", maxLength.ToString());
@@ -61,7 +61,7 @@ namespace Myce.FluentValidator.ErrorMessages
    public class ErrorFewerCharactersThanExpected : ErrorMessage
    {
       public ErrorFewerCharactersThanExpected(string fieldName, int minLength)
-         : base("ERROR_FEWER_CHARACTERS_THAN_EXPECTED", "The field '{fieldName}' has fewer characters than expected ({min.length})")
+         : base("FewerCharactersThanExpectedError", "The field '{fieldName}' has fewer characters than expected ({min.length})")
       {
          AddVariable("fieldName", fieldName);
          AddVariable("min.length", minLength.ToString());

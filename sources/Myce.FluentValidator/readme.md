@@ -1,7 +1,7 @@
 # MYCE.FluentValidator
 MYCE (Makes Your Coding Easier) FluentValidator is a fluent validation library designed to simplify entity validation in .NET applications.
 
-Supports `net6.0`, `net8.0`, `net9.0`, and `netstandard2.0`.
+Supports `net6.0`, `net7.0`, `net8.0`, `net9.0`, and `netstandard2.0`.
 
 ## Installation
 Package Manager Console:
@@ -107,14 +107,12 @@ Comparison validators:
 Numeric validators:
 | Validator | Description |
 | :--- | :--- |
+| `IsBetween` | Validates that the value is between two specified values. |
 | `IsGreaterThan` | Validates that the value is greater than a specified value. |
 | `IsGreaterThanOrEqualTo` | Validates that the value is greater than or equal to a specified value. |
 | `IsLessThan` | Validates that the value is less than a specified value. |
 | `IsLessThanOrEqualTo` | Validates that the value is less than or equal to a specified value. |
-| `MaxLength` | Validates the maximum length of a string. |
-| `MaxLengthIf` | Validates maximum length if a condition is true. |
-| `MinLength` | Validates the minimum length of a string. |
-| `MinLengthIf` | Validates minimum length if a condition is true. |
+
 
 String validators:
 | Validator | Description |
@@ -131,11 +129,24 @@ String validators:
 | `MinLengthIf` | Validates minimum length if a condition is true. |
 
 ## Notes
-- Version 1.2.0 Internal engine updated to use `GetAttributeValue<T>` to eliminate boxing of primitive types.
-- Version 1.2.1 Added `RuleForValue` for external variable validation and `ApplyTemplate` for rule reuse.
-- Version 1.1.1 adds new validators: `IsNotNull`, and `IsNull`.
-- Version 1.1.0 introduces multi-targeting support (`net6.0`, `net7.0`, `net8.0`, `net9.0`, and `netstandard2.0`) and full nullability support.
-- Version 1.0.0 was the initial release of Myce.FluentValidator, providing basic validation capabilities for .NET applications.
+Version 1.2.2 
+- Added `IsBetween` validation rule for all numeric types (`int`, `double`, `decimal`) including nullable support 
+- Fixed fluent chaining for RuleForValue, allowing multiple external value validations in a single statement.
+
+Version 1.2.1 
+- Internal engine updated to use `GetAttributeValue<T>` to eliminate boxing of primitive types and improve performance.
+
+Version 1.2.0 
+- Added `RuleForValue` for external variable validation and `ApplyTemplate` for rule reuse.
+
+Version 1.1.1 
+- Addedd new validators: `IsNotNull`, and `IsNull`.
+
+Version 1.1.0
+- Introduces multi-targeting support (`net6.0`, `net7.0`, `net8.0`, `net9.0`, and `netstandard2.0`) and full nullability support.
+
+Version 1.0.0 
+- The initial stable release of Myce.FluentValidator, providing basic validation capabilities for .NET applications.
 
 ## Dependencies
 - Myce.Extensions
