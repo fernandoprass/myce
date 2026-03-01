@@ -5,7 +5,10 @@ namespace Myce.FluentValidator.Tests
 {
    public class RulerForValueTests
    {
-      private class SimpleEntity { }
+      private class SimpleEntity 
+      {
+         public string Name { get; set; }
+      }
 
       [Fact]
       public void RuleForValue_WithSimpleObjectAndMultipleRules_ShouldAllowAnyRule()
@@ -69,7 +72,7 @@ namespace Myce.FluentValidator.Tests
       }
 
       [Fact]
-      public void RuleForValue_WithMultipleRules_ShouldChainCorrectly()
+      public void RuleForValue_WithRuleForMethod_ShouldChainCorrectly()
       {
          var request = new SimpleEntity();
          string externalToken = "ABC";
@@ -77,12 +80,14 @@ namespace Myce.FluentValidator.Tests
          var validator = new FluentValidator<SimpleEntity>()
              .RuleForValue(externalToken, "token")
                  .IsRequired()
-                 .MinLength(5);
+                 .MinLength(5)
+             .RuleFor(x => x.Name).IsRequired();
 
          var isValid = validator.Validate(request);
 
          Assert.False(isValid);
          Assert.Contains("token", validator.Messages.First().Show());
+         Assert.Equal(2, validator.Messages.Count);
       }
    }
 }

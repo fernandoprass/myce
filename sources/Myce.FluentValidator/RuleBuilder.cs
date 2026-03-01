@@ -66,6 +66,16 @@ namespace Myce.FluentValidator
          return this;
       }
 
+      /// <summary>
+      /// Starts a validation rule for any external object or variable, allowing fluent chaining.
+      /// </summary>
+      public RuleBuilder<T, TValue> RuleForValue<TValue>(TValue value) => _validator.RuleForValue(value);
+
+      /// <summary>
+      /// Starts a validation rule for an external value or variable with a custom name, allowing fluent chaining.
+      /// </summary>
+      public RuleBuilder<T, TValue> RuleForValue<TValue>(TValue value, string paramName) => _validator.RuleForValue(value, paramName);
+
       #region InternalAndPrivateMethods
       /// <summary>
       /// Internal helper to register rules directly into the parent validator.
