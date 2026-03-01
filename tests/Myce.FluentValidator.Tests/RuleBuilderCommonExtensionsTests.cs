@@ -1,5 +1,6 @@
 ﻿using Myce.Response.Messages;
 using Xunit;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Myce.FluentValidator.Tests
 {
@@ -60,6 +61,48 @@ namespace Myce.FluentValidator.Tests
             .RuleFor(x => x.SubObject).IsNull();
 
          Assert.True(validator.Validate(entity));
+      }
+
+      /// <summary>
+      /// Tests the IsNull return the rigth message.
+      /// </summary>
+      [Fact]
+      public void IsNull_WithDifferentMessage_ShouldValidateCorrectly()
+      {
+         var entity = new TestEntity
+         {
+            NullableDatetimeValue = DateTime.Now,
+            NullableIntValue = 0
+         };
+
+         var validator = new FluentValidator<TestEntity>()
+            .RuleFor(x => x.NullableDatetimeValue).IsNull()
+            .RuleFor(x => x.NullableIntValue).IsNull(new ErrorMessage("not found"));
+
+         var result = validator.Validate(entity);
+
+         Assert.False(result);
+         Assert.Equal("'NullableDatetimeValue' is not null.", validator.Messages.First().Show());
+         Assert.Equal("not found",validator.Messages.Last().Show());
+      }
+
+      /// <summary>
+      /// Tests the IsNull return the rigth message.
+      /// </summary>
+      [Fact]
+      public void IsNotNull_WithDifferentMessage_ShouldValidateCorrectly()
+      {
+         var entity = new TestEntity();
+
+         var validator = new FluentValidator<TestEntity>()
+            .RuleFor(x => x.NullableDatetimeValue).IsNotNull()
+            .RuleFor(x => x.NullableIntValue).IsNotNull(new ErrorMessage("it shoud be not null"));
+
+         var result = validator.Validate(entity);
+
+         Assert.False(result);
+         Assert.Equal("'NullableDatetimeValue' is null.", validator.Messages.First().Show());
+         Assert.Equal("it shoud be not null", validator.Messages.Last().Show());
       }
 
       /// <summary>
