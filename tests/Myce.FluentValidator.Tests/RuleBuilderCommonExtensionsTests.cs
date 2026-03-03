@@ -1,6 +1,5 @@
 ﻿using Myce.Response.Messages;
 using Xunit;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Myce.FluentValidator.Tests
 {

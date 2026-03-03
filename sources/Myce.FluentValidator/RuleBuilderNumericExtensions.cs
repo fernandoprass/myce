@@ -9,7 +9,7 @@ namespace Myce.FluentValidator
    public static partial class RuleBuilderNumericExtensions
    {
       #region IntExtensions
-      /// <summary>Validates that the integer value is between a minimum and maximum (inclusive). </summary>
+      /// <summary> Validates that the integer value is between a minimum and maximum (inclusive). </summary>
       public static RuleBuilder<T, int> IsBetween<T>(this RuleBuilder<T, int> rb, int min, int max) where T : class
          => rb.AddNumericRule(min, (attr, _) => attr >= min && attr <= max, $"between {min} and {max}");
 

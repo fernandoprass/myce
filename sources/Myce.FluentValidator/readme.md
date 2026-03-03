@@ -98,6 +98,14 @@ Core validators available:
 | `IsTrue` | Validates that the boolean attribute is true.|
 | `IsFalse` | Validates that the boolean attribute is false.|
 
+Collection validators:
+| Validator | Description |
+| :--- | :--- |
+| `IsEmpty` | Validates that the collection is empty (contains no items). |
+| `IsIn` | Validates that the attribute value is present within a sequence of allowed valeus. |
+| `HasItems` | Validates that the collection is not empty and has at least one item. |
+| `MaxNumberOfItems` | Validates that the collection does not exceed a maximum number of items. |
+
 Comparison validators:
 | Validator | Description |
 | :--- | :--- |
@@ -117,7 +125,7 @@ Numeric validators:
 String validators:
 | Validator | Description |
 | :--- | :--- |
-| `Contains` | Validates that the value exists within a provided collection. |
+| `Contains` | Validates that the string contains a specific substring. |
 | `ContainsOnlyNumber` | Validates that a string contains only numeric characters. |
 | `ExactNumberOfCharacters` | Validates that a string has an exact length. |
 | `ExactNumberOfCharactersIf` | Validates exact length if a condition is true. |

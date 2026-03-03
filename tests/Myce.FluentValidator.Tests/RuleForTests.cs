@@ -15,30 +15,6 @@ namespace Myce.FluentValidator.Tests
          public bool IsSingle { get; set; }
       }
 
-      /// <summary> Verify Contains validator </summary>
-      [Theory]
-      [InlineData("", new[] { "A", "B" }, 1)]
-      [InlineData(null, new[] { "A", "B" }, 1)]
-      [InlineData("AB", new[] { "A", "B" }, 1)]
-      [InlineData("C", new[] { "A", "B" }, 1)]
-      [InlineData("A", new[] { "A", "B" }, 0)]
-      [InlineData("B", new[] { "A", "B", "AB" }, 0)]
-      [InlineData("AB", new[] { "A", "B", "AB" }, 0)]
-      public void Contains(string value, string[] collection, int expectedNumberOfErrors)
-      {
-         ErrorMessage errorMessage = GetGenericErrorMessage();
-
-         var person = new Person { Code = value };
-
-         var validator = new FluentValidator<Person>();
-
-         validator.RuleFor(x => x.Code).Contains(collection, errorMessage);
-
-         var result = validator.Validate(person);
-
-         Assert.Equal(expectedNumberOfErrors, validator.Messages.Count());
-      }
-
       /// <summary> Verify IsRequired and IsRequiredIf validators </summary>
       [Theory]
       [InlineData("", 1 == 1, 2)]

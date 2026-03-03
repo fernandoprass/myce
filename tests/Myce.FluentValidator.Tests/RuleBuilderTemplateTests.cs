@@ -37,7 +37,7 @@ namespace Myce.FluentValidator.Tests
          var validator = new FluentValidator<Person>();
 
          validator.RuleFor(x => x.Name)
-             .ApplyTemplate(BasicStringTemplate)
+             .ApplyTemplate(BasicStringTemplate).RuleFor(x => x.Name)
              .ApplyTemplate(MinLengthTemplate);
 
          var isValid = validator.Validate(user);
@@ -76,6 +76,29 @@ namespace Myce.FluentValidator.Tests
          validator.RuleFor(x => x.Email)
              .ApplyTemplate(BasicStringTemplate)
              .ApplyTemplate(CorporateDomainTemplate);
+
+         var isValid = validator.Validate(user);
+
+         Assert.True(isValid);
+         Assert.Empty(validator.Messages);
+      }
+
+      [Fact]
+      public void ApplyTemplate_WithRuleForValue_ShouldChainSucceed()
+      {
+         var user = new Person { Name = "Jonathan", Email = "admin@myce.com" };
+         var validator = new FluentValidator<Person>();
+
+         var trueVariable = true;
+
+         validator.RuleFor(x => x.Name)
+             .ApplyTemplate(BasicStringTemplate)
+             .ApplyTemplate(MinLengthTemplate);
+
+         validator.RuleFor(x => x.Email)
+             .ApplyTemplate(BasicStringTemplate)
+             .ApplyTemplate(CorporateDomainTemplate)
+             .RuleForValue(trueVariable).IsTrue();
 
          var isValid = validator.Validate(user);
 

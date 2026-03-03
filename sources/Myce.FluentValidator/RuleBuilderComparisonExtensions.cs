@@ -5,7 +5,8 @@ using System.Linq.Expressions;
 namespace Myce.FluentValidator
 {
    /// <summary>
-   /// Extension methods for RuleBuilder for equality and inequality comparisons.
+   /// Extension methods for comparison-based validation rules, such as equality 
+   /// and inequality checks against fixed values or other properties.
    /// </summary>
    public static class RuleBuilderComparisonExtensions
    {
