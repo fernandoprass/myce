@@ -5,7 +5,8 @@ using System;
 namespace Myce.FluentValidator
 {
    /// <summary>
-   /// Extension methods for RuleBuilder for requirement and nullability validations.
+   /// Extension methods for common validation rules that can be applied to any property type, 
+   /// such as null checks, required fields, and boolean validations.
    /// </summary>
    public static class RuleBuilderCommonExtensions
    {
@@ -93,6 +94,7 @@ namespace Myce.FluentValidator
       /// <summary>
       /// Determines whether a value was filled with a custom message.
       /// </summary>
+      /// <param name="message">The error message if the IsRequired rule fails.</param>
       public static RuleBuilder<T, TAttribute> IsRequired<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder, ErrorMessage message)
          where T : class
       {
@@ -111,6 +113,7 @@ namespace Myce.FluentValidator
       /// <summary>
       /// Determines whether the property is required if a given condition is true.
       /// </summary>
+      /// <param name="condition">The condition that determines if the property is required.</param>
       public static RuleBuilder<T, TAttribute> IsRequiredIf<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder, bool condition)
          where T : class
       {
@@ -120,6 +123,7 @@ namespace Myce.FluentValidator
       /// <summary>
       /// Determines whether the property is required if a condition is true with a custom message.
       /// </summary>
+      /// <param name="message">The error message if the IsRequiredIf rule fails.</param>
       public static RuleBuilder<T, TAttribute> IsRequiredIf<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder, bool condition, ErrorMessage message)
          where T : class
       {
@@ -129,6 +133,17 @@ namespace Myce.FluentValidator
       /// <summary>
       /// Validates that the boolean attribute is true.
       /// </summary>
+      public static RuleBuilder<T, bool> IsTrue<T>(this RuleBuilder<T, bool> ruleBuilder)
+         where T : class
+      {
+         var attributeName = ruleBuilder.GetAttributeName();
+         return ruleBuilder.IsTrue(new ErrorMessage($"'{attributeName}' is not true."));
+      }
+
+      /// <summary>
+      /// Validates that the boolean attribute is true.
+      /// </summary>
+      /// <param name="message">The error message if the IsTrue rule fails.</param>
       public static RuleBuilder<T, bool> IsTrue<T>(this RuleBuilder<T, bool> ruleBuilder, ErrorMessage message)
          where T : class
       {
@@ -141,6 +156,17 @@ namespace Myce.FluentValidator
       /// <summary>
       /// Validates that the boolean attribute is false.
       /// </summary>
+      public static RuleBuilder<T, bool> IsFalse<T>(this RuleBuilder<T, bool> ruleBuilder)
+         where T : class
+      {
+         var attributeName = ruleBuilder.GetAttributeName();
+         return ruleBuilder.IsFalse(new ErrorMessage($"'{attributeName}' is not false."));
+      }
+
+      /// <summary>
+      /// Validates that the boolean attribute is false.
+      /// </summary>
+      /// <param name="message">The error message if the IsFalse rule fails.</param>
       public static RuleBuilder<T, bool> IsFalse<T>(this RuleBuilder<T, bool> ruleBuilder, ErrorMessage message)
          where T : class
       {

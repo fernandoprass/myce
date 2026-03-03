@@ -9,8 +9,23 @@ namespace Myce.FluentValidator.Tests
       private class Person
       {
          public string Code { get; set; }
+         public string Name { get; set; }
          public string Email { get; set; }
          public string DateOfBirth { get; set; }
+      }
+
+      [Theory]
+      [InlineData("Fluent Validator is great", "Validator", true)]
+      [InlineData("Fluent Validator is great", "validator", true)] // Case insensitive test
+      [InlineData("Fluent Validator is great", "C#", false)]
+      [InlineData(null, "Any", false)]
+      public void Contains_Substring_ShouldValidateCorrectly(string bio, string search, bool expected)
+      {
+         var user = new Person { Name = bio };
+         var validator = new FluentValidator<Person>()
+             .RuleFor(x => x.Name).Contains(search);
+
+         Assert.Equal(expected, validator.Validate(user));
       }
 
       /// <summary> Verify Contains Only Numbers validator </summary>
@@ -131,11 +146,9 @@ namespace Myce.FluentValidator.Tests
 
       /// <summary> Verify MinLength and MinLengthIf validators </summary>
       [Theory]
-      [InlineData("", 1, 1 == 1, 2)]
-      [InlineData(null, 1, 1 == 1, 2)] // Wait, MinLength for null/empty? Usually passes unless Required?
-                                       // My Implementation: value != null && value.Length >= minLength.
-                                       // If null/empty -> returns FALSE (invalid).
-                                       // So error expected. Correct.
+      [InlineData("", 1, 1 == 1, 0)]   // MinLength 1. Empty string len 0. Expected fails MinLength. But 1==1 -> True. MinLengthIf(true) -> PASS.
+                                       // MinLength(1) -> Empty string -> PASS.
+      [InlineData(null, 1, 1 == 1, 0)] 
       [InlineData("hello", 6, 1 == 1, 2)]
       [InlineData("hello", 6, 1 == 2, 1)]
       [InlineData("hey", 4, 1 == 2, 1)] // MinLength 4. "hey" len 3. Expected fails MinLength. 
@@ -264,6 +277,34 @@ namespace Myce.FluentValidator.Tests
          Assert.Single(validator.Messages);
          Assert.IsType<ErrorInvalidEmail>(validator.Messages.First());
       }
+
+
+      [Theory]
+      [InlineData("JohnDoe", true)]
+      [InlineData("John Doe", true)] // Com espaço
+      [InlineData("John123", false)] // Com número
+      [InlineData("", false)]        // Vazio
+      public void IsAlpha_ShouldValidateCorrectly(string value, bool expected)
+      {
+         var user = new Person { Name = value };
+         var validator = new FluentValidator<Person>()
+               .RuleFor(x => x.Name).IsAlpha();
+
+         Assert.Equal(expected, validator.Validate(user));
+      }
+
+      [Theory]
+      [InlineData("User123", true)]
+      [InlineData("User_123", false)] // Caractere especial
+      public void IsAlphaNumeric_ShouldValidateCorrectly(string value, bool expected)
+      {
+         var user = new Person { Name = value };
+         var validator = new FluentValidator<Person>()
+               .RuleFor(x => x.Name).IsAlphaNumeric();
+
+         Assert.Equal(expected, validator.Validate(user));
+      }
+
 
       private static ErrorMessage GetGenericErrorMessage()
       {

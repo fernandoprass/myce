@@ -9,7 +9,7 @@ namespace Myce.FluentValidator
    public static partial class RuleBuilderNumericExtensions
    {
       #region IntExtensions
-      /// <summary>Validates that the integer value is between a minimum and maximum (inclusive). </summary>
+      /// <summary> Validates that the integer value is between a minimum and maximum (inclusive). </summary>
       public static RuleBuilder<T, int> IsBetween<T>(this RuleBuilder<T, int> rb, int min, int max) where T : class
          => rb.AddNumericRule(min, (attr, _) => attr >= min && attr <= max, $"between {min} and {max}");
 
@@ -48,6 +48,22 @@ namespace Myce.FluentValidator
       /// <summary> Validates that the nullable integer value is less than or equal to a specified value. </summary>
       public static RuleBuilder<T, int?> IsLessThanOrEqualTo<T>(this RuleBuilder<T, int?> rb, int value) where T : class
          => rb.AddNullableNumericRule(value, (a, v) => a <= v, "less than or equal to");
+
+      /// <summary> Validates that the integer value is positive (greater than zero). </summary>
+      public static RuleBuilder<T, int> IsPositive<T>(this RuleBuilder<T, int> rb) where T : class
+         => rb.AddNumericRule(0, (a, v) => a > v, "positive");
+
+      /// <summary> Validates that the nullable integer value is positive (greater than zero). </summary>
+      public static RuleBuilder<T, int?> IsPositive<T>(this RuleBuilder<T, int?> rb) where T : class
+         => rb.AddNullableNumericRule(0, (a, v) => a > v, "positive");
+
+      /// <summary> Validates that the integer value is negative (less than zero). </summary>
+      public static RuleBuilder<T, int> IsNegative<T>(this RuleBuilder<T, int> rb) where T : class
+         => rb.AddNumericRule(0, (a, v) => a < v, "negative");
+
+      /// <summary> Validates that the nullable integer value is negative (less than zero). </summary>
+      public static RuleBuilder<T, int?> IsNegative<T>(this RuleBuilder<T, int?> rb) where T : class
+         => rb.AddNullableNumericRule(0, (a, v) => a < v, "negative");
       #endregion
 
       #region DoubleExtensions
@@ -90,6 +106,22 @@ namespace Myce.FluentValidator
       /// <summary> Validates that the nullable double value is less than or equal to a specified value. </summary>
       public static RuleBuilder<T, double?> IsLessThanOrEqualTo<T>(this RuleBuilder<T, double?> rb, double value) where T : class
          => rb.AddNullableNumericRule(value, (a, v) => a <= v, "less than or equal to");
+
+      /// <summary> Validates that the double value is positive (greater than zero). </summary>
+      public static RuleBuilder<T, double> IsPositive<T>(this RuleBuilder<T, double> rb) where T : class
+         => rb.AddNumericRule(0.0, (a, v) => a > v, "positive");
+
+      /// <summary> Validates that the nullable double value is positive (greater than zero). </summary>
+      public static RuleBuilder<T, double?> IsPositive<T>(this RuleBuilder<T, double?> rb) where T : class
+         => rb.AddNullableNumericRule(0.0, (a, v) => a > v, "positive");
+
+      /// <summary> Validates that the double value is negative (less than zero). </summary>
+      public static RuleBuilder<T, double> IsNegative<T>(this RuleBuilder<T, double> rb) where T : class
+         => rb.AddNumericRule(0.0, (a, v) => a < v, "negative");
+
+      /// <summary> Validates that the nullable double value is negative (less than zero). </summary>
+      public static RuleBuilder<T, double?> IsNegative<T>(this RuleBuilder<T, double?> rb) where T : class
+         => rb.AddNullableNumericRule(0.0, (a, v) => a < v, "negative");
       #endregion
 
       #region DecimalExtensions
@@ -132,6 +164,22 @@ namespace Myce.FluentValidator
       /// <summary> Validates that the nullable decimal value is less than or equal to a specified value. </summary>
       public static RuleBuilder<T, decimal?> IsLessThanOrEqualTo<T>(this RuleBuilder<T, decimal?> rb, decimal value) where T : class
          => rb.AddNullableNumericRule(value, (a, v) => a <= v, "less than or equal to");
+
+      /// <summary> Validates that the decimal value is positive (greater than zero). </summary>
+      public static RuleBuilder<T, decimal> IsPositive<T>(this RuleBuilder<T, decimal> rb) where T : class
+         => rb.AddNumericRule(0m, (a, v) => a > v, "positive");
+
+      /// <summary> Validates that the nullable decimal value is positive (greater than zero). </summary>
+      public static RuleBuilder<T, decimal?> IsPositive<T>(this RuleBuilder<T, decimal?> rb) where T : class
+         => rb.AddNullableNumericRule(0m, (a, v) => a > v, "positive");
+
+      /// <summary> Validates that the decimal value is negative (less than zero). </summary>
+      public static RuleBuilder<T, decimal> IsNegative<T>(this RuleBuilder<T, decimal> rb) where T : class
+         => rb.AddNumericRule(0m, (a, v) => a < v, "negative");
+
+      /// <summary> Validates that the nullable decimal value is negative (less than zero). </summary>
+      public static RuleBuilder<T, decimal?> IsNegative<T>(this RuleBuilder<T, decimal?> rb) where T : class
+         => rb.AddNullableNumericRule(0m, (a, v) => a < v, "negative");
       #endregion
 
       #region PrivateHelpersForCodeReuse

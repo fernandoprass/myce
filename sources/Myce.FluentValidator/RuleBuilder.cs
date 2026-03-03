@@ -58,7 +58,7 @@ namespace Myce.FluentValidator
       /// <summary>
       /// Applies a predefined template of rules to the current property, enabling reuse of common validation logic.
       /// </summary>
-      /// <param name="template">The template</param>
+      /// <param name="template">An action that receives the current RuleBuilder to configure multiple rules at once.</param>
       /// <returns></returns>
       public RuleBuilder<T, TAttribute> ApplyTemplate(Action<RuleBuilder<T, TAttribute>> template)
       {
@@ -74,6 +74,7 @@ namespace Myce.FluentValidator
       /// <summary>
       /// Starts a validation rule for an external value or variable with a custom name, allowing fluent chaining.
       /// </summary>
+      /// <param name="paramName">Custom name for the parameter, used in error messages.</param>
       public RuleBuilder<T, TValue> RuleForValue<TValue>(TValue value, string paramName) => _validator.RuleForValue(value, paramName);
 
       #region InternalAndPrivateMethods
@@ -104,12 +105,12 @@ namespace Myce.FluentValidator
       }
 
       /// <summary>
-      /// Returns the typed value of the property. (Fast, no boxing)
+      /// Returns the typed value of the property. (Fast, no boxing).
       /// </summary>
       internal TAttribute GetAttributeValue(T instance) => _attributeFunc(instance);
 
       /// <summary>
-      /// Returns the value as an object. (Keep for generic/legacy rules)
+      /// Returns the value as an object. (Keep for generic/legacy rules).
       /// </summary>
       internal object? GetAttributeValueAsObject(T instance) => GetAttributeValue(instance);
 

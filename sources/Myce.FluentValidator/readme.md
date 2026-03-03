@@ -98,6 +98,14 @@ Core validators available:
 | `IsTrue` | Validates that the boolean attribute is true.|
 | `IsFalse` | Validates that the boolean attribute is false.|
 
+Collection validators:
+| Validator | Description |
+| :--- | :--- |
+| `IsEmpty` | Validates that the collection is empty (contains no items). |
+| `IsIn` | Validates that the attribute value is present within a sequence of allowed valeus. |
+| `HasItems` | Validates that the collection is not empty and has at least one item. |
+| `MaxNumberOfItems` | Validates that the collection does not exceed a maximum number of items. |
+
 Comparison validators:
 | Validator | Description |
 | :--- | :--- |
@@ -112,12 +120,14 @@ Numeric validators:
 | `IsGreaterThanOrEqualTo` | Validates that the value is greater than or equal to a specified value. |
 | `IsLessThan` | Validates that the value is less than a specified value. |
 | `IsLessThanOrEqualTo` | Validates that the value is less than or equal to a specified value. |
+| `IsPositive` | Validates that the integer value is positive (greater than zero). |
+| `IsNegative` | Validates that the integer value is negative (less than zero). |
 
 
 String validators:
 | Validator | Description |
 | :--- | :--- |
-| `Contains` | Validates that the value exists within a provided collection. |
+| `Contains` | Validates that the string contains a specific substring. |
 | `ContainsOnlyNumber` | Validates that a string contains only numeric characters. |
 | `ExactNumberOfCharacters` | Validates that a string has an exact length. |
 | `ExactNumberOfCharactersIf` | Validates exact length if a condition is true. |
@@ -129,8 +139,12 @@ String validators:
 | `MinLengthIf` | Validates minimum length if a condition is true. |
 
 ## Notes
+Version 1.2.3 
+- Add extension methods to validate collection and enumerable attributes.
+- Added `IsPositive` and `IsNegative` validation rule for all numeric types (`int`, `double`, `decimal`) including nullable support.
+
 Version 1.2.2 
-- Added `IsBetween` validation rule for all numeric types (`int`, `double`, `decimal`) including nullable support 
+- Added `IsBetween` validation rule for all numeric types (`int`, `double`, `decimal`) including nullable support-
 - Fixed fluent chaining for RuleForValue, allowing multiple external value validations in a single statement.
 
 Version 1.2.1 
