@@ -120,6 +120,8 @@ Numeric validators:
 | `IsGreaterThanOrEqualTo` | Validates that the value is greater than or equal to a specified value. |
 | `IsLessThan` | Validates that the value is less than a specified value. |
 | `IsLessThanOrEqualTo` | Validates that the value is less than or equal to a specified value. |
+| `IsPositive` | Validates that the integer value is positive (greater than zero). |
+| `IsNegative` | Validates that the integer value is negative (less than zero). |
 
 
 String validators:
@@ -137,8 +139,12 @@ String validators:
 | `MinLengthIf` | Validates minimum length if a condition is true. |
 
 ## Notes
+Version 1.2.3 
+- Add extension methods to validate collection and enumerable attributes.
+- Added `IsPositive` and `IsNegative` validation rule for all numeric types (`int`, `double`, `decimal`) including nullable support.
+
 Version 1.2.2 
-- Added `IsBetween` validation rule for all numeric types (`int`, `double`, `decimal`) including nullable support 
+- Added `IsBetween` validation rule for all numeric types (`int`, `double`, `decimal`) including nullable support-
 - Fixed fluent chaining for RuleForValue, allowing multiple external value validations in a single statement.
 
 Version 1.2.1 

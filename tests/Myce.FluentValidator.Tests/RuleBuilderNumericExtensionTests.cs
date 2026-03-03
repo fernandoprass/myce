@@ -124,5 +124,31 @@ namespace Myce.FluentValidator.Tests
 
          Assert.Contains("'Age' must be greater than 18", message);
       }
+
+      [Theory]
+      [InlineData(10.5, true)]
+      [InlineData(0, false)]  // Zero is not positive
+      [InlineData(-1, false)]
+      public void IsPositive_Decimal_ShouldValidateCorrectly(decimal value, bool expected)
+      {
+         var account = new NumericEntity { Balance = value };
+         var validator = new FluentValidator<NumericEntity>()
+             .RuleFor(x => x.Balance).IsPositive();
+
+         Assert.Equal(expected, validator.Validate(account));
+      }
+
+      [Theory]
+      [InlineData(-500.0, true)]
+      [InlineData(0.0, false)]
+      [InlineData(null, false)] // Null is not negative
+      public void IsNegative_NullableDecimal_ShouldValidateCorrectly(double? value, bool expected)
+      {
+         var account = new NumericEntity { Discount = value };
+         var validator = new FluentValidator<NumericEntity>()
+             .RuleFor(x => x.Discount).IsNegative();
+
+         Assert.Equal(expected, validator.Validate(account));
+      }
    }
 }
