@@ -7,24 +7,38 @@ using System.Text.RegularExpressions;
 namespace Myce.FluentValidator
 {
    /// <summary>
-   /// Extension methods for RuleBuilder with string attributes.
+   /// Extension methods for string-specific validation rules, such as checks for substrings, 
+   /// character types, length constraints, and format validations like email and date formats.
    /// </summary>
    public static partial class RuleBuilderStringExtensions
    {
       /// <summary>
-      /// Determines whether a string is present within a sequence of allowed values.
+      /// Validates that the string contains a specific substring using OrdinalIgnoreCase.
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
-      /// <param name="ruleBuilder">The rule builder instance.</param>
-      /// <param name="values">The sequence of allowed values.</param>
-      /// <param name="message">The message to be returned in case of an error.</param>
-      public static RuleBuilder<T, string> Contains<T>(this RuleBuilder<T, string> ruleBuilder, string[] values, ErrorMessage message) where T : class
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="substring">The substring to search for.</param>
+      public static RuleBuilder<T, string> Contains<T>(this RuleBuilder<T, string> rb, string substring) where T : class
       {
-         return ruleBuilder.AddRule(instance =>
+         var name = rb.GetAttributeName();
+         return rb.Contains(substring, StringComparison.OrdinalIgnoreCase);
+      }
+
+      /// <summary>
+      /// Validates that the string contains a specific substring.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="substring">The substring to search for.</param>
+      /// <param name="stringComparison">The string comparison option to use when checking for the substring.</param>
+      public static RuleBuilder<T, string> Contains<T>(this RuleBuilder<T, string> rb, string substring, StringComparison stringComparison) where T : class
+      {
+         var name = rb.GetAttributeName();
+         return rb.AddRule(instance =>
          {
-            var value = ruleBuilder.GetAttributeValue(instance);
-            return value is not null && values.Contains(value);
-         }, message);
+            var value = rb.GetAttributeValue(instance);
+            return value != null && value.Contains(substring, stringComparison);
+         }, new ErrorMessage($"'{name}' must contain '{substring}'."));
       }
 
       /// <summary>
@@ -142,6 +156,7 @@ namespace Myce.FluentValidator
       /// <summary>
       /// Validates if the property value is a valid email address with a custom message.
       /// </summary>
+      /// <param name="message">The custom error message.</param>
       public static RuleBuilder<T, string> IsValidEmailAddress<T>(this RuleBuilder<T, string> ruleBuilder, ErrorMessage message) where T : class
       {
          return ruleBuilder.AddRule(instance =>
@@ -152,9 +167,40 @@ namespace Myce.FluentValidator
          }, message);
       }
 
+      /// <summary> 
+      /// Validates that the string matches a specific regular expression pattern. 
+      /// </summary>
+      /// <param name="pattern">The Regex patterb</param>
+      /// <param name="message">The custom error message.</param>
+      public static RuleBuilder<T, string> Matches<T>(this RuleBuilder<T, string> rb, string pattern, ErrorMessage message) where T : class
+      {
+         return rb.AddRule(instance =>
+         {
+            var value = rb.GetAttributeValue(instance);
+            return value != null && Regex.IsMatch(value, pattern);
+         }, message);
+      }
+
+      /// <summary> Validates that the string contains only alphabetic characters. </summary>
+      public static RuleBuilder<T, string> IsAlpha<T>(this RuleBuilder<T, string> rb) where T : class
+      {
+         var name = rb.GetAttributeName();
+         return rb.Matches(@"^[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ\s]+$",
+             new ErrorMessage($"{name} must contain only letters."));
+      }
+
+      /// <summary> Validates that the string contains only alphanumeric characters. </summary>
+      public static RuleBuilder<T, string> IsAlphaNumeric<T>(this RuleBuilder<T, string> rb) where T : class
+      {
+         var name = rb.GetAttributeName();
+         return rb.Matches(@"^[a-zA-Z0-9]+$",
+             new ErrorMessage($"{name} must contain only letters and number."));
+      }
+
       /// <summary>
       /// Validates the maximum character length.
       /// </summary>
+      /// <param name="maxLength">The maximum lenght allowed. </param>
       public static RuleBuilder<T, string> MaxLength<T>(this RuleBuilder<T, string> ruleBuilder, int maxLength) where T : class
       {
          return ruleBuilder.MaxLength(maxLength, new ErrorMoreCharactersThanExpected(ruleBuilder.GetAttributeName(), maxLength));
@@ -163,6 +209,8 @@ namespace Myce.FluentValidator
       /// <summary>
       /// Validates the maximum character length with a custom message.
       /// </summary>
+      /// <param name="maxLength">The maximum lenght allowed. </param>
+      /// <param name="message">The custom error message.</param>
       public static RuleBuilder<T, string> MaxLength<T>(this RuleBuilder<T, string> ruleBuilder, int maxLength, ErrorMessage message) where T : class
       {
          return ruleBuilder.AddRule(instance =>
@@ -204,7 +252,7 @@ namespace Myce.FluentValidator
          return ruleBuilder.AddRule(instance =>
          {
             var value = ruleBuilder.GetAttributeValue(instance);
-            return !string.IsNullOrEmpty(value) && value.Length >= minLength;
+            return string.IsNullOrEmpty(value) || value.Length >= minLength;
          }, message);
       }
 
