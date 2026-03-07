@@ -22,6 +22,11 @@ namespace Myce.Response
       public IReadOnlyCollection<Message> Messages => _messages.AsReadOnly();
 
       /// <summary>
+      /// Gets a read-only collection of error messages associated with this instance.
+      /// </summary>
+      public IEnumerable<Message> ErrorMessages => _messages.Where(x => x.Type == MessageType.Error);
+
+      /// <summary>
       /// Gets a value indicating whether the current state is valid.
       /// </summary>
       public bool IsValid => !HasError;
@@ -110,7 +115,7 @@ namespace Myce.Response
       /// </summary>
       /// <param name="messages">A collection of messages that describe the reasons for the failure. Cannot be null or contain null elements.</param>
       /// <returns>A <see cref="Result"/> instance representing a failure with the provided error messages.</returns>
-      public static Result Failure(IEnumerable<ErrorMessage> messages) => new Result(messages);
+      public static Result Failure(IEnumerable<Message> messages) => new Result(messages);
 
       /// <summary>
       /// Adds a message to the collection.
@@ -221,7 +226,7 @@ namespace Myce.Response
       /// </summary>
       /// <param name="message">The error message that describes the reason for the failure. Cannot be null.</param>
       /// <returns>A failed <see cref="Result{T}"/> instance containing the specified error message.</returns>
-      public static new Result<T> Failure(Message message) => new Result<T>(message);
+      public static new Result<T> Failure(ErrorMessage message) => new Result<T>(message);
 
       /// <summary>
       /// Creates a failed result containing the specified error messages.
