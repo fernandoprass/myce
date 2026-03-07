@@ -57,10 +57,10 @@ namespace Myce.FluentValidator.Tests
 
          Assert.Equal(2, validator.Messages.Count());
          Assert.Equal("Code", validator.Messages.First().Variables.First().Value);
-         Assert.IsType<ErrorIsRequired>(validator.Messages.First());
+         Assert.IsType<IsRequiredError>(validator.Messages.First());
 
          Assert.Equal("Name", validator.Messages.Last().Variables.First().Value);
-         Assert.IsType<ErrorIsRequired>(validator.Messages.Last());
+         Assert.IsType<IsRequiredError>(validator.Messages.Last());
       }
 
       [Fact]
@@ -85,7 +85,7 @@ namespace Myce.FluentValidator.Tests
          var result = validator.Validate(person);
 
          Assert.Equal("Code", validator.Messages.First().Variables.First().Value);
-         Assert.IsType<ErrorShouldContainOnlyNumber>(validator.Messages.First());
+         Assert.IsType<ShouldContainOnlyNumberError>(validator.Messages.First());
 
          var errorMessageAge = validator.Messages.Last();
          Assert.Contains("Salary", errorMessageAge.ToString());      

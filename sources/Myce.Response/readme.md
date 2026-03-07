@@ -3,7 +3,7 @@
 
 A lightweight and robust .NET library implementing the **Result Pattern** to standardize API responses, handle business logic flow, and manage complex messaging with frontend-driven internationalization support.
 
-Supports `net6.0`, `net8.0`, `net9.0`, and `netstandard2.0`.
+Supports `net6.0`, `net7.0`, `net8.0`, `net9.0`, and `netstandard2.0`.
 
 ## Features
 

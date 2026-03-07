@@ -139,6 +139,9 @@ String validators:
 | `MinLengthIf` | Validates minimum length if a condition is true. |
 
 ## Notes
+Version 1.2.4 
+- Add Custom validator to allow users to define their own validation logic with a custom function.
+
 Version 1.2.3 
 - Add extension methods to validate collection and enumerable attributes.
 - Added `IsPositive` and `IsNegative` validation rule for all numeric types (`int`, `double`, `decimal`) including nullable support.

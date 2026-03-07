@@ -33,13 +33,30 @@ namespace Myce.FluentValidator
       }
 
       /// <summary>
+      /// Validates the property using a pre-calculated boolean value.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The type of the property being validated.</typeparam>
+      /// <param name="ruleBuilder">The rule builder instance.</param>
+      /// <param name="condition">The result of a custom validation performed outside the builder.</param>
+      /// <param name="message">The error message if the condition is false.</param>
+      public static RuleBuilder<T, TAttribute> Custom<T, TAttribute>(
+          this RuleBuilder<T, TAttribute> ruleBuilder,
+          bool condition,
+          ErrorMessage message)
+          where T : class
+      {
+         return ruleBuilder.AddRule(_ => condition, message);
+      }
+
+      /// <summary>
       /// Validates if the property value is not null.
       /// </summary>
       public static RuleBuilder<T, TAttribute> IsNotNull<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder)
          where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName(); 
-         return ruleBuilder.IsNotNull(new ErrorMessage($"'{attributeName}' is null."));
+         return ruleBuilder.IsNotNull(new IsNullError(attributeName));
       }
 
       /// <summary>
@@ -64,7 +81,7 @@ namespace Myce.FluentValidator
          where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();
-         return ruleBuilder.IsNull(new ErrorMessage($"'{attributeName}' is not null."));
+         return ruleBuilder.IsNull(new IsNotNullError(attributeName));
       }
 
       /// <summary>
@@ -88,7 +105,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> IsRequired<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder)
          where T : class
       {
-         return ruleBuilder.IsRequired(new ErrorIsRequired(ruleBuilder.GetAttributeName()));
+         return ruleBuilder.IsRequired(new IsRequiredError(ruleBuilder.GetAttributeName()));
       }
 
       /// <summary>
@@ -137,7 +154,7 @@ namespace Myce.FluentValidator
          where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();
-         return ruleBuilder.IsTrue(new ErrorMessage($"'{attributeName}' is not true."));
+         return ruleBuilder.IsTrue(new IsFalseError(attributeName));
       }
 
       /// <summary>
@@ -160,7 +177,7 @@ namespace Myce.FluentValidator
          where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();
-         return ruleBuilder.IsFalse(new ErrorMessage($"'{attributeName}' is not false."));
+         return ruleBuilder.IsFalse(new IsTrueError(attributeName));
       }
 
       /// <summary>
