@@ -12,8 +12,8 @@ Supports `net6.0`, `net7.0`, `net8.0`, `net9.0`, and `netstandard2.0`.
 * **Dynamic Variable Interpolation**: Messages support placeholders (using `{}` or `[]`) for runtime data injection.
 * **Frontend-Ready i18n**: Messages carry unique codes and variable dictionaries, allowing the frontend to handle translations.
 * **Lean Payloads**: Internal logic properties are marked with `[JsonIgnore]` to keep JSON responses small and efficient.
-
 * **Smart Fallback**: The `Title` property automatically defaults to the text of the first message if not explicitly set.  
+* **Merge**: Easily combine results between types while preserving messages.
 
 ---
 

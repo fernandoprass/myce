@@ -8,6 +8,24 @@ namespace Myce.Response.Tests
    /// </summary>
    public class ResultTests
    {
+      /// <summary> Validade if return default data when source is null </summary>
+      [Fact]
+      public void Merge_ShouldGenerateNewREsult_WhenReceivesMultipleResults()
+      {
+         var result1 = new Result<int>(new ErrorMessage("ERR01", "Error occurred"));
+
+         var result2 = new Result();
+         result2.AddMessage(new WarningMessage("WRN01", "Warning occurred"));
+         result2.AddMessage(new InformationMessage("INF01", "Information message"));
+         result2.AddMessage(new ErrorMessage("ERR02", "Another error occurred"));
+
+         var result = Result.Merge(result1, result2);
+
+         Assert.False(result.IsValid);
+         Assert.Equal("Error occurred", result.Title);
+         Assert.Equal(4, result.Messages.Count);
+      }
+
       /// <summary>Validate without messages and with data</summary>
       [Fact]
       public void Result_WithStringMessage_ShouldBeValid()
@@ -123,15 +141,15 @@ namespace Myce.Response.Tests
          var infoMessage = new InformationMessage("code3", "information1");
 
          var result = new Result();
-         result.AddMessage(errorMessage);
-         result.AddMessage(warningMessage);
          result.AddMessage(infoMessage);
+         result.AddMessage(warningMessage);
+         result.AddMessage(errorMessage);
 
          Assert.False(result.IsValid);
          Assert.True(result.HasError);
          Assert.True(result.HasWarning);
          Assert.True(result.HasMessage);
-         Assert.Equal(result.Messages.First().Text, result.Title);
+         Assert.Equal(result.Messages.First(x => x.Type == MessageType.Error).Text, result.Title);
          Assert.Equal(3, result.Messages.Count);
       }
       /// <summary>Validate if MapData preserves messages </summary>
