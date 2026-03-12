@@ -1,4 +1,5 @@
-﻿using Myce.Response.Messages;
+﻿using Myce.FluentValidator.ErrorMessages;
+using Myce.Response.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,8 @@ namespace Myce.FluentValidator
           where T : class
           where TProperty : IEnumerable<TElement>
       {
-         var name = rb.GetAttributeName();
-         return rb.IsEmpty<T, TProperty, TElement>(new ErrorMessage($"'{name}' must be empty."));
+         var attributeName = rb.GetAttributeName();
+         return rb.IsEmpty<T, TProperty, TElement>(new IsNotEmptyError(attributeName));
       }
 
       /// <summary>
@@ -70,8 +71,8 @@ namespace Myce.FluentValidator
           IEnumerable<TAttribute> values)
           where T : class
       {
-         var name = ruleBuilder.GetAttributeName();
-         return ruleBuilder.IsIn(values, new ErrorMessage($"'{name}' contains an invalid value."));
+         var attributeName = ruleBuilder.GetAttributeName();
+         return ruleBuilder.IsIn(values, new ContainsInvalidValueError(attributeName));
       }
 
       /// <summary>
@@ -81,12 +82,12 @@ namespace Myce.FluentValidator
          where T : class
          where TProperty : IEnumerable<TElement>
       {
-         var name = rb.GetAttributeName();
+         var attributeName = rb.GetAttributeName();
          return rb.AddRule(instance =>
          {
             var collection = rb.GetAttributeValue(instance);
             return collection != null && collection.Any();
-         }, new ErrorMessage($"'{name}' must not be empty."));
+         }, new IsNotEmptyError(attributeName));
       }
 
       /// <summary>
@@ -96,12 +97,12 @@ namespace Myce.FluentValidator
          where T : class
          where TProperty : IEnumerable<TElement>
       {
-         var name = rb.GetAttributeName();
+         var attributeName = rb.GetAttributeName();
          return rb.AddRule(instance =>
          {
             var collection = rb.GetAttributeValue(instance);
             return collection == null || collection.Count() <= max;
-         }, new ErrorMessage($"'{name}' must have at most {max} items."));
+         }, new MaxNumberOfItemsError(attributeName,max));
       }
    }
 }

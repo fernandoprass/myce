@@ -67,7 +67,7 @@ namespace Myce.FluentValidator.Tests
          var result = validator.Validate(person);
 
          Assert.Single(validator.Messages);
-         Assert.IsType<ErrorShouldContainOnlyNumber>(validator.Messages.First());
+         Assert.IsType<ShouldContainOnlyNumberError>(validator.Messages.First());
       }
 
       /// <summary> Verify ExactNumberOfCharacters and ExactNumberOfCharactersIf validators </summary>
@@ -131,7 +131,7 @@ namespace Myce.FluentValidator.Tests
 
          validator1.Validate(person1);
          Assert.Single(validator1.Messages);
-         Assert.IsType<ErrorMoreCharactersThanExpected>(validator1.Messages.First());
+         Assert.IsType<MoreCharactersThanExpectedError>(validator1.Messages.First());
 
          var person2 = new Person { Code = "abc" };
 
@@ -141,7 +141,7 @@ namespace Myce.FluentValidator.Tests
 
          validator2.Validate(person2);
          Assert.Single(validator2.Messages);
-         Assert.IsType<ErrorMoreCharactersThanExpected>(validator2.Messages.First());
+         Assert.IsType<MoreCharactersThanExpectedError>(validator2.Messages.First());
       }
 
       /// <summary> Verify MinLength and MinLengthIf validators </summary>
@@ -181,7 +181,7 @@ namespace Myce.FluentValidator.Tests
 
          validator1.Validate(person1);
          Assert.Single(validator1.Messages);
-         Assert.IsType<ErrorFewerCharactersThanExpected>(validator1.Messages.First());
+         Assert.IsType<FewerCharactersThanExpectedError>(validator1.Messages.First());
 
          var person2 = new Person { Code = "abc" };
          var validator2 = new FluentValidator<Person>()
@@ -190,7 +190,7 @@ namespace Myce.FluentValidator.Tests
 
          validator2.Validate(person2);
          Assert.Single(validator2.Messages);
-         Assert.IsType<ErrorFewerCharactersThanExpected>(validator2.Messages.First());
+         Assert.IsType<FewerCharactersThanExpectedError>(validator2.Messages.First());
       }
 
       /// <summary> Verify IsDate validator </summary>
@@ -234,7 +234,7 @@ namespace Myce.FluentValidator.Tests
          var result = validator.Validate(person);
 
          Assert.Single(validator.Messages);
-         Assert.IsType<ErrorInvalidDate>(validator.Messages.First());
+         Assert.IsType<InvalidDateError>(validator.Messages.First());
       }
 
       /// <summary> Verify IsValidEmailAddress validator </summary>
@@ -275,7 +275,7 @@ namespace Myce.FluentValidator.Tests
          var result = validator.Validate(person);
 
          Assert.Single(validator.Messages);
-         Assert.IsType<ErrorInvalidEmail>(validator.Messages.First());
+         Assert.IsType<InvalidEmailError>(validator.Messages.First());
       }
 
 

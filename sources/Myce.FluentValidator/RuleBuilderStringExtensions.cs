@@ -48,7 +48,7 @@ namespace Myce.FluentValidator
       /// <param name="ruleBuilder">The rule builder instance.</param>
       public static RuleBuilder<T, string> ContainsOnlyNumber<T>(this RuleBuilder<T, string> ruleBuilder) where T : class
       {
-         return ruleBuilder.ContainsOnlyNumber(new ErrorShouldContainOnlyNumber(ruleBuilder.GetAttributeName()));
+         return ruleBuilder.ContainsOnlyNumber(new ShouldContainOnlyNumberError(ruleBuilder.GetAttributeName()));
       }
 
       /// <summary>
@@ -74,7 +74,7 @@ namespace Myce.FluentValidator
       /// <param name="length">Expected number of characters.</param>
       public static RuleBuilder<T, string> ExactNumberOfCharacters<T>(this RuleBuilder<T, string> ruleBuilder, int length) where T : class
       {
-         return ruleBuilder.ExactNumberOfCharacters(length, new ErrorNotExactNumberOfCharacters(ruleBuilder.GetAttributeName(), length));
+         return ruleBuilder.ExactNumberOfCharacters(length, new NotExactNumberOfCharactersError(ruleBuilder.GetAttributeName(), length));
       }
 
       /// <summary>
@@ -126,7 +126,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, string> IsValidDate<T>(this RuleBuilder<T, string> ruleBuilder) where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();
-         return ruleBuilder.IsValidDate(new ErrorInvalidDate(attributeName));
+         return ruleBuilder.IsValidDate(new InvalidDateError(attributeName));
       }
 
       /// <summary>
@@ -150,7 +150,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, string> IsValidEmailAddress<T>(this RuleBuilder<T, string> ruleBuilder) where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();
-         return ruleBuilder.IsValidEmailAddress(new ErrorInvalidEmail(attributeName));
+         return ruleBuilder.IsValidEmailAddress(new InvalidEmailError(attributeName));
       }
 
       /// <summary>
@@ -203,7 +203,7 @@ namespace Myce.FluentValidator
       /// <param name="maxLength">The maximum lenght allowed. </param>
       public static RuleBuilder<T, string> MaxLength<T>(this RuleBuilder<T, string> ruleBuilder, int maxLength) where T : class
       {
-         return ruleBuilder.MaxLength(maxLength, new ErrorMoreCharactersThanExpected(ruleBuilder.GetAttributeName(), maxLength));
+         return ruleBuilder.MaxLength(maxLength, new MoreCharactersThanExpectedError(ruleBuilder.GetAttributeName(), maxLength));
       }
 
       /// <summary>
@@ -241,7 +241,7 @@ namespace Myce.FluentValidator
       /// </summary>
       public static RuleBuilder<T, string> MinLength<T>(this RuleBuilder<T, string> ruleBuilder, int minLength) where T : class
       {
-         return ruleBuilder.MinLength(minLength, new ErrorFewerCharactersThanExpected(ruleBuilder.GetAttributeName(), minLength));
+         return ruleBuilder.MinLength(minLength, new FewerCharactersThanExpectedError(ruleBuilder.GetAttributeName(), minLength));
       }
 
       /// <summary>

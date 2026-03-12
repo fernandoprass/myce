@@ -1,5 +1,6 @@
 using Myce.Extensions;
 using Myce.Response.Messages;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 namespace Myce.Response
@@ -51,8 +52,14 @@ namespace Myce.Response
       /// first message in the collection, if available; otherwise, it returns null.</remarks>
       public string? Title
       {
-         get => string.IsNullOrWhiteSpace(_title) ? _messages.FirstOrDefault()?.Show() : _title;
+         get => string.IsNullOrWhiteSpace(_title) ? GetFirstMessage() : _title;
          set => _title = value ?? string.Empty;
+      }
+
+      private string? GetFirstMessage()
+      {
+         var errorMessage = _messages.FirstOrDefault(x => x.Type == MessageType.Error)?.Show();
+         return !string.IsNullOrWhiteSpace(errorMessage) ? errorMessage : _messages.FirstOrDefault()?.Show();
       }
 
       /// <summary>
@@ -110,7 +117,7 @@ namespace Myce.Response
       /// </summary>
       /// <param name="messages">A collection of messages that describe the reasons for the failure. Cannot be null or contain null elements.</param>
       /// <returns>A <see cref="Result"/> instance representing a failure with the provided error messages.</returns>
-      public static Result Failure(IEnumerable<ErrorMessage> messages) => new Result(messages);
+      public static Result Failure(IEnumerable<Message> messages) => new Result(messages);
 
       /// <summary>
       /// Adds a message to the collection.
@@ -123,6 +130,22 @@ namespace Myce.Response
       /// </summary>
       /// <param name="messages">The collection of messages to add. Cannot be null.</param>
       public void AddMessages(IEnumerable<Message> messages) => _messages.AddRange(messages);
+
+      /// <summary>
+      /// Merges the messages from two Result instances into a new Result. The resulting Result will contain all messages from both input results.
+      /// </summary>
+      /// <param name="result1"> The first Result instance whose messages will be included in the merged result. Cannot be null. </param>
+      /// <param name="result2"> The second Result instance whose messages will be included in the merged result. Cannot be null. </param>
+      /// <returns></returns>
+      public static Result Merge(Result result1, Result result2)
+      {
+         var result = new Result();
+
+         result.AddMessages(result1.Messages);
+         result.AddMessages(result2.Messages);
+
+         return result;
+      }
    }
 
    public class Result<T> : Result
@@ -221,7 +244,7 @@ namespace Myce.Response
       /// </summary>
       /// <param name="message">The error message that describes the reason for the failure. Cannot be null.</param>
       /// <returns>A failed <see cref="Result{T}"/> instance containing the specified error message.</returns>
-      public static new Result<T> Failure(Message message) => new Result<T>(message);
+      public static new Result<T> Failure(ErrorMessage message) => new Result<T>(message);
 
       /// <summary>
       /// Creates a failed result containing the specified error messages.
@@ -260,6 +283,22 @@ namespace Myce.Response
       public Result<V> ToResultWithErrors<V>()
       {
          return new Result<V>(Messages);
+      }
+
+      /// <summary>
+      /// Merges the messages from two Result instances into a new Result of type T. The resulting Result will contain all messages from both input results.
+      /// </summary>
+      /// <param name="result1"> The first Result instance whose messages will be included in the merged result. Cannot be null. </param>
+      /// <param name="result2"> The second Result instance whose messages will be included in the merged result. Cannot be null. </param>
+      /// <returns></returns>
+      public static Result<T> Merge(Result result1, Result result2)
+      {
+         var result = new Result<T>();
+
+         result.AddMessages(result1.Messages);
+         result.AddMessages(result2.Messages);
+         
+         return result;
       }
    }
 }

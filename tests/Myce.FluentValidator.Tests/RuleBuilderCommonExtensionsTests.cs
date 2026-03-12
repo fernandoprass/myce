@@ -1,4 +1,5 @@
-﻿using Myce.Response.Messages;
+﻿using Myce.FluentValidator.ErrorMessages;
+using Myce.Response.Messages;
 using Xunit;
 
 namespace Myce.FluentValidator.Tests
@@ -19,6 +20,77 @@ namespace Myce.FluentValidator.Tests
          public int Age { get; set; }
          public bool IsActive { get; set; }
          public bool HasPendingTerms { get; set; }
+      }
+
+      /// <summary>
+      /// Tests the Custom validation logic with a simple even number rule.
+      /// </summary>
+      [Fact]
+      public void Custom_ShouldPass_WhenCustomLogicReturnsTrue()
+      {
+         var person = new Person { Age = 20 };
+
+         Func<int, bool> isEvenRule = age => age % 2 == 0;
+
+         bool trueCondition = true;
+
+         var validator = new FluentValidator<Person>()
+             .RuleFor(x => x.Age)
+             .Custom(trueCondition, new ErrorMessage("This should not fail."))
+             .Custom(isEvenRule, new ErrorMessage("Age must be an even number."));
+
+         var isValid = validator.Validate(person);
+
+         Assert.True(isValid);
+         Assert.Empty(validator.Messages);
+      }
+
+      /// <summary>
+      /// Tests the Custom validation logic with a corporate email rule, 
+      /// ensuring it fails and returns the correct error message when the logic returns false.
+      /// </summary>
+      [Fact]
+      public void Custom_ShouldFailAndReturnMessage_WhenCustomLogicReturnsFalse()
+      {
+         var person = new Person { Email = "john@gmail.com" };
+         var errorMessage = new ErrorMessage("Only corporate emails are allowed.");
+
+         Func<string, bool> isCorporateEmailRule = email =>
+             !string.IsNullOrEmpty(email) && email.EndsWith("@myce.com");
+
+         bool falseCondition = false;
+
+         var validator = new FluentValidator<Person>()
+             .RuleFor(x => x.Email)
+             .Custom(falseCondition, new ErrorMessage("This should always fail."))
+             .Custom(isCorporateEmailRule, errorMessage);
+
+         var isValid = validator.Validate(person);
+
+         Assert.False(isValid);
+         Assert.Equal(2, validator.Messages.Count);
+         Assert.Equal("This should always fail.", validator.Messages.First().Show());
+         Assert.Equal("Only corporate emails are allowed.", validator.Messages.Last().Show());
+      }
+
+      /// <summary>
+      /// Tests that the Custom validation can be chained with other rules, and that all rules are evaluated correctly, 
+      /// returning the appropriate error messages when validation fails.
+      /// </summary>
+      [Fact]
+      public void Custom_CanBeChainedWithOtherRules()
+      {
+         var person = new Person { Email = "invalid-email" };
+
+         var validator = new FluentValidator<Person>()
+             .RuleFor(x => x.Email)
+             .IsNotNull()
+             .Custom(email => email.Contains("@"), new ErrorMessage("Must contain @ symbol"));
+
+         var isValid = validator.Validate(person);
+
+         Assert.False(isValid);
+         Assert.Contains(validator.Messages, m => m.Show() == "Must contain @ symbol");
       }
 
       [Fact]
@@ -81,7 +153,7 @@ namespace Myce.FluentValidator.Tests
          var result = validator.Validate(entity);
 
          Assert.False(result);
-         Assert.Equal("'NullableDatetimeValue' is not null.", validator.Messages.First().Show());
+         Assert.IsType<IsNotNullError>(validator.Messages.First());
          Assert.Equal("not found",validator.Messages.Last().Show());
       }
 
@@ -100,7 +172,7 @@ namespace Myce.FluentValidator.Tests
          var result = validator.Validate(entity);
 
          Assert.False(result);
-         Assert.Equal("'NullableDatetimeValue' is null.", validator.Messages.First().Show());
+         Assert.IsType<IsNullError>(validator.Messages.First());
          Assert.Equal("it shoud be not null", validator.Messages.Last().Show());
       }
 
@@ -124,70 +196,6 @@ namespace Myce.FluentValidator.Tests
             .RuleFor(x => x.SubObject).IsNotNull();
 
          Assert.True(validator.Validate(entity));
-      }
-
-      /// <summary>
-      /// Tests the Custom validation logic with a simple even number rule.
-      /// </summary>
-      [Fact]
-      public void Custom_ShouldPass_WhenCustomLogicReturnsTrue()
-      {
-         var person = new Person { Age = 20 };
-
-         Func<int, bool> isEvenRule = age => age % 2 == 0;
-
-         var validator = new FluentValidator<Person>()
-             .RuleFor(x => x.Age)
-             .Custom(isEvenRule, new ErrorMessage("Age must be an even number."));
-
-         var isValid = validator.Validate(person);
-
-         Assert.True(isValid);
-         Assert.Empty(validator.Messages);
-      }
-
-      /// <summary>
-      /// Tests the Custom validation logic with a corporate email rule, 
-      /// ensuring it fails and returns the correct error message when the logic returns false.
-      /// </summary>
-      [Fact]
-      public void Custom_ShouldFailAndReturnMessage_WhenCustomLogicReturnsFalse()
-      {
-         var person = new Person { Email = "john@gmail.com" };
-         var errorMessage = new ErrorMessage("Only corporate emails are allowed.");
-
-         Func<string, bool> isCorporateEmailRule = email =>
-             !string.IsNullOrEmpty(email) && email.EndsWith("@myce.com");
-
-         var validator = new FluentValidator<Person>()
-             .RuleFor(x => x.Email)
-             .Custom(isCorporateEmailRule, errorMessage);
-
-         var isValid = validator.Validate(person);
-
-         Assert.False(isValid);
-         Assert.Single(validator.Messages);
-         Assert.Equal("Only corporate emails are allowed.", validator.Messages.First().Show());
-      }
-
-      /// <summary>
-      /// Tests that the Custom validation can be chained with other rules, and that all rules are evaluated correctly, 
-      /// returning the appropriate error messages when validation fails.
-      /// </summary>
-      [Fact]
-      public void Custom_CanBeChainedWithOtherRules()
-      {
-         var person = new Person { Email = "invalid-email" }; 
-
-         var validator = new FluentValidator<Person>()
-             .RuleFor(x => x.Email)
-             .IsNotNull()
-             .Custom(email => email.Contains("@"), new ErrorMessage("Must contain @ symbol"));
-
-         var isValid = validator.Validate(person);
-
-         Assert.False(isValid);
-         Assert.Contains(validator.Messages, m => m.Show() == "Must contain @ symbol");
       }
    }
 }
