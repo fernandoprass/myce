@@ -112,6 +112,13 @@ Comparison validators:
 | `IsEqualTo` | Validates equality to a specific value. |
 | `IsNotEqualTo` | Validates if the property value is not equal to a fixed value. |
 
+Enumerator validators:
+| Validator | Description |
+| :--- | :--- |
+| `IsInEnum` | Validates that the property value is a defined constant within the enumeration. |
+| `IsNotInEnum` | Validates that the property value is not a defined constant within the enumeration. |
+| `IsNotDefault` | Validates that the property value is not the default value of the enumeration (usually 0 or the first element). |
+
 Numeric validators:
 | Validator | Description |
 | :--- | :--- |
@@ -139,6 +146,9 @@ String validators:
 | `MinLengthIf` | Validates minimum length if a condition is true. |
 
 ## Notes
+Version 1.3.0 
+- Add extension methods to validate enumarators.
+
 Version 1.2.4 
 - Add Custom validator to allow users to define their own validation logic with a custom function.
 

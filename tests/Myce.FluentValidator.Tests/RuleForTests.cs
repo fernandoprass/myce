@@ -32,7 +32,6 @@ namespace Myce.FluentValidator.Tests
 
          validator.RuleFor(x => x.Code)
             .IsRequired(errorMessage)
-
             .IsRequiredIf(expression, errorMessage);
 
          var result = validator.Validate(person);

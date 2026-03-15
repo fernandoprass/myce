@@ -7,7 +7,7 @@ using System.Linq;
 namespace Myce.FluentValidator
 {
    /// <summary>
-   /// Extension methods for RuleBuilder with collection and enumerable attributes.
+   /// Extension methods for <see cref="RuleBuilder{T, TProperty}"/> providing validation for Collections.
    /// </summary>
    public static class RuleBuilderCollectionExtensions
    {

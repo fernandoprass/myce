@@ -184,6 +184,7 @@ namespace Myce.FluentValidator
       /// <summary> Validates that the string contains only alphabetic characters. </summary>
       public static RuleBuilder<T, string> IsAlpha<T>(this RuleBuilder<T, string> rb) where T : class
       {
+         //todo create new Error Message for this case
          var name = rb.GetAttributeName();
          return rb.Matches(@"^[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ\s]+$",
              new ErrorMessage($"{name} must contain only letters."));
@@ -192,6 +193,7 @@ namespace Myce.FluentValidator
       /// <summary> Validates that the string contains only alphanumeric characters. </summary>
       public static RuleBuilder<T, string> IsAlphaNumeric<T>(this RuleBuilder<T, string> rb) where T : class
       {
+         //todo create new Error Message for this case
          var name = rb.GetAttributeName();
          return rb.Matches(@"^[a-zA-Z0-9]+$",
              new ErrorMessage($"{name} must contain only letters and number."));
