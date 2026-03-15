@@ -13,6 +13,7 @@ namespace Myce.FluentValidator.Tests
          public double? Salary { get; set; }
          public int Age { get; set; }
          public bool IsSingle { get; set; }
+         public DateTime BirthDate { get; set; }
       }
 
       /// <summary> Verify IsRequired and IsRequiredIf validators </summary>
@@ -42,15 +43,14 @@ namespace Myce.FluentValidator.Tests
       [Fact]
       public void IsIsRequired_and_IsMandatoryIf_WithDefaultMessage()
       {
-         var person = new Person { Code = string.Empty, Name = null };
+         var person = new Person { Code = string.Empty, Name = null, BirthDate = new DateTime(1978,02,22) };
 
          var validator = new FluentValidator<Person>();
 
          validator
-            .RuleFor(x => x.Code)
-               .IsRequired()
-            .RuleFor(x => x.Name)
-               .IsRequired();
+            .RuleFor(x => x.Code).IsRequired()
+            .RuleFor(x => x.Name).IsRequired()
+            .RuleFor(x => x.BirthDate).IsRequired();
 
          var result = validator.Validate(person);
 
@@ -65,7 +65,14 @@ namespace Myce.FluentValidator.Tests
       [Fact]
       public void IsIsRequired_and_GeneralRules()
       {
-         var person = new Person { Code = "123A", Name = "John Smith", Age = 17, IsSingle = true, Salary = -100 };
+         var person = new Person { 
+            Code = "123A", 
+            Name = "John Smith", 
+            Age = 17, 
+            IsSingle = true,
+            Salary = -100, 
+            BirthDate = new DateTime(1978, 02, 22) 
+         };
 
          var validator = new FluentValidator<Person>();
 
@@ -79,7 +86,8 @@ namespace Myce.FluentValidator.Tests
                .IsGreaterThanOrEqualTo(18)
                .IsLessThanOrEqualTo(65)
              .RuleFor(x => x.Salary)
-               .IsGreaterThanOrEqualTo(500);
+               .IsGreaterThanOrEqualTo(500)
+             .RuleFor(x => x.BirthDate).IsInThePast();
 
          var result = validator.Validate(person);
 
