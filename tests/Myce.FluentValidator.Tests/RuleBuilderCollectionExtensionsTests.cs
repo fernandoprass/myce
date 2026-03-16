@@ -4,7 +4,7 @@ namespace Myce.FluentValidator.Tests
 {
    public class RuleBuilderCollectionTests
    {
-      public class Order
+      private class Order
       {
          public List<string> Items { get; set; } = new();
          public string Status { get; set; }

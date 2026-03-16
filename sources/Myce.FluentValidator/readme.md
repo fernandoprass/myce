@@ -112,6 +112,24 @@ Comparison validators:
 | `IsEqualTo` | Validates equality to a specific value. |
 | `IsNotEqualTo` | Validates if the property value is not equal to a fixed value. |
 
+Date validators:
+| Validator | Description |
+| :--- | :--- |
+| `IsToday` | Validates that the property value represents today's date. |
+| `IsYesterday` | Validates that the property value represents yesterday's date. |
+| `IsTomorrow` | Validates that the property value represents tomorrow's date. |
+| `IsInThePast` | Validates that the date and time is earlier than the current moment. |
+| `IsInTheFuture` | Validates that the date and time is later than the current moment. |
+| `IsWeekday` | Validates that the date falls on a business day (Monday to Friday). |
+| `IsWeekend` | Validates that the date falls on a Saturday or Sunday. |
+
+Enumerator validators:
+| Validator | Description |
+| :--- | :--- |
+| `IsInEnum` | Validates that the value is a defined member of the enumeration. |
+| `IsNotInEnum` | Validates that the value is not a defined member of the enumeration. |
+| `IsNotDefault` | Validates that the value is not the default value of the enumeration. |
+
 Numeric validators:
 | Validator | Description |
 | :--- | :--- |
@@ -131,14 +149,20 @@ String validators:
 | `ContainsOnlyNumber` | Validates that a string contains only numeric characters. |
 | `ExactNumberOfCharacters` | Validates that a string has an exact length. |
 | `ExactNumberOfCharactersIf` | Validates exact length if a condition is true. |
+| `IsAlpha` | Validates that the string contains only alphabetic characters. |
+| `IsAlphaNumeric` | Validates that the string contains only letters and numbers. |
 | `IsValidDate` | Validates that a string can be parsed as a valid date. |
 | `IsValidEmailAddress` | Validates that a string is a valid email format. |
+| `Matches` | Validates that the string matches a specific regular expression pattern. |
 | `MaxLength` | Validates the maximum length of a string. |
 | `MaxLengthIf` | Validates maximum length if a condition is true. |
 | `MinLength` | Validates the minimum length of a string. |
 | `MinLengthIf` | Validates minimum length if a condition is true. |
 
 ## Notes
+Version 1.3.0 
+- Add extension methods to validate enumarators and date attributes.
+
 Version 1.2.4 
 - Add Custom validator to allow users to define their own validation logic with a custom function.
 

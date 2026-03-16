@@ -1,185 +1,185 @@
-﻿using Myce.Response.Messages;
+using Myce.FluentValidator.ErrorMessages;
+using Myce.Response.Messages;
 using System;
 
 namespace Myce.FluentValidator
 {
    /// <summary>
-   /// Extension methods for RuleBuilder with numeric attributes (int, double, decimal).
+   /// Extension methods for RuleBuilder with numeric attributes.
+   /// Unified generic version supporting any numeric type (int, double, decimal, long, byte, etc.).
    /// </summary>
    public static partial class RuleBuilderNumericExtensions
    {
-      #region IntExtensions
-      /// <summary> Validates that the integer value is between a minimum and maximum (inclusive). </summary>
-      public static RuleBuilder<T, int> IsBetween<T>(this RuleBuilder<T, int> rb, int min, int max) where T : class
-         => rb.AddNumericRule(min, (attr, _) => attr >= min && attr <= max, $"between {min} and {max}");
+      #region GenericNumericExtensions
 
-      /// <summary> Validates that the nullable integer value is between a minimum and maximum (inclusive). </summary>
-      public static RuleBuilder<T, int?> IsBetween<T>(this RuleBuilder<T, int?> rb, int min, int max) where T : class
-         => rb.AddNullableNumericRule(min, (attr, _) => attr >= min && attr <= max, $"between {min} and {max}");
+      /// <summary>
+      /// Validates that the numeric value is between a minimum and maximum (inclusive).
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="min">The minimum allowed value.</param>
+      /// <param name="max">The maximum allowed value.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute> IsBetween<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, TAttribute min, TAttribute max)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddNumericRule(min, (attr, _) => attr.CompareTo(min) >= 0 && attr.CompareTo(max) <= 0,
+                              new IsBetweenError(rb.GetAttributeName(), min.ToString(), max.ToString()));
 
-      /// <summary> Validates that the integer value is greater than a specified value. </summary>
-      public static RuleBuilder<T, int> IsGreaterThan<T>(this RuleBuilder<T, int> rb, int value) where T : class
-         => rb.AddNumericRule(value, (a, v) => a > v, "greater than");
+      /// <summary>
+      /// Validates that the nullable numeric value is between a minimum and maximum (inclusive).
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="min">The minimum allowed value.</param>
+      /// <param name="max">The maximum allowed value.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute?> IsBetween<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, TAttribute min, TAttribute max)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddNullableNumericRule(min, (attr, _) => attr.CompareTo(min) >= 0 && attr.CompareTo(max) <= 0,
+                                      new IsBetweenError(rb.GetAttributeName(), min.ToString(), max.ToString()));
 
-      /// <summary> Validates that the nullable integer value is greater than a specified value. </summary>
-      public static RuleBuilder<T, int?> IsGreaterThan<T>(this RuleBuilder<T, int?> rb, int value) where T : class
-         => rb.AddNullableNumericRule(value, (a, v) => a > v, "greater than");
+      /// <summary>
+      /// Validates that the numeric value is greater than a specified value.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="value">The value to compare against.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute> IsGreaterThan<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, TAttribute value)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) > 0, new IsGreaterThanError(rb.GetAttributeName(), value.ToString()));
 
-      /// <summary> Validates that the integer value is greater than or equal to a specified value. </summary>
-      public static RuleBuilder<T, int> IsGreaterThanOrEqualTo<T>(this RuleBuilder<T, int> rb, int value) where T : class
-         => rb.AddNumericRule(value, (a, v) => a >= v, "greater than or equal to");
+      /// <summary>
+      /// Validates that the nullable numeric value is greater than a specified value.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="value">The value to compare against.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute?> IsGreaterThan<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, TAttribute value)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) > 0, new IsGreaterThanError(rb.GetAttributeName(), value.ToString()));
 
-      /// <summary> Validates that the nullable integer value is greater than or equal to a specified value. </summary>
-      public static RuleBuilder<T, int?> IsGreaterThanOrEqualTo<T>(this RuleBuilder<T, int?> rb, int value) where T : class
-         => rb.AddNullableNumericRule(value, (a, v) => a >= v, "greater than or equal to");
+      /// <summary>
+      /// Validates that the numeric value is greater than or equal to a specified value.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="value">The value to compare against.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute> IsGreaterThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, TAttribute value)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) >= 0, new IsGreaterThanOrEqualToError(rb.GetAttributeName(), value.ToString()));
 
-      /// <summary> Validates that the integer value is less than a specified value. </summary>
-      public static RuleBuilder<T, int> IsLessThan<T>(this RuleBuilder<T, int> rb, int value) where T : class
-         => rb.AddNumericRule(value, (a, v) => a < v, "less than");
+      /// <summary>
+      /// Validates that the nullable numeric value is greater than or equal to a specified value.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="value">The value to compare against.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute?> IsGreaterThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, TAttribute value)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) >= 0, new IsGreaterThanOrEqualToError(rb.GetAttributeName(), value.ToString()));
 
-      /// <summary> Validates that the nullable integer value is less than a specified value. </summary>
-      public static RuleBuilder<T, int?> IsLessThan<T>(this RuleBuilder<T, int?> rb, int value) where T : class
-         => rb.AddNullableNumericRule(value, (a, v) => a < v, "less than");
+      /// <summary>
+      /// Validates that the numeric value is less than a specified value.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="value">The value to compare against.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute> IsLessThan<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, TAttribute value)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) < 0, new IsLessThanError(rb.GetAttributeName(), value.ToString()));
 
-      /// <summary> Validates that the integer value is less than or equal to a specified value. </summary>
-      public static RuleBuilder<T, int> IsLessThanOrEqualTo<T>(this RuleBuilder<T, int> rb, int value) where T : class
-         => rb.AddNumericRule(value, (a, v) => a <= v, "less than or equal to");
+      /// <summary>
+      /// Validates that the nullable numeric value is less than a specified value.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="value">The value to compare against.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute?> IsLessThan<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, TAttribute value)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) < 0, new IsLessThanError(rb.GetAttributeName(), value.ToString()));
 
-      /// <summary> Validates that the nullable integer value is less than or equal to a specified value. </summary>
-      public static RuleBuilder<T, int?> IsLessThanOrEqualTo<T>(this RuleBuilder<T, int?> rb, int value) where T : class
-         => rb.AddNullableNumericRule(value, (a, v) => a <= v, "less than or equal to");
+      /// <summary>
+      /// Validates that the numeric value is less than or equal to a specified value.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="value">The value to compare against.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute> IsLessThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, TAttribute value)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) <= 0, new IsLessThanOrEqualToError(rb.GetAttributeName(), value.ToString()));
 
-      /// <summary> Validates that the integer value is positive (greater than zero). </summary>
-      public static RuleBuilder<T, int> IsPositive<T>(this RuleBuilder<T, int> rb) where T : class
-         => rb.AddNumericRule(0, (a, v) => a > v, "positive");
+      /// <summary>
+      /// Validates that the nullable numeric value is less than or equal to a specified value.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="value">The value to compare against.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute?> IsLessThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, TAttribute value)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) <= 0, new IsLessThanOrEqualToError(rb.GetAttributeName(), value.ToString()));
 
-      /// <summary> Validates that the nullable integer value is positive (greater than zero). </summary>
-      public static RuleBuilder<T, int?> IsPositive<T>(this RuleBuilder<T, int?> rb) where T : class
-         => rb.AddNullableNumericRule(0, (a, v) => a > v, "positive");
+      /// <summary>
+      /// Validates that the numeric value is positive (greater than zero).
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute> IsPositive<T, TAttribute>(this RuleBuilder<T, TAttribute> rb)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddNumericRule(default, (attr, val) => attr.CompareTo(val) > 0, new IsPositiveError(rb.GetAttributeName()));
 
-      /// <summary> Validates that the integer value is negative (less than zero). </summary>
-      public static RuleBuilder<T, int> IsNegative<T>(this RuleBuilder<T, int> rb) where T : class
-         => rb.AddNumericRule(0, (a, v) => a < v, "negative");
+      /// <summary>
+      /// Validates that the nullable numeric value is positive (greater than zero).
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute?> IsPositive<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddNullableNumericRule(default, (attr, val) => attr.CompareTo(val) > 0, new IsPositiveError(rb.GetAttributeName()));
 
-      /// <summary> Validates that the nullable integer value is negative (less than zero). </summary>
-      public static RuleBuilder<T, int?> IsNegative<T>(this RuleBuilder<T, int?> rb) where T : class
-         => rb.AddNullableNumericRule(0, (a, v) => a < v, "negative");
-      #endregion
+      /// <summary>
+      /// Validates that the numeric value is negative (less than zero).
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute> IsNegative<T, TAttribute>(this RuleBuilder<T, TAttribute> rb)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddNumericRule(default, (attr, val) => attr.CompareTo(val) < 0, new IsNegativeError(rb.GetAttributeName()));
 
-      #region DoubleExtensions
-      /// <summary>Validates that the double value is between a minimum and maximum (inclusive). </summary>
-      public static RuleBuilder<T, double> IsBetween<T>(this RuleBuilder<T, double> rb, double min, double max) where T : class
-         => rb.AddNumericRule(min, (attr, _) => attr >= min && attr <= max, $"between {min} and {max}");
+      /// <summary>
+      /// Validates that the nullable numeric value is negative (less than zero).
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute?> IsNegative<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddNullableNumericRule(default, (attr, val) => attr.CompareTo(val) < 0, new IsNegativeError(rb.GetAttributeName()));
 
-      /// <summary> Validates that the nullable double value is between a minimum and maximum (inclusive). </summary>
-      public static RuleBuilder<T, double?> IsBetween<T>(this RuleBuilder<T, double?> rb, double min, double max) where T : class
-         => rb.AddNullableNumericRule(min, (attr, _) => attr >= min && attr <= max, $"between {min} and {max}");
-
-      /// <summary> Validates that the double value is greater than a specified value. </summary>
-      public static RuleBuilder<T, double> IsGreaterThan<T>(this RuleBuilder<T, double> rb, double value) where T : class
-         => rb.AddNumericRule(value, (a, v) => a > v, "greater than");
-
-      /// <summary> Validates that the nullable double value is greater than a specified value. </summary>
-      public static RuleBuilder<T, double?> IsGreaterThan<T>(this RuleBuilder<T, double?> rb, double value) where T : class
-         => rb.AddNullableNumericRule(value, (a, v) => a > v, "greater than");
-
-      /// <summary> Validates that the double value is greater than or equal to a specified value. </summary>
-      public static RuleBuilder<T, double> IsGreaterThanOrEqualTo<T>(this RuleBuilder<T, double> rb, double value) where T : class
-         => rb.AddNumericRule(value, (a, v) => a >= v, "greater than or equal to");
-
-      /// <summary> Validates that the nullable double value is greater than or equal to a specified value. </summary>
-      public static RuleBuilder<T, double?> IsGreaterThanOrEqualTo<T>(this RuleBuilder<T, double?> rb, double value) where T : class
-         => rb.AddNullableNumericRule(value, (a, v) => a >= v, "greater than or equal to");
-
-      /// <summary> Validates that the double value is less than a specified value. </summary>
-      public static RuleBuilder<T, double> IsLessThan<T>(this RuleBuilder<T, double> rb, double value) where T : class
-         => rb.AddNumericRule(value, (a, v) => a < v, "less than");
-
-      /// <summary> Validates that the nullable double value is less than a specified value. </summary>
-      public static RuleBuilder<T, double?> IsLessThan<T>(this RuleBuilder<T, double?> rb, double value) where T : class
-         => rb.AddNullableNumericRule(value, (a, v) => a < v, "less than");
-
-      /// <summary> Validates that the double value is less than or equal to a specified value. </summary>
-      public static RuleBuilder<T, double> IsLessThanOrEqualTo<T>(this RuleBuilder<T, double> rb, double value) where T : class
-         => rb.AddNumericRule(value, (a, v) => a <= v, "less than or equal to");
-
-      /// <summary> Validates that the nullable double value is less than or equal to a specified value. </summary>
-      public static RuleBuilder<T, double?> IsLessThanOrEqualTo<T>(this RuleBuilder<T, double?> rb, double value) where T : class
-         => rb.AddNullableNumericRule(value, (a, v) => a <= v, "less than or equal to");
-
-      /// <summary> Validates that the double value is positive (greater than zero). </summary>
-      public static RuleBuilder<T, double> IsPositive<T>(this RuleBuilder<T, double> rb) where T : class
-         => rb.AddNumericRule(0.0, (a, v) => a > v, "positive");
-
-      /// <summary> Validates that the nullable double value is positive (greater than zero). </summary>
-      public static RuleBuilder<T, double?> IsPositive<T>(this RuleBuilder<T, double?> rb) where T : class
-         => rb.AddNullableNumericRule(0.0, (a, v) => a > v, "positive");
-
-      /// <summary> Validates that the double value is negative (less than zero). </summary>
-      public static RuleBuilder<T, double> IsNegative<T>(this RuleBuilder<T, double> rb) where T : class
-         => rb.AddNumericRule(0.0, (a, v) => a < v, "negative");
-
-      /// <summary> Validates that the nullable double value is negative (less than zero). </summary>
-      public static RuleBuilder<T, double?> IsNegative<T>(this RuleBuilder<T, double?> rb) where T : class
-         => rb.AddNullableNumericRule(0.0, (a, v) => a < v, "negative");
-      #endregion
-
-      #region DecimalExtensions
-      /// <summary>Validates that the decimal value is between a minimum and maximum (inclusive). </summary>
-      public static RuleBuilder<T, decimal> IsBetween<T>(this RuleBuilder<T, decimal> rb, decimal min, decimal max) where T : class
-         => rb.AddNumericRule(min, (attr, _) => attr >= min && attr <= max, $"between {min} and {max}");
-
-      /// <summary> Validates that the nullable decimal value is between a minimum and maximum (inclusive). </summary>
-      public static RuleBuilder<T, decimal?> IsBetween<T>(this RuleBuilder<T, decimal?> rb, decimal min, decimal max) where T : class
-         => rb.AddNullableNumericRule(min, (attr, _) => attr >= min && attr <= max, $"between {min} and {max}");
-
-      /// <summary> Validates that the decimal value is greater than a specified value. </summary>
-      public static RuleBuilder<T, decimal> IsGreaterThan<T>(this RuleBuilder<T, decimal> rb, decimal value) where T : class
-         => rb.AddNumericRule(value, (a, v) => a > v, "greater than");
-
-      /// <summary> Validates that the nullable decimal value is greater than a specified value. </summary>
-      public static RuleBuilder<T, decimal?> IsGreaterThan<T>(this RuleBuilder<T, decimal?> rb, decimal value) where T : class
-         => rb.AddNullableNumericRule(value, (a, v) => a > v, "greater than");
-
-      /// <summary> Validates that the decimal value is greater than or equal to a specified value. </summary>
-      public static RuleBuilder<T, decimal> IsGreaterThanOrEqualTo<T>(this RuleBuilder<T, decimal> rb, decimal value) where T : class
-         => rb.AddNumericRule(value, (a, v) => a >= v, "greater than or equal to");
-
-      /// <summary> Validates that the nullable decimal value is greater than or equal to a specified value. </summary>
-      public static RuleBuilder<T, decimal?> IsGreaterThanOrEqualTo<T>(this RuleBuilder<T, decimal?> rb, decimal value) where T : class
-         => rb.AddNullableNumericRule(value, (a, v) => a >= v, "greater than or equal to");
-
-      /// <summary> Validates that the decimal value is less than a specified value. </summary>
-      public static RuleBuilder<T, decimal> IsLessThan<T>(this RuleBuilder<T, decimal> rb, decimal value) where T : class
-         => rb.AddNumericRule(value, (a, v) => a < v, "less than");
-
-      /// <summary> Validates that the nullable decimal value is less than a specified value. </summary>
-      public static RuleBuilder<T, decimal?> IsLessThan<T>(this RuleBuilder<T, decimal?> rb, decimal value) where T : class
-         => rb.AddNullableNumericRule(value, (a, v) => a < v, "less than");
-
-      /// <summary> Validates that the decimal value is less than or equal to a specified value. </summary>
-      public static RuleBuilder<T, decimal> IsLessThanOrEqualTo<T>(this RuleBuilder<T, decimal> rb, decimal value) where T : class
-         => rb.AddNumericRule(value, (a, v) => a <= v, "less than or equal to");
-
-      /// <summary> Validates that the nullable decimal value is less than or equal to a specified value. </summary>
-      public static RuleBuilder<T, decimal?> IsLessThanOrEqualTo<T>(this RuleBuilder<T, decimal?> rb, decimal value) where T : class
-         => rb.AddNullableNumericRule(value, (a, v) => a <= v, "less than or equal to");
-
-      /// <summary> Validates that the decimal value is positive (greater than zero). </summary>
-      public static RuleBuilder<T, decimal> IsPositive<T>(this RuleBuilder<T, decimal> rb) where T : class
-         => rb.AddNumericRule(0m, (a, v) => a > v, "positive");
-
-      /// <summary> Validates that the nullable decimal value is positive (greater than zero). </summary>
-      public static RuleBuilder<T, decimal?> IsPositive<T>(this RuleBuilder<T, decimal?> rb) where T : class
-         => rb.AddNullableNumericRule(0m, (a, v) => a > v, "positive");
-
-      /// <summary> Validates that the decimal value is negative (less than zero). </summary>
-      public static RuleBuilder<T, decimal> IsNegative<T>(this RuleBuilder<T, decimal> rb) where T : class
-         => rb.AddNumericRule(0m, (a, v) => a < v, "negative");
-
-      /// <summary> Validates that the nullable decimal value is negative (less than zero). </summary>
-      public static RuleBuilder<T, decimal?> IsNegative<T>(this RuleBuilder<T, decimal?> rb) where T : class
-         => rb.AddNullableNumericRule(0m, (a, v) => a < v, "negative");
       #endregion
 
       #region PrivateHelpersForCodeReuse
@@ -191,13 +191,12 @@ namespace Myce.FluentValidator
          this RuleBuilder<T, TAttribute> rb,
          TAttribute value,
          Func<TAttribute, TAttribute, bool> compare,
-         string label)
+         ErrorMessage message)
          where T : class
-         where TAttribute : struct, IComparable
+         where TAttribute : struct, IComparable<TAttribute>
       {
-         var name = rb.GetAttributeName();
-         return rb.AddRule(instance => compare(rb.GetAttributeValue(instance), value),
-            new ErrorMessage($"'{name}' must be {label} {value}."));
+         var attributeName = rb.GetAttributeName();
+         return rb.AddRule(instance => compare(rb.GetAttributeValue(instance), value), message);
       }
 
       /// <summary>
@@ -207,16 +206,16 @@ namespace Myce.FluentValidator
          this RuleBuilder<T, TAttribute?> rb,
          TAttribute value,
          Func<TAttribute, TAttribute, bool> compare,
-         string label)
+         ErrorMessage message)
          where T : class
-         where TAttribute : struct, IComparable
+         where TAttribute : struct, IComparable<TAttribute>
       {
-         var name = rb.GetAttributeName();
+         var attributeName = rb.GetAttributeName();
          return rb.AddRule(instance =>
          {
             var attr = rb.GetAttributeValue(instance);
             return attr.HasValue && compare(attr.Value, value);
-         }, new ErrorMessage($"'{name}' must be {label} {value}."));
+         }, message);
       }
 
       #endregion

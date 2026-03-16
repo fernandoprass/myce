@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Data;
 using Xunit;
 
 namespace Myce.FluentValidator.Tests
 {
    public class RuleBuilderNumericExtensionTests
    {
-      public class NumericEntity
+      private class NumericEntity
       {
          public int Age { get; set; }
          public int? Score { get; set; }

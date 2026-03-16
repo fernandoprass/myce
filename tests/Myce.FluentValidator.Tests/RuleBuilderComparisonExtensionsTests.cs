@@ -4,7 +4,7 @@ namespace Myce.FluentValidator.Tests
 {
    public class RuleBuilderComparisonExtensionsTests
    {
-      internal class TestEntity
+      private class TestEntity
       {
          public int IntValue { get; set; }
          public double DoubleValue { get; set; }
