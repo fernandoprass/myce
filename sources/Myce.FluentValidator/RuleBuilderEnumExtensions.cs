@@ -53,9 +53,18 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TProperty> IsNotDefault<T, TProperty>(this RuleBuilder<T, TProperty> rb)
          where T : class where TProperty : struct, Enum
       {
-         var name = rb.GetAttributeName();
-         return rb.AddRule(instance => !rb.GetAttributeValue(instance).Equals(default(TProperty)),
-            new MustNotBeDefaultValueError(name));
+         var attributeName = rb.GetAttributeName();
+         return rb.IsNotDefault(new MustNotBeDefaultValueError(attributeName));
+      }
+
+      /// <summary>
+      /// Validates that the property value is not the default value of the enumeration (usually 0 or the first element) using a custom error message.
+      /// </summary>
+      /// <param name="message">The custom error message to return if the validation fails.</param>
+      public static RuleBuilder<T, TProperty> IsNotDefault<T, TProperty>(this RuleBuilder<T, TProperty> rb, ErrorMessage message)
+         where T : class where TProperty : struct, Enum
+      {
+         return rb.AddRule(instance => !rb.GetAttributeValue(instance).Equals(default(TProperty)), message);
       }
       #endregion
 
@@ -70,6 +79,7 @@ namespace Myce.FluentValidator
       /// <summary>
       /// Validates that the property value is NOT a defined constant within the <typeparamref name="TProperty"/> enumeration, using a custom error message.
       /// </summary>
+      /// <param name="message">The custom error message to return if the validation fails.</param>
       public static RuleBuilder<T, TProperty> IsNotInEnum<T, TProperty>(this RuleBuilder<T, TProperty> rb, ErrorMessage message)
          where T : class where TProperty : struct, Enum
          => rb.AddRule(instance => !Enum.IsDefined(typeof(TProperty), rb.GetAttributeValue(instance)), message);

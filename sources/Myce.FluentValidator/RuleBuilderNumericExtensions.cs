@@ -10,9 +10,6 @@ namespace Myce.FluentValidator
    /// </summary>
    public static partial class RuleBuilderNumericExtensions
    {
-      //todo create validation for enum types (IsInEnum, IsNotInEnum) 
-      //bool isValidType = Enum.IsDefined(typeof(CustomerType), request.Type);
-
       #region GenericNumericExtensions
 
       /// <summary>
@@ -198,7 +195,7 @@ namespace Myce.FluentValidator
          where T : class
          where TAttribute : struct, IComparable<TAttribute>
       {
-         var name = rb.GetAttributeName();
+         var attributeName = rb.GetAttributeName();
          return rb.AddRule(instance => compare(rb.GetAttributeValue(instance), value), message);
       }
 
@@ -213,7 +210,7 @@ namespace Myce.FluentValidator
          where T : class
          where TAttribute : struct, IComparable<TAttribute>
       {
-         var name = rb.GetAttributeName();
+         var attributeName = rb.GetAttributeName();
          return rb.AddRule(instance =>
          {
             var attr = rb.GetAttributeValue(instance);

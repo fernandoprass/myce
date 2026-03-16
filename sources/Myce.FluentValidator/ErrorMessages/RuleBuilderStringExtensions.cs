@@ -30,6 +30,15 @@ namespace Myce.FluentValidator.ErrorMessages
       }
    }
 
+   public class InvalidFormatError : ErrorMessage
+   {
+      public InvalidFormatError(string fieldName, string format)
+         : base("InvalidFormatError", $"The field {fieldName} must match with the expecterd format.")
+      {
+         AddVariable("fieldName", fieldName);
+      }
+   }
+
    public class MoreCharactersThanExpectedError : ErrorMessage
    {
       public MoreCharactersThanExpectedError(string fieldName, int maxLength)

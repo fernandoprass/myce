@@ -20,8 +20,21 @@ namespace Myce.FluentValidator
       /// <param name="substring">The substring to search for.</param>
       public static RuleBuilder<T, string> Contains<T>(this RuleBuilder<T, string> rb, string substring) where T : class
       {
-         var name = rb.GetAttributeName();
-         return rb.Contains(substring, StringComparison.OrdinalIgnoreCase);
+         var attributeName = rb.GetAttributeName();
+         return rb.Contains(substring, StringComparison.OrdinalIgnoreCase, new MustContainSubstringError(attributeName, substring));
+      }
+
+      /// <summary>
+      ///  Validates that the string contains a specific substring using OrdinalIgnoreCase.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="substring">The substring to search for.</param>
+      /// <param name="message">The custom error message to return if the validation fails.</param>
+      public static RuleBuilder<T, string> Contains<T>(this RuleBuilder<T, string> rb, string substring, ErrorMessage message) where T : class
+      {
+         var attributeName = rb.GetAttributeName();
+         return rb.Contains(substring, StringComparison.OrdinalIgnoreCase, message);
       }
 
       /// <summary>
@@ -33,35 +46,49 @@ namespace Myce.FluentValidator
       /// <param name="stringComparison">The string comparison option to use when checking for the substring.</param>
       public static RuleBuilder<T, string> Contains<T>(this RuleBuilder<T, string> rb, string substring, StringComparison stringComparison) where T : class
       {
-         var name = rb.GetAttributeName();
+         var attributeName = rb.GetAttributeName();
+         return rb.Contains(substring, stringComparison, new MustContainSubstringError(attributeName, substring));
+      }
+
+      /// <summary>
+      /// Validates that the string contains a specific substring.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="substring">The substring to search for.</param>
+      /// <param name="stringComparison">The string comparison option to use when checking for the substring.</param>
+      /// <param name="message">The custom error message to return if the validation fails.</param>
+      public static RuleBuilder<T, string> Contains<T>(this RuleBuilder<T, string> rb, string substring, StringComparison stringComparison, ErrorMessage message) where T : class
+      {
+         var attributeName = rb.GetAttributeName();
          return rb.AddRule(instance =>
          {
             var value = rb.GetAttributeValue(instance);
             return value != null && value.Contains(substring, stringComparison);
-         }, new MustContainSubstringError(name, substring));
+         }, message);
       }
 
       /// <summary>
       /// Validates if a string contains only numeric characters.
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
-      /// <param name="ruleBuilder">The rule builder instance.</param>
-      public static RuleBuilder<T, string> ContainsOnlyNumber<T>(this RuleBuilder<T, string> ruleBuilder) where T : class
+      /// <param name="rb">The rule builder instance.</param>
+      public static RuleBuilder<T, string> ContainsOnlyNumber<T>(this RuleBuilder<T, string> rb) where T : class
       {
-         return ruleBuilder.ContainsOnlyNumber(new ShouldContainOnlyNumberError(ruleBuilder.GetAttributeName()));
+         return rb.ContainsOnlyNumber(new ShouldContainOnlyNumberError(rb.GetAttributeName()));
       }
 
       /// <summary>
       /// Validates if a string contains only numeric characters with a custom message.
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
-      /// <param name="ruleBuilder">The rule builder instance.</param>
-      /// <param name="message">The message to be returned in case of an error.</param>
-      public static RuleBuilder<T, string> ContainsOnlyNumber<T>(this RuleBuilder<T, string> ruleBuilder, ErrorMessage message) where T : class
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="message">The custom error message to return if the validation fails.</param>
+      public static RuleBuilder<T, string> ContainsOnlyNumber<T>(this RuleBuilder<T, string> rb, ErrorMessage message) where T : class
       {
-         return ruleBuilder.AddRule(instance =>
+         return rb.AddRule(instance =>
          {
-            var value = ruleBuilder.GetAttributeValue(instance);
+            var value = rb.GetAttributeValue(instance);
             return string.IsNullOrEmpty(value) || value.All(char.IsNumber);
          }, message);
       }
@@ -70,25 +97,25 @@ namespace Myce.FluentValidator
       /// Determines whether a string has an exact character length.
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
-      /// <param name="ruleBuilder">The rule builder instance.</param>
+      /// <param name="rb">The rule builder instance.</param>
       /// <param name="length">Expected number of characters.</param>
-      public static RuleBuilder<T, string> ExactNumberOfCharacters<T>(this RuleBuilder<T, string> ruleBuilder, int length) where T : class
+      public static RuleBuilder<T, string> ExactNumberOfCharacters<T>(this RuleBuilder<T, string> rb, int length) where T : class
       {
-         return ruleBuilder.ExactNumberOfCharacters(length, new NotExactNumberOfCharactersError(ruleBuilder.GetAttributeName(), length));
+         return rb.ExactNumberOfCharacters(length, new NotExactNumberOfCharactersError(rb.GetAttributeName(), length));
       }
 
       /// <summary>
       /// Determines whether a string has an exact character length with a custom message.
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
-      /// <param name="ruleBuilder">The rule builder instance.</param>
+      /// <param name="rb">The rule builder instance.</param>
       /// <param name="length">Expected number of characters.</param>
       /// <param name="message">The message to be returned in case of an error.</param>
-      public static RuleBuilder<T, string> ExactNumberOfCharacters<T>(this RuleBuilder<T, string> ruleBuilder, int length, ErrorMessage message) where T : class
+      public static RuleBuilder<T, string> ExactNumberOfCharacters<T>(this RuleBuilder<T, string> rb, int length, ErrorMessage message) where T : class
       {
-         return ruleBuilder.AddRule(instance =>
+         return rb.AddRule(instance =>
          {
-            var value = ruleBuilder.GetAttributeValue(instance);
+            var value = rb.GetAttributeValue(instance);
             return string.IsNullOrEmpty(value) || value.Length == length;
          }, message);
       }
@@ -97,36 +124,36 @@ namespace Myce.FluentValidator
       /// Determines whether a string has an exact length if a given condition is true.
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
-      /// <param name="ruleBuilder">The rule builder instance.</param>
+      /// <param name="rb">The rule builder instance.</param>
       /// <param name="length">Expected number of characters.</param>
       /// <param name="condition">The condition to verify.</param>
-      public static RuleBuilder<T, string> ExactNumberOfCharactersIf<T>(this RuleBuilder<T, string> ruleBuilder, int length, bool condition) where T : class
+      public static RuleBuilder<T, string> ExactNumberOfCharactersIf<T>(this RuleBuilder<T, string> rb, int length, bool condition) where T : class
       {
-         return condition ? ruleBuilder.ExactNumberOfCharacters(length) : ruleBuilder;
+         return condition ? rb.ExactNumberOfCharacters(length) : rb;
       }
 
       /// <summary>
       /// Determines whether a string has an exact length if a given condition is true with a custom message.
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
-      /// <param name="ruleBuilder">The rule builder instance.</param>
+      /// <param name="rb">The rule builder instance.</param>
       /// <param name="length">Expected number of characters.</param>
       /// <param name="condition">The condition to verify.</param>
       /// <param name="message">The message to be returned in case of an error.</param>
-      public static RuleBuilder<T, string> ExactNumberOfCharactersIf<T>(this RuleBuilder<T, string> ruleBuilder, int length, bool condition, ErrorMessage message) where T : class
+      public static RuleBuilder<T, string> ExactNumberOfCharactersIf<T>(this RuleBuilder<T, string> rb, int length, bool condition, ErrorMessage message) where T : class
       {
-         return condition ? ruleBuilder.ExactNumberOfCharacters(length, message) : ruleBuilder;
+         return condition ? rb.ExactNumberOfCharacters(length, message) : rb;
       }
 
       /// <summary>
       /// Determines whether a string is a valid date.
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
-      /// <param name="ruleBuilder">The rule builder instance.</param>
-      public static RuleBuilder<T, string> IsValidDate<T>(this RuleBuilder<T, string> ruleBuilder) where T : class
+      /// <param name="rb">The rule builder instance.</param>
+      public static RuleBuilder<T, string> IsValidDate<T>(this RuleBuilder<T, string> rb) where T : class
       {
-         var attributeName = ruleBuilder.GetAttributeName();
-         return ruleBuilder.IsValidDate(new InvalidDateError(attributeName));
+         var attributeName = rb.GetAttributeName();
+         return rb.IsValidDate(new InvalidDateError(attributeName));
       }
 
       /// <summary>
@@ -134,7 +161,7 @@ namespace Myce.FluentValidator
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
       /// <param name="ruleBuilder">The rule builder instance.</param>
-      /// <param name="message">The custom error message.</param>
+      /// <param name="message">The custom error message to return if the validation fails.</param>
       public static RuleBuilder<T, string> IsValidDate<T>(this RuleBuilder<T, string> ruleBuilder, ErrorMessage message) where T : class
       {
          return ruleBuilder.AddRule(instance =>
@@ -156,7 +183,7 @@ namespace Myce.FluentValidator
       /// <summary>
       /// Validates if the property value is a valid email address with a custom message.
       /// </summary>
-      /// <param name="message">The custom error message.</param>
+      /// <param name="message">The custom error message to return if the validation fails.</param>
       public static RuleBuilder<T, string> IsValidEmailAddress<T>(this RuleBuilder<T, string> ruleBuilder, ErrorMessage message) where T : class
       {
          return ruleBuilder.AddRule(instance =>
@@ -170,8 +197,18 @@ namespace Myce.FluentValidator
       /// <summary> 
       /// Validates that the string matches a specific regular expression pattern. 
       /// </summary>
-      /// <param name="pattern">The Regex patterb</param>
-      /// <param name="message">The custom error message.</param>
+      /// <param name="pattern">The Regex pattern.</param>
+      public static RuleBuilder<T, string> Matches<T>(this RuleBuilder<T, string> rb, string pattern) where T : class
+      {
+         var attributeName = rb.GetAttributeName();
+         return rb.Matches(pattern, new InvalidEmailError(attributeName));
+      }
+
+      /// <summary> 
+      /// Validates that the string matches a specific regular expression pattern. 
+      /// </summary>
+      /// <param name="pattern">The Regex pattern.</param>
+      /// <param name="message">The custom error message to return if the validation fails.</param>
       public static RuleBuilder<T, string> Matches<T>(this RuleBuilder<T, string> rb, string pattern, ErrorMessage message) where T : class
       {
          return rb.AddRule(instance =>
@@ -184,19 +221,29 @@ namespace Myce.FluentValidator
       /// <summary> Validates that the string contains only alphabetic characters. </summary>
       public static RuleBuilder<T, string> IsAlpha<T>(this RuleBuilder<T, string> rb) where T : class
       {
-         //todo create new Error Message for this case
-         var name = rb.GetAttributeName();
-         return rb.Matches(@"^[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ\s]+$",
-             new ShouldContainOnlyLettersError(name));
+         var attributeName = rb.GetAttributeName();
+         return rb.IsAlpha(new ShouldContainOnlyLettersError(attributeName));
+      }
+
+      /// <summary> Validates that the string contains only alphabetic characters. </summary>
+      /// <param name="message">The custom error message to return if the validation fails.</param>
+      public static RuleBuilder<T, string> IsAlpha<T>(this RuleBuilder<T, string> rb, ErrorMessage message) where T : class
+      {
+         return rb.Matches(@"^[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ\s]+$", message);
       }
 
       /// <summary> Validates that the string contains only alphanumeric characters. </summary>
       public static RuleBuilder<T, string> IsAlphaNumeric<T>(this RuleBuilder<T, string> rb) where T : class
       {
-         //todo create new Error Message for this case
-         var name = rb.GetAttributeName();
-         return rb.Matches(@"^[a-zA-Z0-9]+$",
-             new ShouldContainOnlyLettersAndNumbersError(name));
+         var attributeName = rb.GetAttributeName();
+         return rb.IsAlphaNumeric(new ShouldContainOnlyLettersAndNumbersError(attributeName));
+      }
+
+      /// <summary> Validates that the string contains only alphanumeric characters. </summary>
+      /// <param name="message">The custom error message to return if the validation fails.</param>
+      public static RuleBuilder<T, string> IsAlphaNumeric<T>(this RuleBuilder<T, string> rb, ErrorMessage message) where T : class
+      {
+         return rb.Matches(@"^[a-zA-Z0-9]+$", message);
       }
 
       /// <summary>
@@ -212,7 +259,7 @@ namespace Myce.FluentValidator
       /// Validates the maximum character length with a custom message.
       /// </summary>
       /// <param name="maxLength">The maximum lenght allowed. </param>
-      /// <param name="message">The custom error message.</param>
+      /// <param name="message">The custom error message to return if the validation fails.</param>
       public static RuleBuilder<T, string> MaxLength<T>(this RuleBuilder<T, string> ruleBuilder, int maxLength, ErrorMessage message) where T : class
       {
          return ruleBuilder.AddRule(instance =>
