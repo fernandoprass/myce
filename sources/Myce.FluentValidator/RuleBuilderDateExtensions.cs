@@ -1,4 +1,5 @@
-﻿using Myce.Response.Messages;
+using Myce.FluentValidator.ErrorMessages;
+using Myce.Response.Messages;
 using System;
 
 namespace Myce.FluentValidator
@@ -18,7 +19,7 @@ namespace Myce.FluentValidator
       /// <returns>The same <see cref="RuleBuilder{T, DateTime}"/> instance for method chaining.</returns>
       public static RuleBuilder<T, DateTime> IsToday<T>(this RuleBuilder<T, DateTime> rb) where T : class
          => rb.AddRule(instance => rb.GetAttributeValue(instance).Date == DateTime.Today,
-            new ErrorMessage($"'{rb.GetAttributeName()}' must be today."));
+            new IsTodayError(rb.GetAttributeName()));
 
       /// <summary>
       /// Validates that the nullable property value is either null or represents today's date (ignoring time).
@@ -30,21 +31,21 @@ namespace Myce.FluentValidator
          => rb.AddRule(instance => {
             var val = rb.GetAttributeValue(instance);
             return !val.HasValue || val.Value.Date == DateTime.Today;
-         }, new ErrorMessage($"'{rb.GetAttributeName()}' must be today."));
+         }, new IsTodayError(rb.GetAttributeName()));
 
       /// <summary>
       /// Validates that the property value represents yesterday's date, ignoring the time component.
       /// </summary>
       public static RuleBuilder<T, DateTime> IsYesterday<T>(this RuleBuilder<T, DateTime> rb) where T : class
          => rb.AddRule(instance => rb.GetAttributeValue(instance).Date == DateTime.Today.AddDays(-1),
-            new ErrorMessage($"'{rb.GetAttributeName()}' must be yesterday."));
+            new IsYesterdayError(rb.GetAttributeName()));
 
       /// <summary>
       /// Validates that the property value represents tomorrow's date, ignoring the time component.
       /// </summary>
       public static RuleBuilder<T, DateTime> IsTomorrow<T>(this RuleBuilder<T, DateTime> rb) where T : class
          => rb.AddRule(instance => rb.GetAttributeValue(instance).Date == DateTime.Today.AddDays(1),
-            new ErrorMessage($"'{rb.GetAttributeName()}' must be tomorrow."));
+            new IsTomorrowError(rb.GetAttributeName()));
 
       #endregion
 
@@ -58,7 +59,7 @@ namespace Myce.FluentValidator
       /// <returns>The same <see cref="RuleBuilder{T, DateTime}"/> instance for method chaining.</returns>
       public static RuleBuilder<T, DateTime> IsInTheFuture<T>(this RuleBuilder<T, DateTime> rb) where T : class
          => rb.AddRule(instance => rb.GetAttributeValue(instance) > DateTime.Now,
-            new ErrorMessage($"'{rb.GetAttributeName()}' must be a future date."));
+            new IsInTheFutureError(rb.GetAttributeName()));
 
       /// <summary>
       /// Validates that the property value is a date and time chronologically earlier than the current moment.
@@ -68,7 +69,7 @@ namespace Myce.FluentValidator
       /// <returns>The same <see cref="RuleBuilder{T, DateTime}"/> instance for method chaining.</returns>
       public static RuleBuilder<T, DateTime> IsInThePast<T>(this RuleBuilder<T, DateTime> rb) where T : class
          => rb.AddRule(instance => rb.GetAttributeValue(instance) < DateTime.Now,
-            new ErrorMessage($"'{rb.GetAttributeName()}' must be a past date."));
+            new IsInThePastError(rb.GetAttributeName()));
 
       #endregion
 
@@ -85,7 +86,7 @@ namespace Myce.FluentValidator
          return rb.AddRule(instance => {
             var date = rb.GetAttributeValue(instance);
             return date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
-         }, new ErrorMessage($"'{rb.GetAttributeName()}' must be a weekend date."));
+         }, new IsWeekendError(rb.GetAttributeName()));
       }
 
       /// <summary>
@@ -99,7 +100,7 @@ namespace Myce.FluentValidator
          return rb.AddRule(instance => {
             var date = rb.GetAttributeValue(instance);
             return date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday;
-         }, new ErrorMessage($"'{rb.GetAttributeName()}' must be a weekday."));
+         }, new IsWeekdayError(rb.GetAttributeName()));
       }
 
       #endregion

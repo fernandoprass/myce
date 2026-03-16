@@ -96,7 +96,7 @@ namespace Myce.FluentValidator.Tests
 
          var errorMessageAge = validator.Messages.Last();
          Assert.Contains("Salary", errorMessageAge.ToString());      
-         Assert.IsType<ErrorMessage>(errorMessageAge);
+         Assert.IsType<IsGreaterThanOrEqualToError>(errorMessageAge);
 
          Assert.Equal(3, validator.Messages.Count());
       }

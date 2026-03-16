@@ -1,4 +1,5 @@
-﻿using Myce.Response.Messages;
+using Myce.FluentValidator.ErrorMessages;
+using Myce.Response.Messages;
 using System;
 using System.Linq.Expressions;
 
@@ -24,10 +25,10 @@ namespace Myce.FluentValidator
          return ruleBuilder.AddRule(instance =>
          {
             var attrValue = ruleBuilder.GetAttributeValue(instance);
-
             if (attrValue is null && value is null) return true;
+
             return attrValue is not null && attrValue.Equals(value);
-         }, new ErrorMessage($"'{attributeName}' must be equal to {value}."));
+         }, new MustBeEqualError(attributeName, value?.ToString()));
       }
 
       /// <summary>
@@ -42,7 +43,7 @@ namespace Myce.FluentValidator
          Expression<Func<T, TAttribute>> comparisonProperty)
          where T : class
       {
-         return ruleBuilder.EqualityCompare(comparisonProperty, true, "be equal to");
+         return ruleBuilder.EqualityCompare(comparisonProperty, true, (attributeName, comparisonName) => new ComparisonError(attributeName, "be equal to", comparisonName));
       }
 
       /// <summary>
@@ -61,7 +62,7 @@ namespace Myce.FluentValidator
             var attrValue = ruleBuilder.GetAttributeValue(instance);
             if (attrValue is null && value is null) return false;
             return attrValue is null || !attrValue.Equals(value);
-         }, new ErrorMessage($"'{attributeName}' must not be equal to {value}."));
+         }, new MustNotBeEqualError(attributeName, value?.ToString()));
       }
 
       /// <summary>
@@ -76,7 +77,7 @@ namespace Myce.FluentValidator
          Expression<Func<T, TAttribute>> comparisonProperty)
          where T : class
       {
-         return ruleBuilder.EqualityCompare(comparisonProperty, false, "not be equal to");
+         return ruleBuilder.EqualityCompare(comparisonProperty, false, (attributeName, comparisonName) => new ComparisonError(attributeName, "not be equal to", comparisonName));
       }
 
       /// <summary>
@@ -86,7 +87,7 @@ namespace Myce.FluentValidator
          this RuleBuilder<T, TAttribute> ruleBuilder,
          Expression<Func<T, TAttribute>> comparisonProperty,
          bool expected,
-         string label)
+         Func<string, string, ErrorMessage> errorFactory)
          where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();
@@ -98,7 +99,7 @@ namespace Myce.FluentValidator
             var compValue = comparisonFunc(instance);
             bool areEqual = (attrValue is null && compValue is null) || (attrValue is not null && attrValue.Equals(compValue));
             return areEqual == expected;
-         }, new ErrorMessage($"'{attributeName}' must {label} '{comparisonName}'."));
+         }, errorFactory(attributeName, comparisonName));
       }
 
       /// <summary>

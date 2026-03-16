@@ -1,4 +1,4 @@
-﻿using Myce.FluentValidator.ErrorMessages;
+using Myce.FluentValidator.ErrorMessages;
 using Myce.Response.Messages;
 using System;
 using System.Linq;
@@ -38,7 +38,7 @@ namespace Myce.FluentValidator
          {
             var value = rb.GetAttributeValue(instance);
             return value != null && value.Contains(substring, stringComparison);
-         }, new ErrorMessage($"'{name}' must contain '{substring}'."));
+         }, new MustContainSubstringError(name, substring));
       }
 
       /// <summary>
@@ -187,7 +187,7 @@ namespace Myce.FluentValidator
          //todo create new Error Message for this case
          var name = rb.GetAttributeName();
          return rb.Matches(@"^[a-zA-ZáàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ\s]+$",
-             new ErrorMessage($"{name} must contain only letters."));
+             new ShouldContainOnlyLettersError(name));
       }
 
       /// <summary> Validates that the string contains only alphanumeric characters. </summary>
@@ -196,7 +196,7 @@ namespace Myce.FluentValidator
          //todo create new Error Message for this case
          var name = rb.GetAttributeName();
          return rb.Matches(@"^[a-zA-Z0-9]+$",
-             new ErrorMessage($"{name} must contain only letters and number."));
+             new ShouldContainOnlyLettersAndNumbersError(name));
       }
 
       /// <summary>
