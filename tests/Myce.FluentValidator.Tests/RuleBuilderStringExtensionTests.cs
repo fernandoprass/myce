@@ -104,7 +104,7 @@ namespace Myce.FluentValidator.Tests
       [InlineData("hello", 4, 1 == 2, 1)]
       [InlineData("hey", 5, 1 == 1, 0)]
       [InlineData("hello", 5, 1 == 1, 0)]
-      public void MaxLength_and_MaxLengthIf(string value, int length, bool expression, int expectedNumberOfErrors)
+      public void MaxLength_and_MaxLengthIf(string value, int length, bool condition, int expectedNumberOfErrors)
       {
          ErrorMessage errorMessage = GetGenericErrorMessage();
          var person = new Person { Code = value };
@@ -113,7 +113,7 @@ namespace Myce.FluentValidator.Tests
 
          validator.RuleFor(x => x.Code)
             .MaxLength(length, errorMessage)
-            .MaxLengthIf(length, expression, errorMessage);
+            .MaxLength(length, errorMessage).If(condition);
 
          var result = validator.Validate(person);
 
@@ -137,7 +137,7 @@ namespace Myce.FluentValidator.Tests
 
          var validator2 = new FluentValidator<Person>();
 
-         validator2.RuleFor(x => x.Code).MaxLengthIf(2, true);
+         validator2.RuleFor(x => x.Code).MaxLength(2).If(true);
 
          validator2.Validate(person2);
          Assert.Single(validator2.Messages);
@@ -156,7 +156,7 @@ namespace Myce.FluentValidator.Tests
                                         // MinLength(4) -> FAILS (1 error).
                                         // Total errors: 1. Correct.
       [InlineData("hello", 5, 1 == 1, 0)]
-      public void MinLength_and_MinLengthIf(string value, int length, bool expression, int expectedNumberOfErrors)
+      public void MinLength_and_MinLengthIf(string value, int length, bool condition, int expectedNumberOfErrors)
       {
          ErrorMessage errorMessage = GetGenericErrorMessage();
          var person = new Person { Code = value };
@@ -164,7 +164,7 @@ namespace Myce.FluentValidator.Tests
          var validator = new FluentValidator<Person>()
             .RuleFor(x => x.Code)
             .MinLength(length, errorMessage)
-            .MinLengthIf(length, expression, errorMessage);
+            .MinLength(length, errorMessage).If(condition);
 
          var result = validator.Validate(person);
 
@@ -186,7 +186,7 @@ namespace Myce.FluentValidator.Tests
          var person2 = new Person { Code = "abc" };
          var validator2 = new FluentValidator<Person>()
             .RuleFor(x => x.Code)
-            .MinLengthIf(4, true);
+            .MinLength(4).If(true);
 
          validator2.Validate(person2);
          Assert.Single(validator2.Messages);

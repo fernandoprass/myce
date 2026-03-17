@@ -124,19 +124,6 @@ namespace Myce.FluentValidator
       }
 
       /// <summary>
-      /// Determines whether the property is required if a given condition is true.
-      /// </summary>
-      /// <typeparam name="T">The type of the entity being validated.</typeparam>
-      /// <typeparam name="TAttribute">The type of the property being validated.</typeparam>
-      /// <param name="ruleBuilder">The rule builder instance.</param>
-      /// <param name="condition">The condition that determines if the property is required.</param>
-      public static RuleBuilder<T, TAttribute> IsRequiredIf<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder, bool condition)
-         where T : class
-      {
-         return condition ? ruleBuilder.IsRequired() : ruleBuilder;
-      }
-
-      /// <summary>
       /// Determines whether a value was filled with a custom message.
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
@@ -156,20 +143,6 @@ namespace Myce.FluentValidator
 
             return true;
          }, message);
-      }
-
-      /// <summary>
-      /// Determines whether the property is required if a condition is true with a custom message.
-      /// </summary>
-      /// <typeparam name="T">The type of the entity being validated.</typeparam>
-      /// <typeparam name="TAttribute">The type of the property being validated.</typeparam>
-      /// <param name="ruleBuilder">The rule builder instance.</param>
-      /// <param name="condition">The condition that determines if the property is required.</param>
-      /// <param name="message">The custom error message to return if the validation fails.</param>
-      public static RuleBuilder<T, TAttribute> IsRequiredIf<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder, bool condition, ErrorMessage message)
-         where T : class
-      {
-         return condition ? ruleBuilder.IsRequired(message) : ruleBuilder;
       }
 
       /// <summary>

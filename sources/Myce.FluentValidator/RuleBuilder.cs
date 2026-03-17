@@ -77,6 +77,28 @@ namespace Myce.FluentValidator
       /// <param name="paramName">Custom name for the parameter, used in error messages.</param>
       public RuleBuilder<T, TValue> RuleForValue<TValue>(TValue value, string paramName) => _validator.RuleForValue(value, paramName);
 
+      /// <summary>
+      /// Applies a condition to the most recently added validation rule.
+      /// The rule will only be executed if the condition is met.
+      /// </summary>
+      /// <param name="condition">The condition to evaluate.</param>
+      public RuleBuilder<T, TAttribute> If(Func<T, bool> condition)
+      {
+         _validator.ApplyConditionToLastRule(condition);
+         return this;
+      }
+
+      /// <summary>
+      /// Applies a condition to the most recently added validation rule.
+      /// The rule will only be executed if the condition is met.
+      /// </summary>
+      /// <param name="condition">The condition to evaluate.</param>
+      public RuleBuilder<T, TAttribute> If(bool condition)
+      {
+         _validator.ApplyConditionToLastRule(condition);
+         return this;
+      }
+
       #region InternalAndPrivateMethods
       /// <summary>
       /// Internal helper to register rules directly into the parent validator.

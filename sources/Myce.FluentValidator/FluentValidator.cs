@@ -87,5 +87,31 @@ namespace Myce.FluentValidator
          _globalRules.Add(rule);
          _globalErrorMessages.Add(new FluentValidatorError(errorMessage, false));
       }
+
+      /// <summary>
+      /// Internal method to wrap the last registered rule with a condition.
+      /// </summary>
+      internal void ApplyConditionToLastRule(Func<T, bool> condition)
+      {
+         var lastIndex = _globalRules.Count - 1;
+         if (lastIndex < 0) return;
+
+         var originalRule = _globalRules[lastIndex];
+
+         _globalRules[lastIndex] = instance => !condition(instance) || originalRule(instance);
+      }
+
+      /// <summary>
+      /// Internal method to wrap the last registered rule with a condition.
+      /// </summary>
+      internal void ApplyConditionToLastRule(bool condition)
+      {
+         var lastIndex = _globalRules.Count - 1;
+         if (lastIndex < 0) return;
+
+         var originalRule = _globalRules[lastIndex];
+
+         _globalRules[lastIndex] = instance => !condition || originalRule(instance);
+      }
    }
 }
