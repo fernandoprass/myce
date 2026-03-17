@@ -21,7 +21,7 @@ namespace Myce.Response.Tests
 
          var result = Result.Merge(result1, result2);
 
-         Assert.False(result.IsValid);
+         Assert.False(result.IsSuccess);
          Assert.Equal("Error occurred", result.Title);
          Assert.Equal(4, result.Messages.Count);
       }
@@ -38,7 +38,7 @@ namespace Myce.Response.Tests
          Assert.False(result.HasWarning);
          Assert.False(result.HasMessage);
          Assert.Empty(result.Messages);
-         Assert.True(result.IsValid);
+         Assert.True(result.IsSuccess);
       }
 
       /// <summary>Validate without messages and with data</summary>
@@ -54,7 +54,7 @@ namespace Myce.Response.Tests
          Assert.False(result.HasWarning);
          Assert.False(result.HasMessage);
          Assert.True(result.HasData);
-         Assert.True(result.IsValid);
+         Assert.True(result.IsSuccess);
          Assert.Equal(20, result.Data);
       }
 
@@ -72,7 +72,7 @@ namespace Myce.Response.Tests
          Assert.False(result.HasWarning);
          Assert.False(result.HasMessage);
          Assert.True(result.HasErrorOrDataIsNull);
-         Assert.True(result.IsValid);
+         Assert.True(result.IsSuccess);
       }
 
       /// <summary>Validate result with error messages</summary>
@@ -85,7 +85,7 @@ namespace Myce.Response.Tests
 
          Assert.Single(result.Messages);
          Assert.False(result.HasWarning);
-         Assert.False(result.IsValid);
+         Assert.False(result.IsSuccess);
          Assert.True(result.HasError);
          Assert.True(result.HasMessage);
          Assert.Equal(result.Messages.First().Text, result.Title);
@@ -105,7 +105,7 @@ namespace Myce.Response.Tests
          Assert.Single(result.Messages);
          Assert.False(result.HasError);
          Assert.True(result.HasWarning);
-         Assert.True(result.IsValid);
+         Assert.True(result.IsSuccess);
          Assert.True(result.HasMessage);
          Assert.Equal(result.Messages.First().Text, result.Title);
          Assert.Equal("code1", result.Messages.First().Code);
@@ -124,7 +124,7 @@ namespace Myce.Response.Tests
          Assert.Single(result.Messages);
          Assert.False(result.HasError);
          Assert.False(result.HasWarning);
-         Assert.True(result.IsValid);
+         Assert.True(result.IsSuccess);
          Assert.True(result.HasMessage);
          Assert.Equal(result.Messages.First().Text, result.Title);
          Assert.Equal("code1", result.Messages.First().Code);
@@ -145,7 +145,7 @@ namespace Myce.Response.Tests
          result.AddMessage(warningMessage);
          result.AddMessage(errorMessage);
 
-         Assert.False(result.IsValid);
+         Assert.False(result.IsSuccess);
          Assert.True(result.HasError);
          Assert.True(result.HasWarning);
          Assert.True(result.HasMessage);
@@ -183,7 +183,7 @@ namespace Myce.Response.Tests
          var resultInt = resultNull.ToResult(obj => 100);
 
          // Since Data is null, the map function is not executed and returns default(int)
-         Assert.False(resultInt.IsValid);
+         Assert.False(resultInt.IsSuccess);
          Assert.Equal(0, resultInt.Data);         
          Assert.Equal("ERR01", resultInt.Messages.First().Code);
       }

@@ -25,7 +25,13 @@ namespace Myce.Response
       /// <summary>
       /// Gets a value indicating whether the current state is valid.
       /// </summary>
+      [ObsoleteAttribute("This property is obsolete. Use IsSuccess instead.", false)]
       public bool IsValid => !HasError;
+
+      /// <summary>
+      /// Gets a value indicating whether the current state is valid.
+      /// </summary>
+      public bool IsSuccess => !HasError;
 
       /// <summary>
       /// Gets a value indicating whether any error messages are present.
