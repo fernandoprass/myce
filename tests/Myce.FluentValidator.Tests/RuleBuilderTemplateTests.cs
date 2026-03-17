@@ -10,6 +10,7 @@ namespace Myce.FluentValidator.Tests
       {
          public string Name { get; set; }
          public string Email { get; set; }
+         public bool IsEmployee { get; set; }
       }
 
       /// <summary>
@@ -104,6 +105,26 @@ namespace Myce.FluentValidator.Tests
 
          Assert.True(isValid);
          Assert.Empty(validator.Messages);
+      }
+
+      [Theory]
+      [InlineData("external@gmail.com", false, true)] // Not employee: Corporate template skipped
+      [InlineData("staff@myce.com", true, true)]      // Employee: Corporate template passes
+      [InlineData("staff@gmail.com", true, false)]     // Employee: Corporate template fails
+      [InlineData("", false, false)]                  // Not employee: Basic template (Required) fails
+      public void MultipleTemplates_WithConditionalLogic(string email, bool isEmployee, bool expected)
+      {
+         var person = new Person { Email = email, IsEmployee = isEmployee };
+         var validator = new FluentValidator<Person>();
+
+         validator.RuleFor(x => x.Email)
+            .ApplyTemplate(BasicStringTemplate)     // Always applied
+            .ApplyTemplate(CorporateDomainTemplate) // Applied...
+            .If(x => x.IsEmployee);                 // ...but only if this condition is met
+
+         var isValid = validator.Validate(person);
+
+         Assert.Equal(expected, isValid);
       }
    }
 }

@@ -85,6 +85,15 @@ var validator = new FluentValidator<Person>()
     .IsFalse(new ErrorMessage("This email is already taken"));
 ```
 
+### 5. Conditional Validation ("If")
+The `If` method applies a condition to the immediately preceding rule. Subsequent rules in the chain are unaffected and remain mandatory.
+```csharp
+validator.RuleFor(x => x.Name)
+    .IsRequired().If(x => x.Age >= 18) // Name is only required for adults
+    .IsAlpha();                        // Must always be alphabetic if provided
+```
+
+
 ## Supported Validators
 
 Core validators available:
@@ -94,7 +103,6 @@ Core validators available:
 | `IsNull` |Validates if the property value is null. |
 | `IsNotNull` |Validates if the property value is not null. |
 | `IsRequired` | Validates that the property is not null or empty. |
-| `IsRequiredIf` | Validates that the property is required if a condition is true. |
 | `IsTrue` | Validates that the boolean attribute is true.|
 | `IsFalse` | Validates that the boolean attribute is false.|
 
@@ -148,18 +156,18 @@ String validators:
 | `Contains` | Validates that the string contains a specific substring. |
 | `ContainsOnlyNumber` | Validates that a string contains only numeric characters. |
 | `ExactNumberOfCharacters` | Validates that a string has an exact length. |
-| `ExactNumberOfCharactersIf` | Validates exact length if a condition is true. |
 | `IsAlpha` | Validates that the string contains only alphabetic characters. |
 | `IsAlphaNumeric` | Validates that the string contains only letters and numbers. |
 | `IsValidDate` | Validates that a string can be parsed as a valid date. |
 | `IsValidEmailAddress` | Validates that a string is a valid email format. |
 | `Matches` | Validates that the string matches a specific regular expression pattern. |
 | `MaxLength` | Validates the maximum length of a string. |
-| `MaxLengthIf` | Validates maximum length if a condition is true. |
 | `MinLength` | Validates the minimum length of a string. |
-| `MinLengthIf` | Validates minimum length if a condition is true. |
 
 ## Notes
+Version 1.4.0
+- Adds the `If` method that makes a rule dependent on a condition.
+
 Version 1.3.0 
 - Add extension methods to validate enumarators and date attributes.
 

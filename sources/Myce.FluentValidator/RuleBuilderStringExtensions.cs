@@ -270,22 +270,6 @@ namespace Myce.FluentValidator
       }
 
       /// <summary>
-      /// Validates the maximum character length if a condition is true.
-      /// </summary>
-      public static RuleBuilder<T, string> MaxLengthIf<T>(this RuleBuilder<T, string> ruleBuilder, int maxLength, bool condition) where T : class
-      {
-         return condition ? ruleBuilder.MaxLength(maxLength) : ruleBuilder;
-      }
-
-      /// <summary>
-      /// Validates the maximum length if a condition is true with a custom message.
-      /// </summary>
-      public static RuleBuilder<T, string> MaxLengthIf<T>(this RuleBuilder<T, string> ruleBuilder, int maxLength, bool condition, ErrorMessage message) where T : class
-      {
-         return condition ? ruleBuilder.MaxLength(maxLength, message) : ruleBuilder;
-      }
-
-      /// <summary>
       /// Validates the minimum character length.
       /// </summary>
       public static RuleBuilder<T, string> MinLength<T>(this RuleBuilder<T, string> ruleBuilder, int minLength) where T : class
@@ -303,22 +287,6 @@ namespace Myce.FluentValidator
             var value = ruleBuilder.GetAttributeValue(instance);
             return string.IsNullOrEmpty(value) || value.Length >= minLength;
          }, message);
-      }
-
-      /// <summary>
-      /// Validates the minimum character length if a condition is true.
-      /// </summary>
-      public static RuleBuilder<T, string> MinLengthIf<T>(this RuleBuilder<T, string> ruleBuilder, int minLength, bool condition) where T : class
-      {
-         return condition ? ruleBuilder.MinLength(minLength) : ruleBuilder;
-      }
-
-      /// <summary>
-      /// Validates the minimum length if a condition is true with a custom message.
-      /// </summary>
-      public static RuleBuilder<T, string> MinLengthIf<T>(this RuleBuilder<T, string> ruleBuilder, int minLength, bool condition, ErrorMessage message) where T : class
-      {
-         return condition ? ruleBuilder.MinLength(minLength, message) : ruleBuilder;
       }
    }
 }

@@ -20,7 +20,7 @@ public class ResultExtensionsTests
       var merged = results.Merge();
 
       // Assert
-      Assert.False(merged.IsValid);
+      Assert.False(merged.IsSuccess);
       Assert.Contains(merged.Messages, m => m.Type == MessageType.Error);
       Assert.Equal(3, merged.Data.Count()); 
    }
@@ -35,7 +35,7 @@ public class ResultExtensionsTests
       var merged = results.Merge();
 
       // Assert
-      Assert.True(merged.IsValid);
+      Assert.True(merged.IsSuccess);
       Assert.Empty(merged.Messages.Where(x => x.Type == MessageType.Error));
    }
 }

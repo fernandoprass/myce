@@ -65,7 +65,7 @@ Placeholders in messages allow the frontend to perform translation using a dicti
 ### The Result Object
 
 -   **Title**: (string) A high-level summary. If null, it returns `Messages.FirstOrDefault()?.Text`.   
--   **IsValid**: (bool) Returns `true` only if no `ErrorMessage` is present.   
+-   **IsSuccess**: (bool) Returns `true` only if no `ErrorMessage` is present.   
 -   **Messages**: (IReadOnlyCollection) A list of `Information`, `Warning`, or `Error` objects.   
 -   **Data**: (T) The generic payload (specific to `Result<T>`).
 
