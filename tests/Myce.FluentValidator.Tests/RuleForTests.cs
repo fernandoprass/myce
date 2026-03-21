@@ -6,6 +6,7 @@ namespace Myce.FluentValidator.Tests
 {
    public class RuleForTests
    {
+      private enum Gender { Female, Male }
       private class Person
       {
          public string Code { get; set; }
@@ -14,6 +15,7 @@ namespace Myce.FluentValidator.Tests
          public int Age { get; set; }
          public bool IsActive { get; set; }
          public DateTime BirthDate { get; set; }
+         public Gender Gender { get; set; }
       }
 
       /// <summary>
@@ -25,6 +27,7 @@ namespace Myce.FluentValidator.Tests
          var person = new Person { 
             Code = "123A", 
             Name = "John Smith", 
+            Gender = Gender.Male,
             Age = 17, 
             IsActive = true,
             Salary = 0, 
@@ -39,7 +42,8 @@ namespace Myce.FluentValidator.Tests
             .RuleFor(x => x.Name)
                .IsRequired()
                .IsEqualTo("John Smith")
-             .RuleFor(x => x.Age)
+            .RuleFor(x => x.Gender).IsInEnum()
+            .RuleFor(x => x.Age)
                .IsGreaterThanOrEqualTo(18)
                .IsLessThanOrEqualTo(65)
              .RuleFor(x => x.Salary)

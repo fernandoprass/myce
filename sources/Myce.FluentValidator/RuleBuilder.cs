@@ -89,13 +89,32 @@ namespace Myce.FluentValidator
       }
 
       /// <summary>
-      /// Applies a condition to the most recently added validation rule.
-      /// The rule will only be executed if the condition is met.
+      /// Applies a block of rules conditionally. All rules defined within the block will only be executed if the condition is met.
       /// </summary>
       /// <param name="condition">The condition to evaluate.</param>
-      public RuleBuilder<T, TAttribute> If(bool condition)
+      /// <param name="rulesBlock"></param>
+      /// <returns></returns>
+      public RuleBuilder<T, TAttribute> If(Func<T, bool> condition, Action<RuleBuilder<T, TAttribute>> rulesBlock)
       {
-         _validator.ApplyConditionToLastRule(condition);
+         using (_validator.BeginIfScope(condition))
+         {
+            rulesBlock(this);
+         }
+         return this;
+      }
+
+      /// <summary>
+      /// Applies a block of rules conditionally. All rules defined within the block will only be executed if the condition is met.
+      /// </summary>
+      /// <param name="condition">The condition to evaluate.</param>
+      /// <param name="rulesBlock"></param>
+      /// <returns></returns>
+      public RuleBuilder<T, TAttribute> If(bool condition, Action<RuleBuilder<T, TAttribute>> rulesBlock)
+      {
+         using (_validator.BeginIfScope(condition))
+         {
+            rulesBlock(this);
+         }
          return this;
       }
 

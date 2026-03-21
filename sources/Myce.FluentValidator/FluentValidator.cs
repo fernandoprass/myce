@@ -10,6 +10,7 @@ namespace Myce.FluentValidator
    {
       private readonly List<Func<T, bool>> _globalRules = new();
       private readonly List<FluentValidatorError> _globalErrorMessages = new();
+      private Func<Func<T, bool>, Func<T, bool>> _ruleWrapper = rule => rule;
 
       /// <summary>
       /// The list of error messages corresponding to the rules that failed during validation. 
@@ -84,8 +85,33 @@ namespace Myce.FluentValidator
       /// </summary>
       internal void AddRule(Func<T, bool> rule, ErrorMessage errorMessage)
       {
-         _globalRules.Add(rule);
+         _globalRules.Add(_ruleWrapper(rule));
          _globalErrorMessages.Add(new FluentValidatorError(errorMessage, false));
+      }
+
+      internal IDisposable BeginIfScope(bool condition)
+      {
+         var previousWrapper = _ruleWrapper;
+
+         _ruleWrapper = rule => instance => !condition || rule(instance);
+
+         return new Scope(() => _ruleWrapper = previousWrapper);
+      }
+
+      internal IDisposable BeginIfScope(Func<T, bool> condition)
+      {
+         var previousWrapper = _ruleWrapper;
+
+         _ruleWrapper = rule => instance => !condition(instance) || rule(instance);
+
+         return new Scope(() => _ruleWrapper = previousWrapper);
+      }
+
+      private class Scope : IDisposable
+      {
+         private readonly Action _onDispose;
+         public Scope(Action onDispose) => _onDispose = onDispose;
+         public void Dispose() => _onDispose();
       }
 
       /// <summary>

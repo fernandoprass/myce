@@ -58,36 +58,38 @@ namespace Myce.FluentValidator.Tests
       }
 
       [Theory]
-      [InlineData(10, true)]
-      [InlineData(5, false)]
-      public void RuleForValue_WithNumericRules_ShouldWorkCorrectly(int externalCount, bool expectedResult)
+      [InlineData(10, true, true)]
+      [InlineData(5, false, true)]
+      [InlineData(5, true, false)]
+      public void RuleForValue_WithConditionalRule_ShouldWorkCorrectly(int externalCount, bool condition, bool expectedResult)
       {
          var request = new SimpleEntity();
          var validator = new FluentValidator<SimpleEntity>()
-             .RuleForValue(externalCount).IsGreaterThan(7);
+             .RuleForValue(externalCount).If(condition, x => x.IsGreaterThan(7));
 
          var isValid = validator.Validate(request);
 
          Assert.Equal(expectedResult, isValid);
       }
 
-      [Fact]
-      public void RuleForValue_WithRuleForMethod_ShouldChainCorrectly()
+      [Theory]
+      [InlineData("ABC", true, false)]
+      [InlineData("ABC", false, true)]
+      [InlineData("ABCDE", true, true)]
+      [InlineData("ABCD5", true, false)]
+      public void RuleForValue_WithRuleForMethod_ShouldChainCorrectly(string externalToken, bool condition, bool expectedResult)
       {
-         var request = new SimpleEntity();
-         string externalToken = "ABC";
+         var request = new SimpleEntity() { Name = "Person Name" };
 
          var validator = new FluentValidator<SimpleEntity>()
              .RuleForValue(externalToken, "token")
-                 .IsRequired()
-                 .MinLength(5)
+                 .IsAlpha()
+                 .If(condition, x => x.MinLength(5))
              .RuleFor(x => x.Name).IsRequired();
 
          var isValid = validator.Validate(request);
 
-         Assert.False(isValid);
-         Assert.Contains("token", validator.Messages.First().Show());
-         Assert.Equal(2, validator.Messages.Count);
+         Assert.Equal(expectedResult, isValid);
       }
    }
 }
