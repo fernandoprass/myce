@@ -1,4 +1,5 @@
-﻿using Myce.FluentValidator.ErrorMessages;
+﻿using Myce.Extensions;
+using Myce.FluentValidator.ErrorMessages;
 using Myce.Response.Messages;
 using System;
 
@@ -139,7 +140,7 @@ namespace Myce.FluentValidator
             if (value is null) return false;
 
             // Check for empty strings or whitespace
-            if (value is string s) return !string.IsNullOrWhiteSpace(s);
+            if (value is string s) return !string.IsNullOrWhiteSpace(s) || !s.IsNullOrEmpty();
 
             return true;
          }, message);

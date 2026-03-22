@@ -100,44 +100,27 @@ namespace Myce.FluentValidator
 
       internal IDisposable BeginIfScope(Func<T, bool> condition)
       {
-         var previousWrapper = _ruleWrapper;
+         var parentWrapper = _ruleWrapper;
 
-         _ruleWrapper = rule => instance => !condition(instance) || rule(instance);
+         _ruleWrapper = rule =>
+         {
+            Func<T, bool> conditionalRule = instance => !condition(instance) || rule(instance);
 
-         return new Scope(() => _ruleWrapper = previousWrapper);
+            return parentWrapper(conditionalRule);
+         };
+
+         return new Scope(() => _ruleWrapper = parentWrapper);
       }
+
+      internal IDisposable BeginElseScope(Func<T, bool> condition) => BeginIfScope(instance => !condition(instance));
+
+      internal IDisposable BeginElseScope(bool condition) => BeginIfScope(!condition);
 
       private class Scope : IDisposable
       {
          private readonly Action _onDispose;
          public Scope(Action onDispose) => _onDispose = onDispose;
          public void Dispose() => _onDispose();
-      }
-
-      /// <summary>
-      /// Internal method to wrap the last registered rule with a condition.
-      /// </summary>
-      internal void ApplyConditionToLastRule(Func<T, bool> condition)
-      {
-         var lastIndex = _globalRules.Count - 1;
-         if (lastIndex < 0) return;
-
-         var originalRule = _globalRules[lastIndex];
-
-         _globalRules[lastIndex] = instance => !condition(instance) || originalRule(instance);
-      }
-
-      /// <summary>
-      /// Internal method to wrap the last registered rule with a condition.
-      /// </summary>
-      internal void ApplyConditionToLastRule(bool condition)
-      {
-         var lastIndex = _globalRules.Count - 1;
-         if (lastIndex < 0) return;
-
-         var originalRule = _globalRules[lastIndex];
-
-         _globalRules[lastIndex] = instance => !condition || originalRule(instance);
       }
    }
 }

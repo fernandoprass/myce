@@ -4,12 +4,11 @@ using Xunit;
 
 namespace Myce.FluentValidator.Tests
 {
-   public class RuleForTests
+   public class RuleForGenericTests
    {
       private enum Gender { Female, Male }
       private class Person
       {
-         public string Code { get; set; }
          public string Name { get; set; }
          public double? Salary { get; set; }
          public int Age { get; set; }
@@ -22,10 +21,9 @@ namespace Myce.FluentValidator.Tests
       /// Mix multiple rules on different properties and ensure that all validations are executed and the correct error messages are generated.
       /// </summary>
       [Fact]
-      public void RuleFor_MixingMultipleRules_ShouldValidate()
+      public void RuleFor_MixingMultipleRules_ShouldValidateAndFail()
       {
          var person = new Person { 
-            Code = "123A", 
             Name = "John Smith", 
             Gender = Gender.Male,
             Age = 17, 
@@ -36,31 +34,19 @@ namespace Myce.FluentValidator.Tests
 
          var validator = new FluentValidator<Person>();
 
-         validator.RuleFor(x => x.Code)
-               .IsRequired()
-               .ContainsOnlyNumber()
-            .RuleFor(x => x.Name)
-               .IsRequired()
-               .IsEqualTo("John Smith")
+         validator.RuleFor(x => x.Name).IsRequired().IsEqualTo("John Smith")
             .RuleFor(x => x.Gender).IsInEnum()
-            .RuleFor(x => x.Age)
-               .IsGreaterThanOrEqualTo(18)
-               .IsLessThanOrEqualTo(65)
-             .RuleFor(x => x.Salary)
-               .IsGreaterThanOrEqualTo(500).If(x => x.Age >= 18)
-             .RuleFor(x => x.BirthDate).IsInThePast();
+            .RuleFor(x => x.Age).IsBetween(18, 65)
+            .RuleFor(x => x.Salary).If(x => x.Age >= 18, rb => rb.IsGreaterThanOrEqualTo(500))
+            .RuleFor(x => x.BirthDate).IsInThePast();
 
          var result = validator.Validate(person);
 
-         var errorMessageCode = validator.Messages.First();
-         Assert.Equal("Code", errorMessageCode.Variables.First().Value);
-         Assert.IsType<ShouldContainOnlyNumberError>(errorMessageCode);
-
-         var errorMessageAge = validator.Messages.Last();
+         var errorMessageAge = validator.Messages.First();
          Assert.Contains("Age", errorMessageAge.ToString());      
-         Assert.IsType<IsGreaterThanOrEqualToError>(errorMessageAge);
+         Assert.IsType<IsBetweenError>(errorMessageAge);
 
-         Assert.Equal(2, validator.Messages.Count());
+         Assert.Single(validator.Messages);
       }
 
       /// <summary>
@@ -68,19 +54,19 @@ namespace Myce.FluentValidator.Tests
       /// Subsequent rules in the chain must always execute.
       /// </summary>
       [Theory]
-      [InlineData(15, "John", true)]    // Age < 18: IsRequired(If) skipped, others pass
-      [InlineData(20, "John", true)]    // Age >= 18: IsRequired passes, others pass
+      [InlineData(15, "John", true)]   // Age < 18: IsRequired(If) skipped, others pass
+      [InlineData(20, "John", true)]   // Age >= 18: IsRequired passes, others pass
       [InlineData(20, "", false)]      // Age >= 18: IsRequired fails
       [InlineData(15, "J", false)]     // Age < 18: IsRequired skipped, but MinLength(3) fails
-      public void If_ShouldOnlyAffectThePrecedingRule(int age, string name, bool expected)
+      public void If_ShouldOnlyAffectThePrecedingRule_ShouldValidate(int age, string name, bool expected)
       {
          var person = new Person { Age = age, Name = name };
          var validator = new FluentValidator<Person>();
 
          validator.RuleFor(x => x.Name)
-            .IsRequired().If(x => x.Age >= 18) // Conditional requirement
-            .MinLength(3)                     // Always mandatory
-            .IsAlpha();                       // Always mandatory
+            .If(x => x.Age >= 18, rb => rb.IsRequired()) // Conditional requirement
+            .MinLength(3)                                // Always mandatory
+            .IsAlpha();                                  // Always mandatory
 
          Assert.Equal(expected, validator.Validate(person));
       }
@@ -90,17 +76,19 @@ namespace Myce.FluentValidator.Tests
       /// based on the state of the Person instance.
       /// </summary>
       [Theory]
-      [InlineData("GOLD_MEMBER", true, true)]   // Active: Code check runs and passes
-      [InlineData("SHORT", true, false)]        // Active: Code check runs and fails
+      [InlineData("GOLD_MEMBER", true, true)]  // Active: Code check runs and passes
+      [InlineData("SHORT", true, false)]       // Active: Code check runs and fails
       [InlineData("SHORT", false, true)]       // Inactive: Code check is skipped
-      public void RuleForValue_WithIf_ShouldValidateCondition(string externalCode, bool isActive, bool expected)
+      [InlineData(null, false, false)]         // ExternalCode is null: Fails regardless of IsActive
+
+      public void RuleForValue_WithAndWithoutIf_ShouldValidateConditionWhenExists(string externalCode, bool isActive, bool expected)
       {
          var person = new Person { IsActive = isActive };
          var validator = new FluentValidator<Person>();
 
-         // Validates an external string based on the Person's IsActive status
-         validator.RuleForValue(externalCode)
-            .MinLength(10).If(x => x.IsActive);
+         validator
+            .RuleForValue(externalCode).If(x => x.IsActive, rb => rb.MinLength(10))
+            .RuleForValue(externalCode, "externalCode").IsNotNull();
 
          Assert.Equal(expected, validator.Validate(person));
       }
@@ -125,8 +113,8 @@ namespace Myce.FluentValidator.Tests
          var validator = new FluentValidator<Person>();
 
          validator.RuleFor(x => x.Name)
-            .IsRequired().If(x => x.Age >= 18)
-            .IsAlpha().If(x => x.IsActive);
+            .If(x => x.Age >= 18, rb => rb.IsRequired())
+            .If(x => x.IsActive, rb => rb.IsAlpha());
 
          Assert.Equal(expected, validator.Validate(person));
       }
@@ -146,9 +134,8 @@ namespace Myce.FluentValidator.Tests
          var validator = new FluentValidator<Person>();
 
          // Custom rule: BirthDate must be in the past, but only IF the person is Active
-         validator.RuleFor(x => x.BirthDate)
-            .IsInThePast(new ErrorMessage("Invalid birth date"))
-            .If(x => x.IsActive);
+         validator.RuleFor(x => x.BirthDate)            
+            .If(x => x.IsActive, rb => rb.IsInThePast(new ErrorMessage("Invalid birth date")));
 
          // Should pass because IsActive is false, so the past date check is ignored
          Assert.True(validator.Validate(person));

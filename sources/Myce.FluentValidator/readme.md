@@ -85,14 +85,49 @@ var validator = new FluentValidator<Person>()
     .IsFalse(new ErrorMessage("This email is already taken"));
 ```
 
-### 5. Conditional Validation ("If")
-The `If` method applies a condition to the immediately preceding rule. Subsequent rules in the chain are unaffected and remain mandatory.
+### 5. Conditional Validation ("If" and "If .. Else")
+The library supports full flow control for rules using `If` and `Else` blocks. This allows you to apply different sets of rules based on the 
+state of the object, while maintaining individual error messages for every rule within the blocks.
 ```csharp
 validator.RuleFor(x => x.Name)
-    .IsRequired().If(x => x.Age >= 18) // Name is only required for adults
-    .IsAlpha();                        // Must always be alphabetic if provided
+    .If(x => x.IsActive, rb => {
+        rb.IsRequired();
+        rb.MinLength(5);
+    });
+```
+You can provide an elseBlock to handle mutually exclusive validation logic.
+```csharp
+validator.RuleFor(x => x.TaxId)
+    .If(x => x.CustomerType == CustomerType.Individual, 
+        ifBlock: rb => rb.IsRequired().Matches(@"^\d{3}-\d{2}-\d{4}$"), // e.g., SSN
+        elseBlock: rb => rb.IsRequired().MinLength(9)                   // e.g., Corporate Tax ID
+    );
 ```
 
+Templates can also be applied conditionally. This is the cleanest way to reuse complex logic only when needed.
+```csharp
+validator.RuleFor(x => x.Code)
+    .If(x => x.Gender == Gender.Male, rb => rb.ApplyTemplate(MaleCodeRules))
+    .If(x => x.Gender == Gender.Female, rb => rb.ApplyTemplate(FemaleCodeRules));
+    );
+```
+
+**Rule Scoping**
+Unlike basic conditional validators that only affect the next rule, the If method in this library uses Rule Scoping. This means:
+
+Granular Errors: If a rule inside an If block fails, it returns the specific error message for that rule (e.g., "Min length is 5"), not a generic "Condition failed" message.
+
+Nesting: You can nest If blocks inside other If blocks for complex hierarchical validation.
+
+Clean Syntax: No need to repeat the condition for every single rule.
+
+Method,Description
+| Method | Description |
+| :--- | :--- |
+| `If(condition, action)` | Executes all rules in the action only if the predicate is true. |
+| `If(condition, ifAction, elseAction)` | Executes either the ifAction or the elseAction based on the predicate. |
+| `If(bool, action)` | Static boolean version for external flags.|
+| `If(bool, ifAction, elseAction)` | Executes either the ifAction or the elseAction based on the bool value. |
 
 ## Supported Validators
 
@@ -165,6 +200,10 @@ String validators:
 | `MinLength` | Validates the minimum length of a string. |
 
 ## Notes
+Version 1.5.0
+- Fix bug in the `If` method that causedby multiple conditionals.
+- Add `Else` block support for the `If` method, allowing mutually exclusive validation logic with separate error messages for each block.
+
 Version 1.4.0
 - Adds the `If` method that makes a rule dependent on a condition.
 

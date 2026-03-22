@@ -77,22 +77,13 @@ namespace Myce.FluentValidator
       /// <param name="paramName">Custom name for the parameter, used in error messages.</param>
       public RuleBuilder<T, TValue> RuleForValue<TValue>(TValue value, string paramName) => _validator.RuleForValue(value, paramName);
 
-      /// <summary>
-      /// Applies a condition to the most recently added validation rule.
-      /// The rule will only be executed if the condition is met.
-      /// </summary>
-      /// <param name="condition">The condition to evaluate.</param>
-      public RuleBuilder<T, TAttribute> If(Func<T, bool> condition)
-      {
-         _validator.ApplyConditionToLastRule(condition);
-         return this;
-      }
 
+      #region IfElseBlocks
       /// <summary>
       /// Applies a block of rules conditionally. All rules defined within the block will only be executed if the condition is met.
       /// </summary>
       /// <param name="condition">The condition to evaluate.</param>
-      /// <param name="rulesBlock"></param>
+      /// <param name="rulesBlock">The block of rules to execute if the condition is true.</param>
       /// <returns></returns>
       public RuleBuilder<T, TAttribute> If(Func<T, bool> condition, Action<RuleBuilder<T, TAttribute>> rulesBlock)
       {
@@ -107,7 +98,7 @@ namespace Myce.FluentValidator
       /// Applies a block of rules conditionally. All rules defined within the block will only be executed if the condition is met.
       /// </summary>
       /// <param name="condition">The condition to evaluate.</param>
-      /// <param name="rulesBlock"></param>
+      /// <param name="rulesBlock">The block of rules to execute if the condition is true.</param>
       /// <returns></returns>
       public RuleBuilder<T, TAttribute> If(bool condition, Action<RuleBuilder<T, TAttribute>> rulesBlock)
       {
@@ -117,6 +108,56 @@ namespace Myce.FluentValidator
          }
          return this;
       }
+
+      /// <summary>
+      /// Applies a block of rules conditionally. All rules defined within the block will only be executed if the condition is met.
+      /// </summary>
+      /// <param name="condition">The condition to evaluate.</param>
+      /// <param name="ifBlock">The block of rules to execute if the condition is true.</param>
+      /// <param name="elseBlock">The block of rules to execute if the condition is false.</param>
+      /// <returns></returns>
+      public RuleBuilder<T, TAttribute> If(
+          Func<T, bool> condition,
+          Action<RuleBuilder<T, TAttribute>> ifBlock,
+          Action<RuleBuilder<T, TAttribute>> elseBlock)
+      {
+         using (_validator.BeginIfScope(condition))
+         {
+            ifBlock(this);
+         }
+
+         using (_validator.BeginElseScope(condition))
+         {
+            elseBlock(this);
+         }
+
+         return this;
+      }
+
+      /// <summary>
+      /// Applies a block of rules conditionally. All rules defined within the block will only be executed if the condition is met.
+      /// </summary>
+      /// <param name="condition">The condition to evaluate.</param>
+      /// <param name="rulesBlock"></param>
+      /// <returns></returns>
+      public RuleBuilder<T, TAttribute> If(
+          bool condition,
+          Action<RuleBuilder<T, TAttribute>> ifBlock,
+          Action<RuleBuilder<T, TAttribute>> elseBlock)
+      {
+         using (_validator.BeginIfScope(condition))
+         {
+            ifBlock(this);
+         }
+
+         using (_validator.BeginElseScope(condition))
+         {
+            elseBlock(this);
+         }
+
+         return this;
+      }
+      #endregion IfElseBlocks
 
       #region InternalAndPrivateMethods
       /// <summary>
@@ -155,6 +196,6 @@ namespace Myce.FluentValidator
       /// </summary>
       internal object? GetAttributeValueAsObject(T instance) => GetAttributeValue(instance);
 
-      #endregion
+      #endregion InternalAndPrivateMethods
    }
 }
