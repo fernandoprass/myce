@@ -113,7 +113,7 @@ namespace Myce.FluentValidator.Tests
 
          validator.RuleFor(x => x.Code)
             .MaxLength(length, errorMessage)
-            .MaxLength(length, errorMessage).If(condition);
+            .If(condition, x => x.MaxLength(length, errorMessage));
 
          var result = validator.Validate(person);
 
@@ -137,7 +137,7 @@ namespace Myce.FluentValidator.Tests
 
          var validator2 = new FluentValidator<Person>();
 
-         validator2.RuleFor(x => x.Code).MaxLength(2).If(true);
+         validator2.RuleFor(x => x.Code).If(true, x => x.MaxLength(2));
 
          validator2.Validate(person2);
          Assert.Single(validator2.Messages);
@@ -164,7 +164,7 @@ namespace Myce.FluentValidator.Tests
          var validator = new FluentValidator<Person>()
             .RuleFor(x => x.Code)
             .MinLength(length, errorMessage)
-            .MinLength(length, errorMessage).If(condition);
+            .If(condition, x => x.MinLength(length, errorMessage));
 
          var result = validator.Validate(person);
 
@@ -186,7 +186,7 @@ namespace Myce.FluentValidator.Tests
          var person2 = new Person { Code = "abc" };
          var validator2 = new FluentValidator<Person>()
             .RuleFor(x => x.Code)
-            .MinLength(4).If(true);
+            .If(true, x => x.MinLength(4));
 
          validator2.Validate(person2);
          Assert.Single(validator2.Messages);

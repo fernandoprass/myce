@@ -10,6 +10,7 @@ namespace Myce.FluentValidator
    {
       private readonly List<Func<T, bool>> _globalRules = new();
       private readonly List<FluentValidatorError> _globalErrorMessages = new();
+      private Func<Func<T, bool>, Func<T, bool>> _ruleWrapper = rule => rule;
 
       /// <summary>
       /// The list of error messages corresponding to the rules that failed during validation. 
@@ -84,34 +85,42 @@ namespace Myce.FluentValidator
       /// </summary>
       internal void AddRule(Func<T, bool> rule, ErrorMessage errorMessage)
       {
-         _globalRules.Add(rule);
+         _globalRules.Add(_ruleWrapper(rule));
          _globalErrorMessages.Add(new FluentValidatorError(errorMessage, false));
       }
 
-      /// <summary>
-      /// Internal method to wrap the last registered rule with a condition.
-      /// </summary>
-      internal void ApplyConditionToLastRule(Func<T, bool> condition)
+      internal IDisposable BeginIfScope(bool condition)
       {
-         var lastIndex = _globalRules.Count - 1;
-         if (lastIndex < 0) return;
+         var previousWrapper = _ruleWrapper;
 
-         var originalRule = _globalRules[lastIndex];
+         _ruleWrapper = rule => instance => !condition || rule(instance);
 
-         _globalRules[lastIndex] = instance => !condition(instance) || originalRule(instance);
+         return new Scope(() => _ruleWrapper = previousWrapper);
       }
 
-      /// <summary>
-      /// Internal method to wrap the last registered rule with a condition.
-      /// </summary>
-      internal void ApplyConditionToLastRule(bool condition)
+      internal IDisposable BeginIfScope(Func<T, bool> condition)
       {
-         var lastIndex = _globalRules.Count - 1;
-         if (lastIndex < 0) return;
+         var parentWrapper = _ruleWrapper;
 
-         var originalRule = _globalRules[lastIndex];
+         _ruleWrapper = rule =>
+         {
+            Func<T, bool> conditionalRule = instance => !condition(instance) || rule(instance);
 
-         _globalRules[lastIndex] = instance => !condition || originalRule(instance);
+            return parentWrapper(conditionalRule);
+         };
+
+         return new Scope(() => _ruleWrapper = parentWrapper);
+      }
+
+      internal IDisposable BeginElseScope(Func<T, bool> condition) => BeginIfScope(instance => !condition(instance));
+
+      internal IDisposable BeginElseScope(bool condition) => BeginIfScope(!condition);
+
+      private class Scope : IDisposable
+      {
+         private readonly Action _onDispose;
+         public Scope(Action onDispose) => _onDispose = onDispose;
+         public void Dispose() => _onDispose();
       }
    }
 }
