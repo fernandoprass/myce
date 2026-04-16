@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 
 namespace Myce.Wrappers.Contracts
 {
@@ -136,6 +136,69 @@ namespace Myce.Wrappers.Contracts
 
 #if !NETSTANDARD2_0
       /// <summary>
+      /// Asynchronously opens a file, appends the specified lines to the file, and then closes the file.
+      /// </summary>
+      /// <param name="path">The file to append the lines to.</param>
+      /// <param name="contents">The lines to append to the file.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>A task that represents the asynchronous append operation.</returns>
+      Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Asynchronously opens a file, appends the specified lines to the file, and then closes the file.
+      /// </summary>
+      /// <param name="path">The file to append the lines to.</param>
+      /// <param name="contents">The lines to append to the file.</param>
+      /// <param name="encoding">The character encoding to use.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>A task that represents the asynchronous append operation.</returns>
+      Task AppendAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Asynchronously opens a file, appends the specified string to the file, and then closes the file.
+      /// </summary>
+      /// <param name="path">The file to append the specified string to.</param>
+      /// <param name="contents">The string to append to the file.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>A task that represents the asynchronous append operation.</returns>
+      Task AppendAllTextAsync(string path, string? contents, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Asynchronously opens a file, appends the specified string to the file, and then closes the file.
+      /// </summary>
+      /// <param name="path">The file to append the specified string to.</param>
+      /// <param name="contents">The string to append to the file.</param>
+      /// <param name="encoding">The character encoding to use.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>A task that represents the asynchronous append operation.</returns>
+      Task AppendAllTextAsync(string path, string? contents, Encoding encoding, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Asynchronously opens a binary file, reads the contents of the file into a byte array, and then closes the file.
+      /// </summary>
+      /// <param name="path">The file to open for reading.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>A task that represents the asynchronous read operation, which wraps the byte array containing the contents of the file.</returns>
+      Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Asynchronously opens a text file, reads all lines of the file, and then closes the file.
+      /// </summary>
+      /// <param name="path">The file to open for reading.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>A task that represents the asynchronous read operation, which wraps an array containing all lines of the file.</returns>
+      Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Asynchronously opens a text file, reads all lines of the file with the specified encoding, and then closes the file.
+      /// </summary>
+      /// <param name="path">The file to open for reading.</param>
+      /// <param name="encoding">The encoding applied to the contents of the file.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>A task that represents the asynchronous read operation, which wraps an array containing all lines of the file.</returns>
+      Task<string[]> ReadAllLinesAsync(string path, Encoding encoding, CancellationToken cancellationToken = default);
+
+      /// <summary>
       /// Asynchronously opens a text file, reads all the text in the file, and then closes the file.
       /// </summary>
       /// <param name="path">The file to open for reading.</param>
@@ -151,24 +214,35 @@ namespace Myce.Wrappers.Contracts
       /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
       /// <returns>A string containing all the text in the file.</returns>
       Task<string> ReadAllTextAsync(string path, Encoding encoding, CancellationToken cancellationToken = default);
-#endif
 
       /// <summary>
-      /// Creates a new file, write the contents to the file, and then closes the file. If the target file already exists, it is overwritten.
+      /// Asynchronously creates a new file, writes the specified byte array to the file, and then closes the file. If the target file already exists, it is overwritten.
       /// </summary>
       /// <param name="path">The file to write to.</param>
-      /// <param name="contents">The string to write to the file.</param>
-      void WriteAllText(string path, string? contents);
+      /// <param name="bytes">The bytes to write to the file.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>A task that represents the asynchronous write operation.</returns>
+      Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken = default);
 
       /// <summary>
-      /// Creates a new file, write the contents to the file, and then closes the file. If the target file already exists, it is overwritten.
+      /// Asynchronously creates a new file, writes the specified lines to the file, and then closes the file.
       /// </summary>
       /// <param name="path">The file to write to.</param>
-      /// <param name="contents">The string to write to the file.</param>
-      /// <param name="encoding">The encoding to apply to the string.</param>
-      void WriteAllText(string path, string? contents, Encoding encoding);
+      /// <param name="contents">The lines to write to the file.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>A task that represents the asynchronous write operation.</returns>
+      Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken = default);
 
-#if !NETSTANDARD2_0
+      /// <summary>
+      /// Asynchronously creates a new file, writes the specified lines to the file, and then closes the file.
+      /// </summary>
+      /// <param name="path">The file to write to.</param>
+      /// <param name="contents">The lines to write to the file.</param>
+      /// <param name="encoding">The character encoding to use.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>A task that represents the asynchronous write operation.</returns>
+      Task WriteAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken = default);
+
       /// <summary>
       /// Asynchronously creates a new file, writes the specified string to the file, and then closes the file. If the target file already exists, 
       /// it is overwritten.
@@ -189,6 +263,92 @@ namespace Myce.Wrappers.Contracts
       /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
       /// <returns>A task that represents the asynchronous write operation.</returns>
       Task WriteAllTextAsync(string path, string? contents, Encoding encoding, CancellationToken cancellationToken = default);
+
+#if NET8_0_OR_GREATER
+      /// <summary>
+      /// Asynchronously read the lines of a file.
+      /// </summary>
+      /// <param name="path">The file to read.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>All the lines of the file, or the lines that are the result of a query.</returns>
+      IAsyncEnumerable<string> ReadLinesAsync(string path, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Asynchronously read the lines of a file that has a specified encoding.
+      /// </summary>
+      /// <param name="path">The file to read.</param>
+      /// <param name="encoding">The encoding applied to the contents of the file.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>All the lines of the file, or the lines that are the result of a query.</returns>
+      IAsyncEnumerable<string> ReadLinesAsync(string path, Encoding encoding, CancellationToken cancellationToken = default);
+#endif
+
+#if NET9_0_OR_GREATER
+      /// <summary>
+      /// Asynchronously opens a specified file, appends the specified byte array to the file, and then closes the file.
+      /// </summary>
+      /// <param name="path">The file to append the bytes to.</param>
+      /// <param name="bytes">The bytes to append to the file.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>A task that represents the asynchronous append operation.</returns>
+      Task AppendAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Asynchronously opens a specified file, appends the specified byte memory to the file, and then closes the file.
+      /// </summary>
+      /// <param name="path">The file to append the bytes to.</param>
+      /// <param name="bytes">The byte memory to append to the file.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>A task that represents the asynchronous append operation.</returns>
+      Task AppendAllBytesAsync(string path, ReadOnlyMemory<byte> bytes, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Asynchronously opens a file, appends the specified character memory to the file, and then closes the file.
+      /// </summary>
+      /// <param name="path">The file to append the specified character memory to.</param>
+      /// <param name="contents">The character memory to append to the file.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>A task that represents the asynchronous append operation.</returns>
+      Task AppendAllTextAsync(string path, ReadOnlyMemory<char> contents, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Asynchronously opens a file, appends the specified character memory to the file, and then closes the file.
+      /// </summary>
+      /// <param name="path">The file to append the specified character memory to.</param>
+      /// <param name="contents">The character memory to append to the file.</param>
+      /// <param name="encoding">The character encoding to use.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>A task that represents the asynchronous append operation.</returns>
+      Task AppendAllTextAsync(string path, ReadOnlyMemory<char> contents, Encoding encoding, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Asynchronously creates a new file, writes the specified byte memory to the file, and then closes the file. If the target file already exists, it is overwritten.
+      /// </summary>
+      /// <param name="path">The file to write to.</param>
+      /// <param name="bytes">The byte memory to write to the file.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>A task that represents the asynchronous write operation.</returns>
+      Task WriteAllBytesAsync(string path, ReadOnlyMemory<byte> bytes, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Asynchronously creates a new file, writes the specified character memory to the file, and then closes the file. If the target file already exists, it is overwritten.
+      /// </summary>
+      /// <param name="path">The file to write to.</param>
+      /// <param name="contents">The character memory to write to the file.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>A task that represents the asynchronous write operation.</returns>
+      Task WriteAllTextAsync(string path, ReadOnlyMemory<char> contents, CancellationToken cancellationToken = default);
+
+      /// <summary>
+      /// Asynchronously creates a new file, writes the specified character memory to the file, and then closes the file. If the target file already exists, it is overwritten.
+      /// </summary>
+      /// <param name="path">The file to write to.</param>
+      /// <param name="contents">The character memory to write to the file.</param>
+      /// <param name="encoding">The encoding to apply to the character memory.</param>
+      /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+      /// <returns>A task that represents the asynchronous write operation.</returns>
+      Task WriteAllTextAsync(string path, ReadOnlyMemory<char> contents, Encoding encoding, CancellationToken cancellationToken = default);
+#endif
 #endif
    }
 }
