@@ -89,3 +89,12 @@ This library follows a **Client-Side Translation** strategy. The backend provide
 1.  **Explicit Titles**: Set the `Title` property when you want a specific summary for the UI that differs from individual error messages.  
 2.  **ToResult Mapping**: Use `.ToResult<V>(map)` to convert between types (e.g., Entity to DTO) while preserving all messages and state.
 
+ ## Notes
+Version 1.3.0
+- Remove obsolete attribute IsValid (was replaced by IsSuccess).
+
+Version 1.2.0
+- Introduces support for `net10.0`, ensuring compatibility with the latest .NET features and improvements.
+
+Version 1.0.0 
+- The initial stable release of Myce.Response, providing basic response handling capabilities for .NET applications.

@@ -32,7 +32,7 @@ namespace Myce.FluentValidator
       /// <typeparam name="TProperty">The collection type (must implement IEnumerable).</typeparam>
       /// <typeparam name="TElement">The type of the elements in the collection.</typeparam>
       /// <param name="message">The custom error message to return if the validation fails.</param>
-      public static RuleBuilder<T, TProperty> IsEmpty<T, TProperty, TElement>(this RuleBuilder<T, TProperty> rb, ErrorMessage message)
+      public static RuleBuilder<T, TProperty> IsEmpty<T, TProperty, TElement>(this RuleBuilder<T, TProperty> rb, Message message)
           where T : class
           where TProperty : IEnumerable<TElement>
       {
@@ -71,7 +71,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> IsIn<T, TAttribute>(
           this RuleBuilder<T, TAttribute> ruleBuilder,
           IEnumerable<TAttribute> allowedValues,
-          ErrorMessage message)
+          Message message)
           where T : class
       {
          return ruleBuilder.AddRule(instance =>
@@ -103,7 +103,7 @@ namespace Myce.FluentValidator
       /// <typeparam name="TProperty">The collection type (must implement IEnumerable).</typeparam>
       /// <typeparam name="TElement">The type of the elements in the collection.</typeparam>
       /// <param name="message">The custom error message to return if the validation fails.</param>
-      public static RuleBuilder<T, TProperty> HasItems<T, TProperty, TElement>(this RuleBuilder<T, TProperty> rb, ErrorMessage message)
+      public static RuleBuilder<T, TProperty> HasItems<T, TProperty, TElement>(this RuleBuilder<T, TProperty> rb, Message message)
          where T : class
          where TProperty : IEnumerable<TElement>
       {
@@ -137,7 +137,7 @@ namespace Myce.FluentValidator
       /// <typeparam name="TElement">The type of the elements in the collection.</typeparam>
       /// <param name="max">The maximum numbers of items allowed.</param>
       /// <param name="message">The custom error message to return if the validation fails.</param>
-      public static RuleBuilder<T, TProperty> MaxNumberOfItems<T, TProperty, TElement>(this RuleBuilder<T, TProperty> rb, int max, ErrorMessage message)
+      public static RuleBuilder<T, TProperty> MaxNumberOfItems<T, TProperty, TElement>(this RuleBuilder<T, TProperty> rb, int max, Message message)
          where T : class
          where TProperty : IEnumerable<TElement>
       {

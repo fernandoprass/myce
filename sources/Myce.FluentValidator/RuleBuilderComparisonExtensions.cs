@@ -33,7 +33,7 @@ namespace Myce.FluentValidator
       /// <param name="ruleBuilder">The rule builder instance.</param>
       /// <param name="value">The value to compare against.</param>
       /// <param name="message">The custom error message to return if the validation fails.</param>
-      public static RuleBuilder<T, TAttribute> IsEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder, TAttribute value, ErrorMessage message)
+      public static RuleBuilder<T, TAttribute> IsEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder, TAttribute value, Message message)
          where T : class
       {
          return ruleBuilder.AddRule(instance =>
@@ -71,7 +71,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> IsEqualTo<T, TAttribute>(
          this RuleBuilder<T, TAttribute> ruleBuilder,
          Expression<Func<T, TAttribute>> comparisonProperty,
-         ErrorMessage message)
+         Message message)
          where T : class
       {
          return ruleBuilder.EqualityCompare(comparisonProperty, true, (_, _) => message);
@@ -99,7 +99,7 @@ namespace Myce.FluentValidator
       /// <param name="ruleBuilder">The rule builder instance.</param>
       /// <param name="value">The value to compare against.</param>
       /// <param name="message">The custom error message to return if the validation fails.</param>
-      public static RuleBuilder<T, TAttribute> IsNotEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder, TAttribute value, ErrorMessage message)
+      public static RuleBuilder<T, TAttribute> IsNotEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder, TAttribute value, Message message)
          where T : class
       {
          return ruleBuilder.AddRule(instance =>
@@ -136,7 +136,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> IsNotEqualTo<T, TAttribute>(
          this RuleBuilder<T, TAttribute> ruleBuilder,
          Expression<Func<T, TAttribute>> comparisonProperty,
-         ErrorMessage message)
+         Message message)
          where T : class
       {
          return ruleBuilder.EqualityCompare(comparisonProperty, false, (_, _) => message);
@@ -149,7 +149,7 @@ namespace Myce.FluentValidator
          this RuleBuilder<T, TAttribute> ruleBuilder,
          Expression<Func<T, TAttribute>> comparisonProperty,
          bool expected,
-         Func<string, string, ErrorMessage> errorFactory)
+         Func<string, string, Message> errorFactory)
          where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();

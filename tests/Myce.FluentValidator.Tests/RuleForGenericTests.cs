@@ -50,6 +50,57 @@ namespace Myce.FluentValidator.Tests
       }
 
       /// <summary>
+      /// Warning messages should be included in the Messages collection, but validation should return TRUE.
+      /// </summary>
+      [Fact]
+      public void RuleFor_ContainOnlyWarningMessage_ShouldReturnValid()
+      {
+         var person = new Person
+         {
+            Name = "John Smith",
+            Age = 17
+         };
+
+         var validator = new FluentValidator<Person>();
+
+         validator.RuleFor(x => x.Name).IsRequired().IsEqualTo("John Smith")
+            .RuleFor(x => x.Age).IsBetween(18, 65, new WarningMessage("Warning"));
+
+
+         var result = validator.Validate(person);
+
+         Assert.True(result);
+         Assert.IsType<WarningMessage>(validator.Messages.First());
+         Assert.Single(validator.Messages);
+      }
+
+      /// <summary>
+      /// Warning messages should be included in the Messages collection, but validation should return false when contains also an Error Message.
+      /// </summary>
+      [Fact]
+      public void RuleFor_ContainWarningAndErrorMessages_ShouldReturnInvalid()
+      {
+         var person = new Person
+         {
+            Name = "John Smith",
+            Age = 17
+         };
+
+         var validator = new FluentValidator<Person>();
+
+         validator.RuleFor(x => x.Name).IsRequired().RuleFor(x => x.Name).MinLength(50) 
+            .RuleFor(x => x.Age).IsBetween(18, 65, new WarningMessage("Warning"));
+
+
+         var result = validator.Validate(person);
+
+         Assert.False(result);
+         Assert.Equal(2, validator.Messages.Count);
+         Assert.IsType<FewerCharactersThanExpectedError>(validator.Messages.First());
+         Assert.IsType<WarningMessage>(validator.Messages.Last());
+      }
+
+      /// <summary>
       /// Tests that 'If' only affects the rule immediately preceding it.
       /// Subsequent rules in the chain must always execute.
       /// </summary>

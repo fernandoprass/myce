@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Myce.Wrappers.Contracts;
 
 namespace Myce.Wrappers
@@ -107,6 +107,48 @@ namespace Myce.Wrappers
 
 #if !NETSTANDARD2_0
       /// <inheritdoc/>
+      public Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken = default)
+      {
+         return File.AppendAllLinesAsync(path, contents, cancellationToken);
+      }
+
+      /// <inheritdoc/>
+      public Task AppendAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken = default)
+      {
+         return File.AppendAllLinesAsync(path, contents, encoding, cancellationToken);
+      }
+
+      /// <inheritdoc/>
+      public Task AppendAllTextAsync(string path, string? contents, CancellationToken cancellationToken = default)
+      {
+         return File.AppendAllTextAsync(path, contents, cancellationToken);
+      }
+
+      /// <inheritdoc/>
+      public Task AppendAllTextAsync(string path, string? contents, Encoding encoding, CancellationToken cancellationToken = default)
+      {
+         return File.AppendAllTextAsync(path, contents, encoding, cancellationToken);
+      }
+
+      /// <inheritdoc/>
+      public Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken = default)
+      {
+         return File.ReadAllBytesAsync(path, cancellationToken);
+      }
+
+      /// <inheritdoc/>
+      public Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken = default)
+      {
+         return File.ReadAllLinesAsync(path, cancellationToken);
+      }
+
+      /// <inheritdoc/>
+      public Task<string[]> ReadAllLinesAsync(string path, Encoding encoding, CancellationToken cancellationToken = default)
+      {
+         return File.ReadAllLinesAsync(path, encoding, cancellationToken);
+      }
+
+      /// <inheritdoc/>
       public Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken = default)
       {
          return File.ReadAllTextAsync(path, cancellationToken);
@@ -117,21 +159,25 @@ namespace Myce.Wrappers
       {
          return File.ReadAllTextAsync(path, encoding, cancellationToken);
       }
-#endif
 
       /// <inheritdoc/>
-      public void WriteAllText(string path, string? contents)
+      public Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken = default)
       {
-         File.WriteAllText(path, contents);
+         return File.WriteAllBytesAsync(path, bytes, cancellationToken);
       }
 
       /// <inheritdoc/>
-      public void WriteAllText(string path, string? contents, Encoding encoding)
+      public Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken = default)
       {
-         File.WriteAllText(path, contents, encoding);
+         return File.WriteAllLinesAsync(path, contents, cancellationToken);
       }
 
-#if !NETSTANDARD2_0
+      /// <inheritdoc/>
+      public Task WriteAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken = default)
+      {
+         return File.WriteAllLinesAsync(path, contents, encoding, cancellationToken);
+      }
+
       /// <inheritdoc/>
       public Task WriteAllTextAsync(string path, string? contents, CancellationToken cancellationToken = default)
       {
@@ -143,6 +189,64 @@ namespace Myce.Wrappers
       {
          return File.WriteAllTextAsync(path, contents, encoding, cancellationToken);
       }
+
+#if NET8_0_OR_GREATER
+      /// <inheritdoc/>
+      public IAsyncEnumerable<string> ReadLinesAsync(string path, CancellationToken cancellationToken = default)
+      {
+         return File.ReadLinesAsync(path, cancellationToken);
+      }
+
+      /// <inheritdoc/>
+      public IAsyncEnumerable<string> ReadLinesAsync(string path, Encoding encoding, CancellationToken cancellationToken = default)
+      {
+         return File.ReadLinesAsync(path, encoding, cancellationToken);
+      }
+#endif
+
+#if NET9_0_OR_GREATER
+      /// <inheritdoc/>
+      public Task AppendAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken = default)
+      {
+         return File.AppendAllBytesAsync(path, bytes, cancellationToken);
+      }
+
+      /// <inheritdoc/>
+      public Task AppendAllBytesAsync(string path, ReadOnlyMemory<byte> bytes, CancellationToken cancellationToken = default)
+      {
+         return File.AppendAllBytesAsync(path, bytes, cancellationToken);
+      }
+
+      /// <inheritdoc/>
+      public Task AppendAllTextAsync(string path, ReadOnlyMemory<char> contents, CancellationToken cancellationToken = default)
+      {
+         return File.AppendAllTextAsync(path, contents, cancellationToken);
+      }
+
+      /// <inheritdoc/>
+      public Task AppendAllTextAsync(string path, ReadOnlyMemory<char> contents, Encoding encoding, CancellationToken cancellationToken = default)
+      {
+         return File.AppendAllTextAsync(path, contents, encoding, cancellationToken);
+      }
+
+      /// <inheritdoc/>
+      public Task WriteAllBytesAsync(string path, ReadOnlyMemory<byte> bytes, CancellationToken cancellationToken = default)
+      {
+         return File.WriteAllBytesAsync(path, bytes, cancellationToken);
+      }
+
+      /// <inheritdoc/>
+      public Task WriteAllTextAsync(string path, ReadOnlyMemory<char> contents, CancellationToken cancellationToken = default)
+      {
+         return File.WriteAllTextAsync(path, contents, cancellationToken);
+      }
+
+      /// <inheritdoc/>
+      public Task WriteAllTextAsync(string path, ReadOnlyMemory<char> contents, Encoding encoding, CancellationToken cancellationToken = default)
+      {
+         return File.WriteAllTextAsync(path, contents, encoding, cancellationToken);
+      }
+#endif
 #endif
    }
 }

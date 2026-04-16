@@ -38,7 +38,7 @@ namespace Myce.FluentValidator
       /// <summary>
       /// Shortcut to access error messages from the parent validator.
       /// </summary>
-      public List<ErrorMessage> Messages => _validator.Messages;
+      public List<Message> Messages => _validator.Messages;
 
       /// <summary>
       /// Starts a rule for a different property, allowing fluent chaining.
@@ -163,9 +163,9 @@ namespace Myce.FluentValidator
       /// <summary>
       /// Internal helper to register rules directly into the parent validator.
       /// </summary>
-      internal RuleBuilder<T, TAttribute> AddRule(Func<T, bool> rule, ErrorMessage errorMessage)
+      internal RuleBuilder<T, TAttribute> AddRule(Func<T, bool> rule, Message message)
       {
-         _validator.AddRule(rule, errorMessage);
+         _validator.AddRule(rule, message);
          return this;
       }
 
