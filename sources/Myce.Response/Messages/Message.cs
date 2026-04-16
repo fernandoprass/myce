@@ -4,10 +4,33 @@ namespace Myce.Response.Messages
 {
    public abstract class Message
    {
+      /// <summary>
+      /// List of variables to be used in the message text. Each variable consists of a name and a value, and can be referenced
+      /// </summary>
       private readonly List<Variable> _variables = new List<Variable>();
+
+      /// <summary>
+      /// Message type that determines the category or severity of the message. This property is set during object initialization and 
+      /// cannot be changed afterwards.
+      /// </summary>
       public MessageType Type { get; protected set; }
+
+      /// <summary>
+      /// Code that uniquely identifies the message. This property can be used to categorize messages or to provide a reference for 
+      /// specific types of messages. It is initialized to an empty string and can be set during object initialization or later as needed.
+      /// </summary>
       public string Code { get; set; } = string.Empty;
+
+      /// <summary>
+      /// The text content of the message. This property contains the main information or description of the message. It is initialized 
+      /// to an empty string and can be set during object initialization or later as needed. The text can include placeholders for variables, 
+      /// which will be replaced with their corresponding values when the Show() method is called.
+      /// </summary>
       public string Text { get; set; } = string.Empty;
+
+      /// <summary>
+      /// List of variables associated with the message. Each variable provides additional context or data for the message, and can be referenced in the Text property using placeholders.
+      /// </summary>
       public IReadOnlyCollection<Variable> Variables => _variables.AsReadOnly();
 
       /// <summary>

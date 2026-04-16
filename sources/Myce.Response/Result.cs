@@ -1,6 +1,4 @@
-using Myce.Extensions;
 using Myce.Response.Messages;
-using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 namespace Myce.Response
@@ -8,7 +6,7 @@ namespace Myce.Response
    public interface IResult
    {
       IReadOnlyCollection<Message> Messages { get; }
-      bool IsValid { get; }
+      bool IsSuccess { get; }
    }
 
    public class Result : IResult
@@ -25,12 +23,6 @@ namespace Myce.Response
       /// <summary>
       /// Gets a value indicating whether the current state is valid.
       /// </summary>
-      [ObsoleteAttribute("This property is obsolete. Use IsSuccess instead.", false)]
-      public bool IsValid => !HasError;
-
-      /// <summary>
-      /// Gets a value indicating whether the current state is valid.
-      /// </summary>
       public bool IsSuccess => !HasError;
 
       /// <summary>
@@ -43,7 +35,7 @@ namespace Myce.Response
       /// Gets a value indicating whether any messages are present.
       /// </summary>
       [JsonIgnore]
-      public bool HasMessage => _messages.Any();
+      public bool HasMessage => _messages.Count > 0;
 
       /// <summary>
       /// Gets a value indicating whether any warning messages are present.
@@ -112,6 +104,13 @@ namespace Myce.Response
       public static Result Success(InformationMessage message) => new Result(message);
 
       /// <summary>
+      /// Creates a successful result with the specified information message.
+      /// </summary>
+      /// <param name="message">The message that confirm the operation. Cannot be null.</param>
+      /// <returns>A <see cref="Result"/> instance representing a failure with the provided error message.</returns>
+      public static Result Success(WarningMessage message) => new Result(message);
+
+      /// <summary>
       /// Creates a failed result with the specified error message.
       /// </summary>
       /// <param name="message">The error message that describes the reason for the failure. Cannot be null.</param>
@@ -123,7 +122,7 @@ namespace Myce.Response
       /// </summary>
       /// <param name="messages">A collection of messages that describe the reasons for the failure. Cannot be null or contain null elements.</param>
       /// <returns>A <see cref="Result"/> instance representing a failure with the provided error messages.</returns>
-      public static Result Failure(IEnumerable<Message> messages) => new Result(messages);
+      public static Result Failure(IEnumerable<ErrorMessage> messages) => new Result(messages);
 
       /// <summary>
       /// Adds a message to the collection.
@@ -160,13 +159,13 @@ namespace Myce.Response
       /// Gets a value indicating whether the object is valid and its associated data is not null.
       /// </summary>
       [JsonIgnore]
-      public bool IsValidAndDataIsNotNull => IsValid && Data != null;
+      public bool IsValidAndDataIsNotNull => IsSuccess && Data != null;
 
       /// <summary>
       /// Gets a value indicating whether the object is valid and its data is null.
       /// </summary>
       [JsonIgnore]
-      public bool IsValidAndDataIsNull => IsValid && Data == null;
+      public bool IsValidAndDataIsNull => IsSuccess && Data == null;
 
       /// <summary>
       /// Gets a value indicating whether the current instance contains data.
@@ -257,7 +256,7 @@ namespace Myce.Response
       /// </summary>
       /// <param name="messages">A collection of messages that describe the reasons for the failure. Cannot be null or empty.</param>
       /// <returns>A failed result that encapsulates the provided error messages.</returns>
-      public static new Result<T> Failure(IEnumerable<Message> messages) => new Result<T>(messages);
+      public static Result<T> Failure(IEnumerable<Message> messages) => new Result<T>(messages);
 
       /// <summary>
       /// Creates a new generic result by copying the messages from an existing non-generic result.
