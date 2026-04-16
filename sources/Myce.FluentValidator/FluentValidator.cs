@@ -9,7 +9,7 @@ namespace Myce.FluentValidator
    public class FluentValidator<T> : IFluentValidator<T> where T : class
    {
       private readonly List<Func<T, bool>> _globalRules = new();
-      private readonly List<FluentValidatorError> _globalErrorMessages = new();
+      private readonly List<FluentValidatorMessage> _globalMessages = new();
       private Func<Func<T, bool>, Func<T, bool>> _ruleWrapper = rule => rule;
 
       /// <summary>
@@ -18,10 +18,10 @@ namespace Myce.FluentValidator
       /// messages for the rules that did not pass. Each message provides details about the specific
       /// validation failure, allowing you to understand what went wrong with the validated instance.
       /// </summary>
-      public List<ErrorMessage> Messages => _globalErrorMessages
-                                                .Where(x => x.ErrorFound)
-                                                .Select(x => x.Message)
-                                                .ToList();
+      public List<Message> Messages => _globalMessages
+                                        .Where(x => x.WasRuleBroken)
+                                        .Select(x => x.Message)
+                                        .ToList();
 
       /// <summary>
       /// Registers a validation rule for a specific property of the object being validated. 
@@ -66,27 +66,25 @@ namespace Myce.FluentValidator
       /// <returns></returns>
       public bool Validate(T instance)
       {
-         var isValid = true;
-         foreach (var error in _globalErrorMessages) error.ErrorFound = false;
+         foreach (var error in _globalMessages) error.WasRuleBroken = false;
 
          for (int i = 0; i < _globalRules.Count; i++)
          {
             if (!_globalRules[i](instance))
             {
-               isValid = false;
-               _globalErrorMessages[i].ErrorFound = true;
+               _globalMessages[i].WasRuleBroken = true;
             }
          }
-         return isValid;
+         return !_globalMessages.Any(x => x.WasRuleBroken && x.Message.Type == MessageType.Error);
       }
 
       /// <summary>
       /// Internal method to register rules. Not visible via IFluentValidator interface.
       /// </summary>
-      internal void AddRule(Func<T, bool> rule, ErrorMessage errorMessage)
+      internal void AddRule(Func<T, bool> rule, Message message)
       {
          _globalRules.Add(_ruleWrapper(rule));
-         _globalErrorMessages.Add(new FluentValidatorError(errorMessage, false));
+         _globalMessages.Add(new FluentValidatorMessage(message, false));
       }
 
       internal IDisposable BeginIfScope(bool condition)

@@ -14,7 +14,7 @@ namespace Myce.FluentValidator
       /// <summary>
       /// Returns the list of error messages from the last validation.
       /// </summary>
-      List<ErrorMessage> Messages { get; }
+      List<Message> Messages { get; }
 
       /// <summary>
       /// Starts the fluent rule definition for a specific property.

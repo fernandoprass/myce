@@ -22,7 +22,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> Custom<T, TAttribute>(
           this RuleBuilder<T, TAttribute> ruleBuilder,
           bool condition,
-          ErrorMessage message)
+          Message message)
           where T : class
       {
          return ruleBuilder.AddRule(_ => condition, message);
@@ -39,7 +39,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> Custom<T, TAttribute>(
          this RuleBuilder<T, TAttribute> ruleBuilder,
          Func<TAttribute, bool> rule,
-         ErrorMessage message)
+         Message message)
          where T : class
       {
          return ruleBuilder.AddRule(instance =>
@@ -70,7 +70,7 @@ namespace Myce.FluentValidator
       /// <typeparam name="TAttribute">The type of the property being validated.</typeparam>
       /// <param name="ruleBuilder">The rule builder instance.</param>
       /// <param name="message">The custom error message to return if the validation fails.</param>
-      public static RuleBuilder<T, TAttribute> IsNotNull<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder, ErrorMessage message)
+      public static RuleBuilder<T, TAttribute> IsNotNull<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder, Message message)
          where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();
@@ -101,7 +101,7 @@ namespace Myce.FluentValidator
       /// <typeparam name="TAttribute">The type of the property being validated.</typeparam>
       /// <param name="ruleBuilder">The rule builder instance.</param>
       /// <param name="message">The custom error message to return if the validation fails.</param>
-      public static RuleBuilder<T, TAttribute> IsNull<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder, ErrorMessage message)
+      public static RuleBuilder<T, TAttribute> IsNull<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder, Message message)
          where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();
@@ -131,7 +131,7 @@ namespace Myce.FluentValidator
       /// <typeparam name="TAttribute">The type of the property being validated.</typeparam>
       /// <param name="ruleBuilder">The rule builder instance.</param>
       /// <param name="message">The custom error message to return if the validation fails.</param>
-      public static RuleBuilder<T, TAttribute> IsRequired<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder, ErrorMessage message)
+      public static RuleBuilder<T, TAttribute> IsRequired<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder, Message message)
          where T : class
       {
          return ruleBuilder.AddRule(instance =>
@@ -166,7 +166,7 @@ namespace Myce.FluentValidator
       /// <typeparam name="TAttribute">The type of the property being validated.</typeparam>
       /// <param name="ruleBuilder">The rule builder instance.</param>
       /// <param name="message">The custom error message to return if the validation fails.</param>
-      public static RuleBuilder<T, bool> IsTrue<T>(this RuleBuilder<T, bool> ruleBuilder, ErrorMessage message)
+      public static RuleBuilder<T, bool> IsTrue<T>(this RuleBuilder<T, bool> ruleBuilder, Message message)
          where T : class
       {
          return ruleBuilder.AddRule(instance =>
@@ -195,7 +195,7 @@ namespace Myce.FluentValidator
       /// <typeparam name="TAttribute">The type of the property being validated.</typeparam>
       /// <param name="ruleBuilder">The rule builder instance.</param>
       /// <param name="message">The custom error message to return if the validation fails.</param>
-      public static RuleBuilder<T, bool> IsFalse<T>(this RuleBuilder<T, bool> ruleBuilder, ErrorMessage message)
+      public static RuleBuilder<T, bool> IsFalse<T>(this RuleBuilder<T, bool> ruleBuilder, Message message)
          where T : class
       {
          return ruleBuilder.AddRule(instance =>

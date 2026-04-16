@@ -200,6 +200,10 @@ String validators:
 | `MinLength` | Validates the minimum length of a string. |
 
 ## Notes
+Version 1.6.0
+- Add possibility to add warning messages in addition to error messages, allowing users to differentiate between critical validation failures and non-critical warnings.
+- Add overrides for all numeric validators to support custom messages, ensuring that users can provide specific feedback.
+
 Version 1.5.0
 - Fix bug in the `If` method that causedby multiple conditionals.
 - Add `Else` block support for the `If` method, allowing mutually exclusive validation logic with separate error messages for each block.
