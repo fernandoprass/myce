@@ -79,7 +79,7 @@ namespace Myce.Response.Tests
       [Fact]
       public void Result_WithErrorMessages_ShouldBeInvalid()
       {
-         var errorMessage = new ErrorMessage("code1","error1" );
+         var errorMessage = new ErrorMessage("code1", "error1");
 
          var result = Result.Failure(errorMessage);
 
@@ -184,8 +184,47 @@ namespace Myce.Response.Tests
 
          // Since Data is null, the map function is not executed and returns default(int)
          Assert.False(resultInt.IsSuccess);
-         Assert.Equal(0, resultInt.Data);         
+         Assert.Equal(0, resultInt.Data);
          Assert.Equal("ERR01", resultInt.Messages.First().Code);
+      }
+
+      [Theory]
+      [InlineData(MessageType.Warning)]
+      [InlineData(MessageType.Information)]
+      public void Failure_NoErrorMessageInList_ThrowsException(MessageType messageType)
+      {
+         var messages = new List<Message>
+         {
+            new WarningMessage("Test Warning"),
+            new InformationMessage("Test Info")
+         };
+
+         var exception = Assert.Throws<Exception>(() => Result.Failure(messages));
+
+         Assert.Equal("To return 'Failure', there must be at least one error message in the list.", exception.Message);
+      }
+
+      [Fact]
+      public void Failure_EmptyList_ThrowsException()
+      {
+         var emptyMessages = new List<Message>();
+
+         Assert.Throws<Exception>(() => Result.Failure(emptyMessages));
+      }
+
+      [Fact]
+      public void Failure_AtLeastOneErrorMessageInList_ReturnsResult()
+      {
+         var messages = new List<Message>
+         {
+            new WarningMessage("Warning 1"),
+            new ErrorMessage("Actual Error") // This should prevent the exception
+         };
+
+         var result = Result.Failure(messages);
+
+         Assert.NotNull(result);
+         Assert.Contains(result.Messages, m => m.Type == MessageType.Error);
       }
    }
 }

@@ -122,7 +122,14 @@ namespace Myce.Response
       /// </summary>
       /// <param name="messages">A collection of messages that describe the reasons for the failure. Cannot be null or contain null elements.</param>
       /// <returns>A <see cref="Result"/> instance representing a failure with the provided error messages.</returns>
-      public static Result Failure(IEnumerable<ErrorMessage> messages) => new Result(messages);
+      public static Result Failure(IEnumerable<Message> messages) 
+      {
+         if (!messages.Any(x => x.Type == MessageType.Error))
+         {
+            throw new Exception("To return 'Failure', there must be at least one error message in the list.");
+         }
+         return new Result(messages);
+      } 
 
       /// <summary>
       /// Adds a message to the collection.
@@ -256,7 +263,14 @@ namespace Myce.Response
       /// </summary>
       /// <param name="messages">A collection of messages that describe the reasons for the failure. Cannot be null or empty.</param>
       /// <returns>A failed result that encapsulates the provided error messages.</returns>
-      public static Result<T> Failure(IEnumerable<Message> messages) => new Result<T>(messages);
+      public new static Result<T> Failure(IEnumerable<Message> messages)
+      {
+         if (!messages.Any(x => x.Type == MessageType.Error))
+         {
+            throw new Exception("To return 'Failure', there must be at least one error message in the list.");
+         }
+         return new Result<T>(messages);
+      }
 
       /// <summary>
       /// Creates a new generic result by copying the messages from an existing non-generic result.
