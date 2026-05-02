@@ -200,6 +200,8 @@ String validators:
 | `MinLength` | Validates the minimum length of a string. |
 
 ## Notes
+Version 1.7.0
+- Add short-circuiting behavior to the validation process, allowing users to specify that validation should stop after the first failure, improving performance in scenarios where only the first error is relevant.
 Version 1.6.0
 - Add possibility to add warning messages in addition to error messages, allowing users to differentiate between critical validation failures and non-critical warnings.
 - Add overrides for all numeric validators to support custom messages, ensuring that users can provide specific feedback.

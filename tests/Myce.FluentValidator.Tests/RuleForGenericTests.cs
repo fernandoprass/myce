@@ -195,5 +195,26 @@ namespace Myce.FluentValidator.Tests
          person.IsActive = true;
          Assert.False(validator.Validate(person));
       }
+
+
+      /// <summary>
+      /// Test if the shortcut mode works correctly when validating a Person instance with multiple rules, 
+      /// ensuring that validation stops after the first rule failure and only the relevant error message is generated.
+      /// </summary>
+      [Theory]
+      [InlineData(15, "John", "Age")]  
+      [InlineData(20, "", "Name")]  
+      public void ShortcutStateage_FoundOneRuleBoken_ShouldStopToValidate(int age, string name, string message)
+      {
+         var person = new Person { Age = age, Name = name };
+         var validator = new FluentValidator<Person>();
+
+         validator.RuleFor(x => x.Age).IsGreaterThan(18)
+                  .RuleFor(x => x.Name).IsRequired();
+
+         var result = validator.Validate(person, true);
+         Assert.Single(validator.Messages);
+         Assert.Contains(message, validator.Messages.First().Show());
+      }
    }
 }
