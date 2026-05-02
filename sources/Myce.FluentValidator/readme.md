@@ -85,7 +85,37 @@ var validator = new FluentValidator<Person>()
     .IsFalse(new ErrorMessage("This email is already taken"));
 ```
 
-### 5. Conditional Validation ("If" and "If .. Else")
+### 5. Short-Circuiting
+FluentValidator has two modes of validation: full and short-circuit. By default, it runs in full mode, validating all rules and collecting all errors. 
+However, you can specify that validation should stop after the first failure, improving performance when only the first error is relevant. It can be done in two different ways: global or per validation.
+
+**Global Short-Circuiting**
+To stop validation after the first failure for all validations, set the `ShortCircuitMode` property to true when calling the validator:
+```csharp
+validator.RuleFor(x => x.Name).IsRequired()
+         .RuleFor(x => x.Age).IsGreaterThanOrEqualTo(18)
+
+validator.Validate(person, shortCircuitMode: true);
+//Age only gets validated if Name is valid. If Name is null or empty, 
+//validation stops immediately and returns the error for Name without checking Age.
+```
+
+**Per Validation Short-Circuiting**
+You can also specify short-circuiting behavior for individual rules by using the `Stop()` method in the rule definition:
+```csharp
+validator
+   .RuleFor(x => x.Email)
+      .IsRequired().Stop()
+      .IsValidEmailAddress()
+   .RuleFor(x => x.Age)
+      .IsGreaterThanOrEqualTo(18);
+//If the Email is null or empty, validation will stop immediately the validation for Email 
+//attribute and return the Email is required without checking if it's a valid email address.
+//The Age validation will still run regardless of the Email validation result, 
+//since short-circuiting is only applied to the Email rule.
+```
+
+### 6. Conditional Validation ("If" and "If .. Else")
 The library supports full flow control for rules using `If` and `Else` blocks. This allows you to apply different sets of rules based on the 
 state of the object, while maintaining individual error messages for every rule within the blocks.
 ```csharp

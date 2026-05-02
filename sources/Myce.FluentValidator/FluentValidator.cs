@@ -66,7 +66,7 @@ namespace Myce.FluentValidator
       /// <returns></returns>
       public bool Validate(T instance)
       {
-         return Validate(instance, shortcutMode: false);
+         return Validate(instance, shortCircuitMode: false);
       }
 
       /// <summary>
@@ -74,9 +74,9 @@ namespace Myce.FluentValidator
       /// Any error messages for failed rules will be collected and can be accessed via the Messages property.
       /// </summary>
       /// <param name="instance">The instance of type T to validate.</param>
-      /// <param name="shortcutMode">If true, the validation process will stop at the first failed rule, improving performance when only the overall validity is needed. If false, all rules will be evaluated to collect all error messages.</param>
+      /// <param name="shortCircuitMode">If true, the validation process will stop at the first failed rule, improving performance when only the overall validity is needed. If false, all rules will be evaluated to collect all error messages.</param>
       /// <returns></returns>
-      public bool Validate(T instance, bool shortcutMode)
+      public bool Validate(T instance, bool shortCircuitMode)
       {
          foreach (var error in _globalMessages) error.WasRuleBroken = false;
 
@@ -86,7 +86,7 @@ namespace Myce.FluentValidator
             {
                _globalMessages[i].WasRuleBroken = true;
 
-               if (shortcutMode) break;
+               if (shortCircuitMode) break;
             }
          }
          return !_globalMessages.Any(x => x.WasRuleBroken && x.Message.Type == MessageType.Error);

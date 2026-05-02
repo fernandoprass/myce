@@ -10,6 +10,7 @@ namespace Myce.FluentValidator.Tests
       private class Person
       {
          public string Name { get; set; }
+         public string Email { get; set; }
          public double? Salary { get; set; }
          public int Age { get; set; }
          public bool IsActive { get; set; }
@@ -198,13 +199,13 @@ namespace Myce.FluentValidator.Tests
 
 
       /// <summary>
-      /// Test if the shortcut mode works correctly when validating a Person instance with multiple rules, 
+      /// Test if the shortcircuit mode works correctly when validating a Person instance with multiple rules, 
       /// ensuring that validation stops after the first rule failure and only the relevant error message is generated.
       /// </summary>
       [Theory]
       [InlineData(15, "John", "Age")]  
       [InlineData(20, "", "Name")]  
-      public void ShortcutStateage_FoundOneRuleBoken_ShouldStopToValidate(int age, string name, string message)
+      public void ShortCircuitStateage_FoundOneRuleBoken_ShouldStopToValidate(int age, string name, string message)
       {
          var person = new Person { Age = age, Name = name };
          var validator = new FluentValidator<Person>();
@@ -215,6 +216,49 @@ namespace Myce.FluentValidator.Tests
          var result = validator.Validate(person, true);
          Assert.Single(validator.Messages);
          Assert.Contains(message, validator.Messages.First().Show());
+      }
+
+      [Theory]
+      [InlineData("", false, 1)] // Fails IsRequired, STOPS, ignores IsEmail. Count = 1.
+      [InlineData("invalid-email", false, 1)] // Passes IsRequired, Fails IsEmail. Count = 1.
+      [InlineData("valid@myce.com", true, 0)]  // Passes all. Count = 0.
+      public void Stop_RuleChainFailure_HaltExecutionForProperty(string email, bool expectedIsValid, int expectedMessageCount)
+      {
+         var person = new Person { Email = email };
+         var validator = new FluentValidator<Person>();
+
+         validator.RuleFor(x => x.Email)
+             .IsRequired(new ErrorMessage("Required")).Stop()
+             .IsValidEmailAddress(new ErrorMessage("Invalid Format"));
+
+         var isValid = validator.Validate(person);
+
+         Assert.Equal(expectedIsValid, isValid);
+         Assert.Equal(expectedMessageCount, validator.Messages.Count());
+      }
+
+      [Fact]
+      public void Stop_MultipleProperties_OnlyHaltAffectedChain()
+      {
+         // Scenario: Email fails and stops, but Name should still be validated.
+         var person = new Person { Email = "", Name = "" };
+         var validator = new FluentValidator<Person>();
+
+         validator
+            .RuleFor(x => x.Email)
+               .IsRequired(new ErrorMessage("Email Required")).Stop()
+               .IsValidEmailAddress(new ErrorMessage("Invalid Format"))
+            .RuleFor(x => x.Name)
+               .IsRequired(new ErrorMessage("Name Required"));
+
+         validator.Validate(person);
+
+         // We expect 2 messages: "Email Required" and "Name Required".
+         // "Email Format" must NOT be here because of .Stop()
+         Assert.Equal(2, validator.Messages.Count);
+         Assert.Contains(validator.Messages, m => m.Text == "Email Required");
+         Assert.Contains(validator.Messages, m => m.Text == "Name Required");
+         Assert.DoesNotContain(validator.Messages, m => m.Text == "Invalid Format");
       }
    }
 }

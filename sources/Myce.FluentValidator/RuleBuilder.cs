@@ -15,7 +15,7 @@ namespace Myce.FluentValidator
       private readonly string _manualName = string.Empty;
       private readonly FluentValidator<T> _validator;
       private readonly Expression<Func<T, TAttribute>> _attribute;
-      private readonly Func<T, TAttribute> _attributeFunc;
+      private readonly Func<T, TAttribute> _attributeExpression;
 
       /// <summary>
       /// Initializes a new instance of the RuleBuilder class.
@@ -26,7 +26,7 @@ namespace Myce.FluentValidator
       {
          _validator = validator;
          _attribute = attribute;
-         _attributeFunc = attribute.Compile();
+         _attributeExpression = attribute.Compile();
       }
 
       internal RuleBuilder(FluentValidator<T> validator, Expression<Func<T, TAttribute>> attribute, string manualName)
@@ -77,6 +77,16 @@ namespace Myce.FluentValidator
       /// <param name="paramName">Custom name for the parameter, used in error messages.</param>
       public RuleBuilder<T, TValue> RuleForValue<TValue>(TValue value, string paramName) => _validator.RuleForValue(value, paramName);
 
+      private bool _stopOnFirstFailure = false;
+      private bool _hasFailed = false;
+      /// <summary>
+      /// Stops the validation chain for this specific property if the preceding rule fails.
+      /// </summary>
+      public RuleBuilder<T, TAttribute> Stop()
+      {
+         _stopOnFirstFailure = true;
+         return this;
+      }
 
       #region IfElseBlocks
       /// <summary>
@@ -165,7 +175,28 @@ namespace Myce.FluentValidator
       /// </summary>
       internal RuleBuilder<T, TAttribute> AddRule(Func<T, bool> rule, Message message)
       {
-         _validator.AddRule(rule, message);
+         Func<T, bool> wrappedRule = instance =>
+         {
+            // Verify if should skip this rule due to a previous failure in the chain
+            if (_stopOnFirstFailure && _hasFailed)
+            {
+               return true;
+            }
+
+            // Execute original rule
+            var result = rule(instance);
+
+            // If failed and Stop() was called, mark the chain as failed to skip subsequent rules
+            if (!result)
+            {
+               _hasFailed = true;
+            }
+
+            return result;
+         };
+
+         // Add to the parent validator
+         _validator.AddRule(wrappedRule, message);
          return this;
       }
 
@@ -189,7 +220,7 @@ namespace Myce.FluentValidator
       /// <summary>
       /// Returns the typed value of the property. (Fast, no boxing).
       /// </summary>
-      internal TAttribute GetAttributeValue(T instance) => _attributeFunc(instance);
+      internal TAttribute GetAttributeValue(T instance) => _attributeExpression(instance);
 
       /// <summary>
       /// Returns the value as an object. (Keep for generic/legacy rules).
