@@ -1,6 +1,8 @@
 # MYCE.Extensions
 MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contains a set of extensions for the most common types.
 
+Supports `net6.0`, `net7.0`, `net8.0`, `net9.0`, `net10.0`, and `netstandard2.0`.
+
 ## Library
 - CollectionExtensions
     - AddIfNotNull() - Add an item to a collection if the item is not null
@@ -68,7 +70,8 @@ MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contai
     - ToEnum() - Converts string to Enum object
 
 ## Notes
-- Version 1.0.0 introduces multi-targeting support (`net6.0`, `net8.0`, `net9.0`, and `netstandard2.0`) and full nullability support.
+- Version 1.0.3 improves performance for RemoveSimbols() method in StringExtension class
+- Version 1.0.0 introduces multi-targeting support (`net6.0`, `net8.0`, `net9.0`, `net10.0`, and `netstandard2.0`) and full nullability support.
 - In version 0.5.1 the Enumerable Extension *DistinctBy* was renamed to *DistinctRowsBy* to avoid the exception *"CS0121 The call is ambiguous between the following methods or properties..."*.
 
 ## Dependencies

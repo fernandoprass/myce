@@ -8,8 +8,8 @@ namespace Myce.FluentValidator
 {
    public class FluentValidator<T> : IFluentValidator<T> where T : class
    {
-      private readonly List<Func<T, bool>> _globalRules = new();
-      private readonly List<FluentValidatorMessage> _globalMessages = new();
+      private readonly List<Func<T, bool>> _globalRules = [];
+      private readonly List<FluentValidatorMessage> _globalMessages = [];
       private Func<Func<T, bool>, Func<T, bool>> _ruleWrapper = rule => rule;
 
       /// <summary>
@@ -66,6 +66,18 @@ namespace Myce.FluentValidator
       /// <returns></returns>
       public bool Validate(T instance)
       {
+         return Validate(instance, shortCircuitMode: false);
+      }
+
+      /// <summary>
+      /// Validates the given instance against all registered rules and returns true if all rules pass, otherwise false. 
+      /// Any error messages for failed rules will be collected and can be accessed via the Messages property.
+      /// </summary>
+      /// <param name="instance">The instance of type T to validate.</param>
+      /// <param name="shortCircuitMode">If true, the validation process will stop at the first failed rule, improving performance when only the overall validity is needed. If false, all rules will be evaluated to collect all error messages.</param>
+      /// <returns></returns>
+      public bool Validate(T instance, bool shortCircuitMode)
+      {
          foreach (var error in _globalMessages) error.WasRuleBroken = false;
 
          for (int i = 0; i < _globalRules.Count; i++)
@@ -73,6 +85,8 @@ namespace Myce.FluentValidator
             if (!_globalRules[i](instance))
             {
                _globalMessages[i].WasRuleBroken = true;
+
+               if (shortCircuitMode) break;
             }
          }
          return !_globalMessages.Any(x => x.WasRuleBroken && x.Message.Type == MessageType.Error);

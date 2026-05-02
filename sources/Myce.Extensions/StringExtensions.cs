@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Myce.Extensions
@@ -57,21 +58,19 @@ namespace Myce.Extensions
       /// <returns>Returns a string with only numbers, letters, and spaces if required</returns>
       private static string? RemoveSimbols(string? value, bool keepSpaces)
       {
-         if (value == null)
-         {
-            return null;
-         }
+         if (string.IsNullOrEmpty(value)) return value;
 
-         string result = string.Empty;
-         for (int i = 0; i < value.Length; i++)
+         var sb = new StringBuilder(value.Length);
+
+         foreach (char c in value)
          {
-            if (char.IsLetterOrDigit(value[i]) || keepSpaces && char.IsWhiteSpace(value[i]))
+            if (char.IsLetterOrDigit(c) || (keepSpaces && char.IsWhiteSpace(c)))
             {
-               result += value[i];
+               sb.Append(c);
             }
          }
 
-         return result;
+         return sb.ToString();
       }
 
       /// <summary>
@@ -101,7 +100,7 @@ namespace Myce.Extensions
       public static T ToEnum<T>(this string value)
           where T : struct
       {
-         return (T)System.Enum.Parse(typeof(T), value, true);
+         return (T)Enum.Parse(typeof(T), value, true);
       }
 
       /// <summary>
