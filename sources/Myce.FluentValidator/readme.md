@@ -1,7 +1,7 @@
 # MYCE.FluentValidator
 MYCE (Makes Your Coding Easier) FluentValidator is a fluent validation library designed to simplify entity validation in .NET applications.
 
-Supports `net6.0`, `net7.0`, `net8.0`, `net9.0`, and `netstandard2.0`.
+Supports `net6.0`, `net7.0`, `net8.0`, `net9.0`, `net10.0`, and `netstandard2.0`.
 
 ## Installation
 Package Manager Console:
@@ -267,7 +267,7 @@ Version 1.1.1
 - Addedd new validators: `IsNotNull`, and `IsNull`.
 
 Version 1.1.0
-- Introduces multi-targeting support (`net6.0`, `net7.0`, `net8.0`, `net9.0`, and `netstandard2.0`) and full nullability support.
+- Introduces multi-targeting support (`net6.0`, `net7.0`, `net8.0`, `net9.0`, `net10.0`, and `netstandard2.0`) and full nullability support.
 
 Version 1.0.0 
 - The initial stable release of Myce.FluentValidator, providing basic validation capabilities for .NET applications.
