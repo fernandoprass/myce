@@ -174,10 +174,14 @@ Core validators available:
 Collection validators:
 | Validator | Description |
 | :--- | :--- |
+| `All` | Apply a validation rule to every item in a collection and ensure that all items meet the specified criteria. |
+| `Any` | Apply a validation rule to every item in a collection and ensure that at least one item meets the specified criteria. |
+| `Count` | Validates the number of items in a collection against specific conditions, such as minimum, maximum, or exact counts. |
 | `IsEmpty` | Validates that the collection is empty (contains no items). |
 | `IsIn` | Validates that the attribute value is present within a sequence of allowed valeus. |
 | `HasItems` | Validates that the collection is not empty and has at least one item. |
-| `MaxNumberOfItems` | Validates that the collection does not exceed a maximum number of items. |
+| `HasNoDuplicates` | Validates that the collection doesn´t have any duplicate item. |
+
 
 Comparison validators:
 | Validator | Description |
@@ -230,8 +234,15 @@ String validators:
 | `MinLength` | Validates the minimum length of a string. |
 
 ## Notes
+Version 1.8.0
+- Add new validators for collections
+-- `All`: enabling users to apply a validation rule to every item in a collection and ensure that all items meet the specified criteria.
+-- `Count`: allowing users to validate the number of items in a collection against specific conditions, such as minimum, maximum, or exact counts.
+-- `HasNoDuplicates`: allowing users to ensure that a collection does not contain duplicate elements based on specific criteria.
+
 Version 1.7.0
 - Add short-circuiting behavior to the validation process, allowing users to specify that validation should stop after the first failure, improving performance in scenarios where only the first error is relevant.
+- 
 Version 1.6.0
 - Add possibility to add warning messages in addition to error messages, allowing users to differentiate between critical validation failures and non-critical warnings.
 - Add overrides for all numeric validators to support custom messages, ensuring that users can provide specific feedback.

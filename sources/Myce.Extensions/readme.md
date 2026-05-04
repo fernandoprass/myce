@@ -18,7 +18,7 @@ Supports `net6.0`, `net7.0`, `net8.0`, `net9.0`, `net10.0`, and `netstandard2.0`
     - PriorWorkday() - Return the prior workday (Monday to Friday) for a given date. Holidays are not taken into account.
     - NextWorkday() - Return the next workday (Monday to Friday) for a given date. Holidays are not taken into account.
     - Yesterday() - Return yesterday's date
-    - Tomorrow() - Return oomorrow's date
+    - Tomorrow() - Return tomorrow's date
 
 - DecimalExtension
     - EqualZero() - Return true if the value is equal zero

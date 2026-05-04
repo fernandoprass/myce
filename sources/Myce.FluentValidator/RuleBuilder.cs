@@ -46,9 +46,22 @@ namespace Myce.FluentValidator
       public RuleBuilder<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> attribute) => _validator.RuleFor(attribute);
 
       /// <summary>
-      /// Performs validation directly from the builder.
+      /// Validates the given instance against all registered rules and returns true if all rules pass, otherwise false. 
+      /// Any error messages for failed rules will be collected and can be accessed via the Messages property.
       /// </summary>
+      /// <param name="instance">The instance of type T to validate.</param>
+      /// <returns></returns>
       public bool Validate(T instance) => _validator.Validate(instance);
+
+      /// <summary>
+      /// Validates the given instance against all registered rules and returns true if all rules pass, otherwise false. 
+      /// Any error messages for failed rules will be collected and can be accessed via the Messages property.
+      /// </summary>
+      /// <param name="instance">The instance of type T to validate.</param>
+      /// <param name="shortCircuitMode">If true, the validation process will stop at the first failed rule, improving performance 
+      /// when only the overall validity is needed. If false, all rules will be evaluated to collect all error messages.</param>
+      /// <returns></returns>
+      public bool Validate(T instance, bool shortCircuitMode) => _validator.Validate(instance, shortCircuitMode);
 
       /// <summary>
       /// Implicitly converts the RuleBuilder to the parent FluentValidator.

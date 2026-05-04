@@ -29,6 +29,16 @@ namespace Myce.FluentValidator.ErrorMessages
       }
    }
 
+   public class InvalidNumberOfItemsError : ErrorMessage
+   {
+      public InvalidNumberOfItemsError(string fieldName, int condition)
+         : base("InvalidNumberOfItemsError", $"'{fieldName}' contains an invalid number of items ({condition}).")
+      {
+         AddVariable("fieldName", fieldName);
+         AddVariable("condition", condition.ToString());
+      }
+   }
+
    public class MaxNumberOfItemsError : ErrorMessage
    {
       public MaxNumberOfItemsError(string fieldName, int max)
@@ -36,6 +46,15 @@ namespace Myce.FluentValidator.ErrorMessages
       {
          AddVariable("fieldName", fieldName);
          AddVariable("max", max.ToString());
+      }
+   }
+
+   public class ContainsDuplicateItemsError : ErrorMessage
+   {
+      public ContainsDuplicateItemsError(string fieldName)
+         : base("ContainsDuplicateItemsError", $"'{fieldName}' contains duplicate items.")
+      {
+         AddVariable("fieldName", fieldName);
       }
    }
 }
