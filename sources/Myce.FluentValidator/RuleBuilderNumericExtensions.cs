@@ -26,6 +26,24 @@ namespace Myce.FluentValidator
          => rb.AddNumericRule(min, (attr, _) => attr.CompareTo(min) >= 0 && attr.CompareTo(max) <= 0,
                               new IsBetweenError(rb.GetAttributeName(), min.ToString(), max.ToString()));
 
+      /// <summary>
+      /// Validates that the numeric value is between minimum and maximum values extracted dynamically from other fields (inclusive).
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="minExpression">A function expression to extract the minimum comparison value from the instance.</param>
+      /// <param name="maxExpression">A function expression to extract the maximum comparison value from the instance.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute> IsBetween<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, Func<T, TAttribute> minExpression, Func<T, TAttribute> maxExpression)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance =>
+         {
+            var attr = rb.GetAttributeValue(instance);
+            var min = minExpression(instance);
+            var max = maxExpression(instance);
+            return attr.CompareTo(min) >= 0 && attr.CompareTo(max) <= 0;
+         }, new IsBetweenError(rb.GetAttributeName(), "min field", "max field"));
 
       /// <summary>
       /// Validates that the numeric value is between a minimum and maximum (inclusive).
@@ -42,6 +60,24 @@ namespace Myce.FluentValidator
          => rb.AddNumericRule(min, (attr, _) => attr.CompareTo(min) >= 0 && attr.CompareTo(max) <= 0, message);
 
       /// <summary>
+      /// Validates that the numeric value is between minimum and maximum values extracted dynamically from other fields (inclusive) using a custom message.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="minExpression">A function expression to extract the minimum comparison value from the instance.</param>
+      /// <param name="maxExpression">A function expression to extract the maximum comparison value from the instance.</param>
+      /// <param name="message">The custom message to use if validation fails.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute> IsBetween<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, Func<T, TAttribute> minExpression, Func<T, TAttribute> maxExpression, Message message)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance =>
+         {
+            var attr = rb.GetAttributeValue(instance);
+            return attr.CompareTo(minExpression(instance)) >= 0 && attr.CompareTo(maxExpression(instance)) <= 0;
+         }, message);
+
+      /// <summary>
       /// Validates that the nullable numeric value is between a minimum and maximum (inclusive).
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
@@ -54,6 +90,23 @@ namespace Myce.FluentValidator
          where T : class where TAttribute : struct, IComparable<TAttribute>
          => rb.AddNullableNumericRule(min, (attr, _) => attr.CompareTo(min) >= 0 && attr.CompareTo(max) <= 0,
                                       new IsBetweenError(rb.GetAttributeName(), min.ToString(), max.ToString()));
+
+      /// <summary>
+      /// Validates that the nullable numeric value is between minimum and maximum values extracted dynamically from other fields (inclusive).
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="minExpression">A function expression to extract the minimum comparison value from the instance.</param>
+      /// <param name="maxExpression">A function expression to extract the maximum comparison value from the instance.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute?> IsBetween<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, Func<T, TAttribute> minExpression, Func<T, TAttribute> maxExpression)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance =>
+         {
+            var attr = rb.GetAttributeValue(instance);
+            return attr.HasValue && attr.Value.CompareTo(minExpression(instance)) >= 0 && attr.Value.CompareTo(maxExpression(instance)) <= 0;
+         }, new IsBetweenError(rb.GetAttributeName(), "min field", "max field"));
 
       /// <summary>
       /// Validates that the nullable numeric value is between a minimum and maximum (inclusive).
@@ -70,6 +123,24 @@ namespace Myce.FluentValidator
          => rb.AddNullableNumericRule(min, (attr, _) => attr.CompareTo(min) >= 0 && attr.CompareTo(max) <= 0, message);
 
       /// <summary>
+      /// Validates that the nullable numeric value is between minimum and maximum values extracted dynamically from other fields (inclusive) using a custom message.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="minExpression">A function expression to extract the minimum comparison value from the instance.</param>
+      /// <param name="maxExpression">A function expression to extract the maximum comparison value from the instance.</param>
+      /// <param name="message">The custom message to use if validation fails.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute?> IsBetween<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, Func<T, TAttribute> minExpression, Func<T, TAttribute> maxExpression, Message message)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance =>
+         {
+            var attr = rb.GetAttributeValue(instance);
+            return attr.HasValue && attr.Value.CompareTo(minExpression(instance)) >= 0 && attr.Value.CompareTo(maxExpression(instance)) <= 0;
+         }, message);
+
+      /// <summary>
       /// Validates that the numeric value is greater than a specified value.
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
@@ -80,6 +151,19 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> IsGreaterThan<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, TAttribute value)
          where T : class where TAttribute : struct, IComparable<TAttribute>
          => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) > 0, new IsGreaterThanError(rb.GetAttributeName(), value.ToString()));
+
+      /// <summary>
+      /// Validates that the numeric value is greater than the value of another property.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="expression">A function expression to extract the comparison value from the instance.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute> IsGreaterThan<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, Func<T, TAttribute> expression)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance => rb.GetAttributeValue(instance).CompareTo(expression(instance)) > 0,
+                       new IsGreaterThanError(rb.GetAttributeName(), "the other field"));
 
       /// <summary>
       /// Validates that the numeric value is greater than a specified value.
@@ -95,6 +179,19 @@ namespace Myce.FluentValidator
          => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) > 0, message);
 
       /// <summary>
+      /// Validates that the numeric value is greater than the value of another property using a custom message.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="expression">A function expression to extract the comparison value from the instance.</param>
+      /// <param name="message">The custom message to use if validation fails.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute> IsGreaterThan<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, Func<T, TAttribute> expression, Message message)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance => rb.GetAttributeValue(instance).CompareTo(expression(instance)) > 0, message);
+
+      /// <summary>
       /// Validates that the nullable numeric value is greater than a specified value.
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
@@ -105,6 +202,22 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute?> IsGreaterThan<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, TAttribute value)
          where T : class where TAttribute : struct, IComparable<TAttribute>
          => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) > 0, new IsGreaterThanError(rb.GetAttributeName(), value.ToString()));
+
+      /// <summary>
+      /// Validates that the nullable numeric value is greater than the value of another property.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="expression">A function expression to extract the comparison value from the instance.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute?> IsGreaterThan<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, Func<T, TAttribute> expression)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance =>
+         {
+            var attr = rb.GetAttributeValue(instance);
+            return attr.HasValue && attr.Value.CompareTo(expression(instance)) > 0;
+         }, new IsGreaterThanError(rb.GetAttributeName(), "the other field"));
 
       /// <summary>
       /// Validates that the nullable numeric value is greater than a specified value.
@@ -120,6 +233,23 @@ namespace Myce.FluentValidator
          => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) > 0, message);
 
       /// <summary>
+      /// Validates that the nullable numeric value is greater than the value of another property using a custom message.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="expression">A function expression to extract the comparison value from the instance.</param>
+      /// <param name="message">The custom message to use if validation fails.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute?> IsGreaterThan<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, Func<T, TAttribute> expression, Message message)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance =>
+         {
+            var attr = rb.GetAttributeValue(instance);
+            return attr.HasValue && attr.Value.CompareTo(expression(instance)) > 0;
+         }, message);
+
+      /// <summary>
       /// Validates that the numeric value is greater than or equal to a specified value.
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
@@ -130,6 +260,19 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> IsGreaterThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, TAttribute value)
          where T : class where TAttribute : struct, IComparable<TAttribute>
          => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) >= 0, new IsGreaterThanOrEqualToError(rb.GetAttributeName(), value.ToString()));
+
+      /// <summary>
+      /// Validates that the numeric value is greater than or equal to the value of another property.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="expression">A function expression to extract the comparison value from the instance.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute> IsGreaterThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, Func<T, TAttribute> expression)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance => rb.GetAttributeValue(instance).CompareTo(expression(instance)) >= 0,
+                       new IsGreaterThanOrEqualToError(rb.GetAttributeName(), "the other field"));
 
       /// <summary>
       /// Validates that the numeric value is greater than or equal to a specified value.
@@ -145,6 +288,19 @@ namespace Myce.FluentValidator
          => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) >= 0, message);
 
       /// <summary>
+      /// Validates that the numeric value is greater than or equal to the value of another property using a custom message.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="expression">A function expression to extract the comparison value from the instance.</param>
+      /// <param name="message">The custom message to use if validation fails.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute> IsGreaterThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, Func<T, TAttribute> expression, Message message)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance => rb.GetAttributeValue(instance).CompareTo(expression(instance)) >= 0, message);
+
+      /// <summary>
       /// Validates that the nullable numeric value is greater than or equal to a specified value.
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
@@ -155,6 +311,22 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute?> IsGreaterThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, TAttribute value)
          where T : class where TAttribute : struct, IComparable<TAttribute>
          => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) >= 0, new IsGreaterThanOrEqualToError(rb.GetAttributeName(), value.ToString()));
+
+      /// <summary>
+      /// Validates that the nullable numeric value is greater than or equal to the value of another property.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="expression">A function expression to extract the comparison value from the instance.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute?> IsGreaterThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, Func<T, TAttribute> expression)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance =>
+         {
+            var attr = rb.GetAttributeValue(instance);
+            return attr.HasValue && attr.Value.CompareTo(expression(instance)) >= 0;
+         }, new IsGreaterThanOrEqualToError(rb.GetAttributeName(), "the other field"));
 
       /// <summary>
       /// Validates that the nullable numeric value is greater than or equal to a specified value.
@@ -170,6 +342,23 @@ namespace Myce.FluentValidator
          => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) >= 0, message);
 
       /// <summary>
+      /// Validates that the nullable numeric value is greater than or equal to the value of another property using a custom message.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="expression">A function expression to extract the comparison value from the instance.</param>
+      /// <param name="message">The custom message to use if validation fails.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute?> IsGreaterThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, Func<T, TAttribute> expression, Message message)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance =>
+         {
+            var attr = rb.GetAttributeValue(instance);
+            return attr.HasValue && attr.Value.CompareTo(expression(instance)) >= 0;
+         }, message);
+
+      /// <summary>
       /// Validates that the numeric value is less than a specified value.
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
@@ -180,6 +369,19 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> IsLessThan<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, TAttribute value)
          where T : class where TAttribute : struct, IComparable<TAttribute>
          => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) < 0, new IsLessThanError(rb.GetAttributeName(), value.ToString()));
+
+      /// <summary>
+      /// Validates that the numeric value is less than the value of another property.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="expression">A function expression to extract the comparison value from the instance.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute> IsLessThan<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, Func<T, TAttribute> expression)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance => rb.GetAttributeValue(instance).CompareTo(expression(instance)) < 0,
+                       new IsLessThanError(rb.GetAttributeName(), "the other field"));
 
       /// <summary>
       /// Validates that the numeric value is less than a specified value.
@@ -195,6 +397,19 @@ namespace Myce.FluentValidator
          => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) < 0, message);
 
       /// <summary>
+      /// Validates that the numeric value is less than the value of another property using a custom message.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="expression">A function expression to extract the comparison value from the instance.</param>
+      /// <param name="message">The custom message to use if validation fails.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute> IsLessThan<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, Func<T, TAttribute> expression, Message message)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance => rb.GetAttributeValue(instance).CompareTo(expression(instance)) < 0, message);
+
+      /// <summary>
       /// Validates that the nullable numeric value is less than a specified value.
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
@@ -205,6 +420,22 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute?> IsLessThan<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, TAttribute value)
          where T : class where TAttribute : struct, IComparable<TAttribute>
          => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) < 0, new IsLessThanError(rb.GetAttributeName(), value.ToString()));
+
+      /// <summary>
+      /// Validates that the nullable numeric value is less than the value of another property.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="expression">A function expression to extract the comparison value from the instance.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute?> IsLessThan<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, Func<T, TAttribute> expression)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance =>
+         {
+            var attr = rb.GetAttributeValue(instance);
+            return attr.HasValue && attr.Value.CompareTo(expression(instance)) < 0;
+         }, new IsLessThanError(rb.GetAttributeName(), "the other field"));
 
       /// <summary>
       /// Validates that the nullable numeric value is less than a specified value.
@@ -220,6 +451,23 @@ namespace Myce.FluentValidator
          => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) < 0, message);
 
       /// <summary>
+      /// Validates that the nullable numeric value is less than the value of another property using a custom message.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="expression">A function expression to extract the comparison value from the instance.</param>
+      /// <param name="message">The custom message to use if validation fails.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute?> IsLessThan<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, Func<T, TAttribute> expression, Message message)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance =>
+         {
+            var attr = rb.GetAttributeValue(instance);
+            return attr.HasValue && attr.Value.CompareTo(expression(instance)) < 0;
+         }, message);
+
+      /// <summary>
       /// Validates that the numeric value is less than or equal to a specified value.
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
@@ -230,6 +478,32 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> IsLessThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, TAttribute value)
          where T : class where TAttribute : struct, IComparable<TAttribute>
          => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) <= 0, new IsLessThanOrEqualToError(rb.GetAttributeName(), value.ToString()));
+
+      /// <summary>
+      /// Validates that the numeric value is less than or equal to the value of another property.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="expression">A function expression to extract the comparison value from the instance.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute> IsLessThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, Func<T, TAttribute> expression)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance => rb.GetAttributeValue(instance).CompareTo(expression(instance)) <= 0,
+                       new IsLessThanOrEqualToError(rb.GetAttributeName(), "the other field"));
+
+      /// <summary>
+      /// Validates that the numeric value is less than or equal to the value of another property using a custom message.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="expression">A function expression to extract the comparison value from the instance.</param>
+      /// <param name="message">The custom message to use if validation fails.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute> IsLessThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, Func<T, TAttribute> expression, Message message)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance => rb.GetAttributeValue(instance).CompareTo(expression(instance)) <= 0, message);
 
       /// <summary>
       /// Validates that the nullable numeric value is less than or equal to a specified value.
@@ -244,6 +518,22 @@ namespace Myce.FluentValidator
          => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) <= 0, new IsLessThanOrEqualToError(rb.GetAttributeName(), value.ToString()));
 
       /// <summary>
+      /// Validates that the nullable numeric value is less than or equal to the value of another property.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="expression">A function expression to extract the comparison value from the instance.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute?> IsLessThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, Func<T, TAttribute> expression)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance =>
+         {
+            var attr = rb.GetAttributeValue(instance);
+            return attr.HasValue && attr.Value.CompareTo(expression(instance)) <= 0;
+         }, new IsLessThanOrEqualToError(rb.GetAttributeName(), "the other field"));
+
+      /// <summary>
       /// Validates that the nullable numeric value is less than or equal to a specified value.
       /// </summary>
       /// <typeparam name="T">The type of the entity being validated.</typeparam>
@@ -255,6 +545,23 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute?> IsLessThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, TAttribute value, Message message)
          where T : class where TAttribute : struct, IComparable<TAttribute>
          => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) <= 0, message);
+
+      /// <summary>
+      /// Validates that the nullable numeric value is less than or equal to the value of another property using a custom message.
+      /// </summary>
+      /// <typeparam name="T">The type of the entity being validated.</typeparam>
+      /// <typeparam name="TAttribute">The numeric struct type implementing IComparable.</typeparam>
+      /// <param name="rb">The rule builder instance.</param>
+      /// <param name="expression">A function expression to extract the comparison value from the instance.</param>
+      /// <param name="message">The custom message to use if validation fails.</param>
+      /// <returns>The rule builder instance.</returns>
+      public static RuleBuilder<T, TAttribute?> IsLessThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, Func<T, TAttribute> expression, Message message)
+         where T : class where TAttribute : struct, IComparable<TAttribute>
+         => rb.AddRule(instance =>
+         {
+            var attr = rb.GetAttributeValue(instance);
+            return attr.HasValue && attr.Value.CompareTo(expression(instance)) <= 0;
+         }, message);
 
       /// <summary>
       /// Validates that the numeric value is positive (greater than zero).

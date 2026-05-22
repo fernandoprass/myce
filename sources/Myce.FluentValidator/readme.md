@@ -182,7 +182,6 @@ Collection validators:
 | `HasItems` | Validates that the collection is not empty and has at least one item. |
 | `HasNoDuplicates` | Validates that the collection doesn´t have any duplicate item. |
 
-
 Comparison validators:
 | Validator | Description |
 | :--- | :--- |
@@ -234,6 +233,9 @@ String validators:
 | `MinLength` | Validates the minimum length of a string. |
 
 ## Notes
+Version 1.8.1
+- Numeric validators now support comparison between attributes of the same entity, allowing for dynamic validation rules based on the state of the object. For example, you can validate that one numeric property is greater than another property within the same entity.
+
 Version 1.8.0
 - Add new validators for collections
 -- `All`: enabling users to apply a validation rule to every item in a collection and ensure that all items meet the specified criteria.
