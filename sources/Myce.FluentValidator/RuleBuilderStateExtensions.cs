@@ -60,7 +60,7 @@ namespace Myce.FluentValidator
          where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName(); 
-         return ruleBuilder.IsNotNull(new IsNullError(attributeName));
+         return ruleBuilder.IsNotNull(StateErrorMessages.IsNull(attributeName));
       }
 
       /// <summary>
@@ -91,7 +91,7 @@ namespace Myce.FluentValidator
          where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();
-         return ruleBuilder.IsNull(new IsNotNullError(attributeName));
+         return ruleBuilder.IsNull(StateErrorMessages.IsNotNull(attributeName));
       }
 
       /// <summary>
@@ -121,7 +121,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> IsRequired<T, TAttribute>(this RuleBuilder<T, TAttribute> ruleBuilder)
          where T : class
       {
-         return ruleBuilder.IsRequired(new IsRequiredError(ruleBuilder.GetAttributeName()));
+         return ruleBuilder.IsRequired(StateErrorMessages.IsRequired(ruleBuilder.GetAttributeName()));
       }
 
       /// <summary>
@@ -156,7 +156,7 @@ namespace Myce.FluentValidator
          where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();
-         return ruleBuilder.IsTrue(new IsFalseError(attributeName));
+         return ruleBuilder.IsTrue(StateErrorMessages.IsFalse(attributeName));
       }
 
       /// <summary>
@@ -185,7 +185,7 @@ namespace Myce.FluentValidator
          where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();
-         return ruleBuilder.IsFalse(new IsTrueError(attributeName));
+         return ruleBuilder.IsFalse(StateErrorMessages.IsTrue(attributeName));
       }
 
       /// <summary>

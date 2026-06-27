@@ -1,4 +1,6 @@
-﻿namespace Myce.Response.Messages
+﻿using static System.Net.Mime.MediaTypeNames;
+
+namespace Myce.Response.Messages
 {
    public class ErrorMessage : Message
    {
@@ -11,5 +13,7 @@
       public ErrorMessage(string code, string text, Variable variable) : base(MessageType.Error, code, text, variable) { }
 
       public ErrorMessage(string code, string text, IEnumerable<Variable> variables) : base(MessageType.Error, code, text, variables) { }
+
+      public ErrorMessage(string code, Dictionary<string, string> translations) : base(MessageType.Error, code, translations) { }
    }
 }

@@ -118,7 +118,9 @@ namespace Myce.FluentValidator.Tests
          var isValid = validator.Validate(order);
 
          Assert.False(isValid);
-         Assert.IsType<InvalidNumberOfItemsError>(validator.Messages.First());
+         Assert.IsType<ErrorMessage>(validator.Messages.First());
+         Assert.Equal(CollectionErrorMessages.InvalidNumberOfItemsErrorCode,validator.Messages.First().Code);
+
       }
 
       [Fact]

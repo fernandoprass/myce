@@ -19,7 +19,7 @@ namespace Myce.FluentValidator
       /// <returns>The same <see cref="RuleBuilder{T, TProperty}"/> instance for method chaining.</returns>
       public static RuleBuilder<T, TProperty> IsInEnum<T, TProperty>(this RuleBuilder<T, TProperty> rb)
          where T : class where TProperty : struct, Enum
-         => rb.IsInEnum(new InvalidEnumValueError(rb.GetAttributeName(), typeof(TProperty).Name));
+         => rb.IsInEnum(EnumErrorMessages.InvalidEnumValue(rb.GetAttributeName(), typeof(TProperty).Name));
 
       /// <summary>
       /// Validates that the property value is a defined constant within the <typeparamref name="TProperty"/> enumeration, using a custom error message.
@@ -33,7 +33,7 @@ namespace Myce.FluentValidator
       /// </summary>
       public static RuleBuilder<T, TProperty?> IsInEnum<T, TProperty>(this RuleBuilder<T, TProperty?> rb)
          where T : class where TProperty : struct, Enum
-         => rb.IsInEnum(new InvalidEnumValueError(rb.GetAttributeName(), typeof(TProperty).Name));
+         => rb.IsInEnum(EnumErrorMessages.InvalidEnumValue(rb.GetAttributeName(), typeof(TProperty).Name));
 
       /// <summary>
       /// Validates that the nullable property value is either null or a defined constant within the <typeparamref name="TProperty"/> enumeration, using a custom error message.
@@ -54,7 +54,7 @@ namespace Myce.FluentValidator
          where T : class where TProperty : struct, Enum
       {
          var attributeName = rb.GetAttributeName();
-         return rb.IsNotDefault(new MustNotBeDefaultValueError(attributeName));
+         return rb.IsNotDefault(EnumErrorMessages.MustNotBeDefaultValue(attributeName));
       }
 
       /// <summary>
@@ -74,7 +74,7 @@ namespace Myce.FluentValidator
       /// </summary>
       public static RuleBuilder<T, TProperty> IsNotInEnum<T, TProperty>(this RuleBuilder<T, TProperty> rb)
          where T : class where TProperty : struct, Enum
-         => rb.IsNotInEnum(new NotInEnumError(rb.GetAttributeName(), typeof(TProperty).Name));
+         => rb.IsNotInEnum(EnumErrorMessages.NotInEnum(rb.GetAttributeName(), typeof(TProperty).Name));
 
       /// <summary>
       /// Validates that the property value is NOT a defined constant within the <typeparamref name="TProperty"/> enumeration, using a custom error message.

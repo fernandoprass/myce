@@ -11,5 +11,7 @@
       public InformationMessage(string code, string text, Variable variable) : base(MessageType.Information, code, text, variable) { }
 
       public InformationMessage(string code, string text, IEnumerable<Variable> variables) : base(MessageType.Information, code, text, variables) { }
+
+      public InformationMessage(string code, Dictionary<string, string> translations) : base(MessageType.Information, code, translations) { }
    }
 }

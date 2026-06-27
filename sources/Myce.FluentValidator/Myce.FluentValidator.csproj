@@ -24,8 +24,5 @@
 		<None Include="license.txt" Pack="True" PackagePath="\" />
 		<None Include="readme.md" Pack="True" PackagePath="\" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="ErrorMessages\" />
-	</ItemGroup>
 
 </Project>

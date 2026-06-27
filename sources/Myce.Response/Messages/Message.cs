@@ -5,25 +5,27 @@ namespace Myce.Response.Messages
 {
    public abstract class Message
    {
+      private static readonly string _defaultLanguage = "en-US";
+
       /// <summary>
       /// List of variables to be used in the message text. Each variable consists of a name and a value, and can be referenced
       /// </summary>
-      private readonly List<Variable> _variables = new List<Variable>();
+      private readonly List<Variable> _variables = [];
 
       /// <summary>
       /// Holds the multilingual templates for this specific message instance: [Language] -> [Template Text]
       /// </summary>
-      private readonly Dictionary<string, string> _localizedTexts = new(StringComparer.OrdinalIgnoreCase);
+      private readonly Dictionary<string, string> _translatedTexts = new(StringComparer.OrdinalIgnoreCase);
 
       /// <summary>
       /// Holds localizable values for specific variables: [VariableName] -> [Language] -> [Localized Value]
       /// </summary>
-      private readonly Dictionary<string, Dictionary<string, string>> _localizedVariables = new(StringComparer.OrdinalIgnoreCase);
+      private readonly Dictionary<string, Dictionary<string, string>> _translatedVariables = new(StringComparer.OrdinalIgnoreCase);
 
       /// <summary>
       /// Default language key used as fallback if requested translation is missing. If not informed, uses en-US.
       /// </summary>
-      public string DefaultLanguageKey { get; set; } = "en-US";
+      public string Language { get; set; } = _defaultLanguage;
 
       /// <summary>
       /// Message type that determines the category or severity of the message. This property is set during object initialization and 
@@ -111,18 +113,19 @@ namespace Myce.Response.Messages
       /// </summary>
       /// <param name="type">The type of the message.</param>
       /// <param name="code">The unique message code identifier.</param>
-      /// <param name="localizedTexts">The dictionary containing language keys and message templates (e.g., Key: "en-US", Value: "Inform Date of birth").</param>
-      public Message(MessageType type, string code, Dictionary<string, string> localizedTexts)
+      /// <param name="translations">The dictionary containing language keys and message templates (e.g., Key: "en-US", Value: "Inform Date of birth").</param>
+      public Message(MessageType type, string code, Dictionary<string, string> translations)
       {
          Type = type;
          Code = code ?? string.Empty;
-         if (localizedTexts != null)
+         if (translations != null)
          {
-            foreach (var kvp in localizedTexts)
+            foreach (var kvp in translations)
             {
-               _localizedTexts[kvp.Key] = kvp.Value;
+               _translatedTexts[kvp.Key] = kvp.Value;
             }
          }
+         Text = GetTextTranslated();
       }
 
       /// <summary>
@@ -142,7 +145,7 @@ namespace Myce.Response.Messages
       public void AddTextTranslation(string language, string text)
       {
          if (string.IsNullOrEmpty(language)) return;
-         _localizedTexts[language] = text ?? string.Empty;
+         _translatedTexts[language] = text ?? string.Empty;
       }
 
       /// <summary>
@@ -166,10 +169,10 @@ namespace Myce.Response.Messages
       {
          if (string.IsNullOrEmpty(variable) || string.IsNullOrEmpty(language)) return;
 
-         if (!_localizedVariables.TryGetValue(variable, out var translations))
+         if (!_translatedVariables.TryGetValue(variable, out var translations))
          {
             translations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            _localizedVariables[variable] = translations;
+            _translatedVariables[variable] = translations;
          }
 
          translations[language] = value ?? string.Empty;
@@ -191,7 +194,7 @@ namespace Myce.Response.Messages
       {
          if (string.IsNullOrEmpty(name) || translations == null) return;
 
-         _localizedVariables[name] = translations;
+         _translatedVariables[name] = translations;
 
          // Populates legacy collection with the first available translation to protect backward compatibility
          var firstValue = translations.Values.FirstOrDefault();
@@ -212,11 +215,11 @@ namespace Myce.Response.Messages
          if (string.IsNullOrWhiteSpace(Text))
          {
             // If Text is empty but we have multilingual translations configured, route to fallback resolution
-            if (_localizedTexts.Any())
+            if (_translatedTexts.Any())
             {
-               string targetLanguage = _localizedTexts.ContainsKey(DefaultLanguageKey)
-                  ? DefaultLanguageKey
-                  : _localizedTexts.Keys.FirstOrDefault() ?? string.Empty;
+               string targetLanguage = _translatedTexts.ContainsKey(Language)
+                  ? Language
+                  : _translatedTexts.Keys.FirstOrDefault() ?? string.Empty;
 
                return Show(targetLanguage);
             }
@@ -251,17 +254,17 @@ namespace Myce.Response.Messages
       {
          // 1. Resolve Template with Fallback Strategy
          string template;
-         if (_localizedTexts.TryGetValue(language, out var exactTemplate))
+         if (_translatedTexts.TryGetValue(language, out var exactTemplate))
          {
             template = exactTemplate;
          }
-         else if (_localizedTexts.TryGetValue(DefaultLanguageKey, out var fallbackTemplate))
+         else if (_translatedTexts.TryGetValue(Language, out var fallbackTemplate))
          {
             template = fallbackTemplate;
          }
          else
          {
-            template = _localizedTexts.Values.FirstOrDefault() ?? (!string.IsNullOrWhiteSpace(Text) ? Text : $"[{Code}]");
+            template = _translatedTexts.Values.FirstOrDefault() ?? (!string.IsNullOrWhiteSpace(Text) ? Text : $"[{Code}]");
          }
 
          if (string.IsNullOrWhiteSpace(template))
@@ -275,7 +278,7 @@ namespace Myce.Response.Messages
             if (string.IsNullOrEmpty(variable.Name)) continue;
 
             // If this variable has a localized version, skip it here to let the localized processor handle it
-            if (_localizedVariables.ContainsKey(variable.Name)) continue;
+            if (_translatedVariables.ContainsKey(variable.Name)) continue;
 
             string valueToReplace = variable.Value ?? string.Empty;
             builder.Replace("{" + variable.Name + "}", valueToReplace);
@@ -283,7 +286,7 @@ namespace Myce.Response.Messages
          }
 
          // 3. Process Multilingual variables with language resolution fallbacks
-         foreach (var kvp in _localizedVariables)
+         foreach (var kvp in _translatedVariables)
          {
             string varName = kvp.Key;
             if (string.IsNullOrEmpty(varName)) continue;
@@ -292,7 +295,7 @@ namespace Myce.Response.Messages
 
             if (!varTranslations.TryGetValue(language, value: out string localizedValue))
             {
-               if (!varTranslations.TryGetValue(DefaultLanguageKey, out localizedValue))
+               if (!varTranslations.TryGetValue(Language, out localizedValue))
                {
                   localizedValue = varTranslations.Values.FirstOrDefault() ?? string.Empty;
                }
@@ -303,6 +306,17 @@ namespace Myce.Response.Messages
          }
 
          return builder.ToString();
+      }
+
+      /// <summary>
+      /// Get the translation for the Text. If language is not informed, get from default language (en-US). If there is no translation for en-US, returns empty string. 
+      /// </summary>
+      /// <returns></returns>
+      private string GetTextTranslated()
+      {
+         return _translatedTexts.TryGetValue(Language, out var txt) ? txt :
+                _translatedTexts.TryGetValue(_defaultLanguage, out var defTxt) ? defTxt :
+                string.Empty;
       }
    }
 }
