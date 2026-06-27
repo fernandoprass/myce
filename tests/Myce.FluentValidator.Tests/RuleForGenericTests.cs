@@ -1,5 +1,6 @@
 using Myce.FluentValidator.ErrorMessages;
 using Myce.Response.Messages;
+using System.ComponentModel.DataAnnotations;
 using Xunit;
 
 namespace Myce.FluentValidator.Tests
@@ -44,8 +45,8 @@ namespace Myce.FluentValidator.Tests
          var result = validator.Validate(person);
 
          var errorMessageAge = validator.Messages.First();
-         Assert.Contains("Age", errorMessageAge.ToString());      
-         Assert.IsType<IsBetweenError>(errorMessageAge);
+         Assert.Contains("Age", errorMessageAge.Show());      
+         Assert.Equal(NumericErrorMessages.IsBetweenErrorCode, errorMessageAge.Code);
 
          Assert.Single(validator.Messages);
       }
@@ -97,7 +98,7 @@ namespace Myce.FluentValidator.Tests
 
          Assert.False(result);
          Assert.Equal(2, validator.Messages.Count);
-         Assert.IsType<FewerCharactersThanExpectedError>(validator.Messages.First());
+         Assert.Equal(StringErrorMessages.FewerCharactersThanExpectedErrorCode, validator.Messages.First().Code);
          Assert.IsType<WarningMessage>(validator.Messages.Last());
       }
 

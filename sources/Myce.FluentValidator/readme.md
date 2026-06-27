@@ -1,7 +1,7 @@
 # MYCE.FluentValidator
 MYCE (Makes Your Coding Easier) FluentValidator is a fluent validation library designed to simplify entity validation in .NET applications.
 
-Supports `net6.0`, `net7.0`, `net8.0`, `net9.0`, `net10.0`, and `netstandard2.0`.
+Supports `net7.0`, `net8.0`, `net9.0`, `net10.0`, and `netstandard2.0`.
 
 ## Installation
 Package Manager Console:
@@ -15,6 +15,7 @@ Install-Package Myce.FluentValidator
 - **High Performance**: Optimized with typed value access to avoid boxing/unboxing.
 - **Reusable Templates**: Define rules once and apply them to multiple DTOs.
 - **External Validation**: Validate standalone variables or external states with RuleForValue.
+- **Multilingual Messages**: Select the validation-message language when creating the validator and register additional languages when needed.
 
 ## Usage
 
@@ -56,12 +57,62 @@ if (validator.Messages.Any())
 {
     foreach (var message in validator.Messages)
     {
-        Console.WriteLine(message.Text);
+        Console.WriteLine(message.Show());
     }
 }
 ```
 
-### 3. Reusable Templates (DRY Principle)
+### 3. Multilingual Validation Messages
+
+English is used by default:
+
+```csharp
+var validator = new FluentValidator<Person>();
+```
+
+To use the built-in Brazilian Portuguese translations, provide the language when creating the validator:
+
+```csharp
+var validator = new FluentValidator<Person>(MessageLanguage.PortugueseBrazil);
+
+validator.RuleFor(x => x.Name).IsRequired();
+validator.Validate(person);
+
+foreach (var message in validator.Messages)
+{
+    Console.WriteLine(message.Show());
+}
+```
+
+`MessageLanguage` includes the built-in `English` (`en-US`) and `PortugueseBrazil` (`pt-BR`) languages.
+
+Additional languages can be registered using their culture code. Register the language once in a shared class and use it both when adding translations and when displaying a message:
+
+```csharp
+public static class ApplicationLanguages
+{
+    public static readonly MessageLanguage French =
+        MessageLanguage.Register("fr-FR");
+}
+
+var message = new ErrorMessage("FIELD_REQUIRED", "The field {fieldName} is required.");
+message.AddVariable("fieldName", "Name");
+message.AddTextTranslation(
+    ApplicationLanguages.French,
+    "Le champ {fieldName} est obligatoire.");
+
+string texteFr = message.Show(ApplicationLanguages.French);
+```
+
+Custom languages can also be passed to a validator:
+
+```csharp
+var validator = new FluentValidator<Person>(ApplicationLanguages.French);
+```
+
+Messages without a translation for the selected language use the message fallback behavior. Add the corresponding translation to custom messages when using a registered language.
+
+### 4. Reusable Templates (DRY Principle)
 You can define validation logic for common fields (like Email) and reuse them across different classes.
 ```csharp
 public static class SharedRules 
@@ -75,7 +126,7 @@ validator.RuleFor(x => x.FirstName).ApplyTemplate(SharedRules.NameTemplate);
 validator.RuleFor(x => x.LastName).ApplyTemplate(SharedRules.NameTemplate);
 ```
 
-### 4. External Value Validation
+### 5. External Value Validation
 Use `RuleForValue` to validate data that isn't a property of your main entity, such as checking if a record already exists in the database.
 ```csharp
 bool emailAlreadyExists = service.CheckEmail(request.Email);
@@ -85,7 +136,7 @@ var validator = new FluentValidator<Person>()
     .IsFalse(new ErrorMessage("This email is already taken"));
 ```
 
-### 5. Short-Circuiting
+### 6. Short-Circuiting
 FluentValidator has two modes of validation: full and short-circuit. By default, it runs in full mode, validating all rules and collecting all errors. 
 However, you can specify that validation should stop after the first failure, improving performance when only the first error is relevant. It can be done in two different ways: global or per validation.
 
@@ -115,7 +166,7 @@ validator
 //since short-circuiting is only applied to the Email rule.
 ```
 
-### 6. Conditional Validation ("If" and "If .. Else")
+### 7. Conditional Validation ("If" and "If .. Else")
 The library supports full flow control for rules using `If` and `Else` blocks. This allows you to apply different sets of rules based on the 
 state of the object, while maintaining individual error messages for every rule within the blocks.
 ```csharp
@@ -233,6 +284,13 @@ String validators:
 | `MinLength` | Validates the minimum length of a string. |
 
 ## Notes
+Version 2.0.0
+- Added multilingual default validation messages.
+- English (`en-US`) remains the default language.
+- Added built-in Brazilian Portuguese (`pt-BR`) translations.
+- Added the extensible `MessageLanguage` class, allowing applications to register additional culture codes with `MessageLanguage.Register(...)`.
+- The validator language can now be selected when constructing `FluentValidator<T>`.
+
 Version 1.8.1
 - Numeric validators now support comparison between attributes of the same entity, allowing for dynamic validation rules based on the state of the object. For example, you can validate that one numeric property is greater than another property within the same entity.
 

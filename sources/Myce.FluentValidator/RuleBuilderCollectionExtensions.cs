@@ -27,7 +27,7 @@ namespace Myce.FluentValidator
          where T : class
          where TAttribute : IEnumerable<TElement>
       {
-         return All(rb, predicate, new ContainsInvalidValueError(rb.GetAttributeName()));
+         return All(rb, predicate, CollectionErrorMessages.ContainsInvalidValue(rb.GetAttributeName()));
       }
 
       /// <summary>
@@ -69,7 +69,7 @@ namespace Myce.FluentValidator
          where T : class
          where TAttribute : IEnumerable<TElement>
       {
-         return Any(rb, predicate, new ContainsInvalidValueError(rb.GetAttributeName()));
+         return Any(rb, predicate, CollectionErrorMessages.ContainsInvalidValue(rb.GetAttributeName()));
       }
 
       /// <summary>
@@ -106,7 +106,7 @@ namespace Myce.FluentValidator
       /// <returns>The updated rule builder instance.</returns>
       public static RuleBuilder<T, TAttribute> Count<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, Func<int, bool> condition) where T : class
       {
-         return Count(rb, condition, new InvalidNumberOfItemsError(rb.GetAttributeName(), 0));
+         return Count(rb, condition, CollectionErrorMessages.InvalidNumberOfItems(rb.GetAttributeName(), 0));
       }
 
       /// <summary>
@@ -154,7 +154,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> IsEmpty<T, TAttribute>(this RuleBuilder<T, TAttribute> rb) where T : class
       {
          var attributeName = rb.GetAttributeName();
-         return rb.IsEmpty(new IsNotEmptyError(attributeName));
+         return rb.IsEmpty(CollectionErrorMessages.IsNotEmpty(attributeName));
       }
 
       /// <summary>
@@ -187,7 +187,7 @@ namespace Myce.FluentValidator
           IEnumerable<TAttribute> values) where T : class
       {
          var attributeName = rb.GetAttributeName();
-         return rb.IsIn(values, new ContainsInvalidValueError(attributeName));
+         return rb.IsIn(values, CollectionErrorMessages.ContainsInvalidValue(attributeName));
       }
 
       /// <summary>
@@ -218,7 +218,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> HasItems<T, TAttribute>(this RuleBuilder<T, TAttribute> rb) where T : class
       {
          var attributeName = rb.GetAttributeName();
-         return rb.HasItems(new IsNotEmptyError(attributeName));
+         return rb.HasItems(CollectionErrorMessages.IsNotEmpty(attributeName));
       }
 
       /// <summary>
@@ -249,7 +249,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> HasNoDuplicates<T, TAttribute>(this RuleBuilder<T, TAttribute> rb) where T : class
       {
          var attributeName = rb.GetAttributeName();
-         return rb.HasNoDuplicates(new ContainsDuplicateItemsError(attributeName));
+         return rb.HasNoDuplicates(CollectionErrorMessages.ContainsDuplicateItems(attributeName));
       }
 
       /// <summary>
@@ -289,7 +289,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> MaxNumberOfItems<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, int max) where T : class
       {
          var attributeName = rb.GetAttributeName();
-         return rb.MaxNumberOfItems(max, new MaxNumberOfItemsError(attributeName, max));
+         return rb.MaxNumberOfItems(max, CollectionErrorMessages.MaxNumberOfItems(attributeName, max));
       }
 
       /// <summary>

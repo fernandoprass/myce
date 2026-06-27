@@ -18,7 +18,7 @@ namespace Myce.FluentValidator
       /// <param name="rb">The rule builder instance.</param>
       /// <returns>The same <see cref="RuleBuilder{T, DateTime}"/> instance for method chaining.</returns>
       public static RuleBuilder<T, DateTime> IsToday<T>(this RuleBuilder<T, DateTime> rb) where T : class
-         => rb.IsToday(new IsTodayError(rb.GetAttributeName()));
+         => rb.IsToday(DateErrorMessages.IsToday(rb.GetAttributeName()));
 
       /// <summary>
       /// Validates that the property value represents today's date, ignoring the time component, using a custom error message.
@@ -37,7 +37,7 @@ namespace Myce.FluentValidator
       /// <param name="rb">The rule builder instance.</param>
       /// <returns>The same <see cref="RuleBuilder{T, DateTime?}"/> instance for method chaining.</returns>
       public static RuleBuilder<T, DateTime?> IsToday<T>(this RuleBuilder<T, DateTime?> rb) where T : class
-         => rb.IsToday(new IsTodayError(rb.GetAttributeName()));
+         => rb.IsToday(DateErrorMessages.IsToday(rb.GetAttributeName()));
 
       /// <summary>
       /// Validates that the nullable property value is either null or represents today's date (ignoring time) using a custom error message.
@@ -56,7 +56,7 @@ namespace Myce.FluentValidator
       /// Validates that the property value represents yesterday's date, ignoring the time component.
       /// </summary>
       public static RuleBuilder<T, DateTime> IsYesterday<T>(this RuleBuilder<T, DateTime> rb) where T : class
-         => rb.IsYesterday(new IsYesterdayError(rb.GetAttributeName()));
+         => rb.IsYesterday(DateErrorMessages.IsYesterday(rb.GetAttributeName()));
 
       /// <summary>
       /// Validates that the property value represents yesterday's date, ignoring the time component, using a custom error message.
@@ -68,7 +68,7 @@ namespace Myce.FluentValidator
       /// Validates that the property value represents tomorrow's date, ignoring the time component.
       /// </summary>
       public static RuleBuilder<T, DateTime> IsTomorrow<T>(this RuleBuilder<T, DateTime> rb) where T : class
-         => rb.IsTomorrow(new IsTomorrowError(rb.GetAttributeName()));
+         => rb.IsTomorrow(DateErrorMessages.IsTomorrow(rb.GetAttributeName()));
 
       /// <summary>
       /// Validates that the property value represents tomorrow's date, ignoring the time component, using a custom error message.
@@ -87,7 +87,7 @@ namespace Myce.FluentValidator
       /// <param name="rb">The rule builder instance.</param>
       /// <returns>The same <see cref="RuleBuilder{T, DateTime}"/> instance for method chaining.</returns>
       public static RuleBuilder<T, DateTime> IsInTheFuture<T>(this RuleBuilder<T, DateTime> rb) where T : class
-         => rb.IsInTheFuture(new IsInTheFutureError(rb.GetAttributeName()));
+         => rb.IsInTheFuture(DateErrorMessages.IsInTheFuture(rb.GetAttributeName()));
 
       /// <summary>
       /// Validates that the property value is a date and time chronologically later than the current moment using a custom error message.
@@ -106,7 +106,7 @@ namespace Myce.FluentValidator
       /// <param name="rb">The rule builder instance.</param>
       /// <returns>The same <see cref="RuleBuilder{T, DateTime}"/> instance for method chaining.</returns>
       public static RuleBuilder<T, DateTime> IsInThePast<T>(this RuleBuilder<T, DateTime> rb) where T : class
-         => rb.IsInThePast(new IsInThePastError(rb.GetAttributeName()));
+         => rb.IsInThePast(DateErrorMessages.IsInThePast(rb.GetAttributeName()));
 
       /// <summary>
       /// Validates that the property value is a date and time chronologically earlier than the current moment using a custom error message.
@@ -130,7 +130,7 @@ namespace Myce.FluentValidator
       /// <returns>The same <see cref="RuleBuilder{T, DateTime}"/> instance for method chaining.</returns>
       public static RuleBuilder<T, DateTime> IsWeekend<T>(this RuleBuilder<T, DateTime> rb) where T : class
       {
-         return rb.IsWeekend(new IsWeekendError(rb.GetAttributeName()));
+         return rb.IsWeekend(DateErrorMessages.IsWeekend(rb.GetAttributeName()));
       }
 
       /// <summary>
@@ -156,7 +156,7 @@ namespace Myce.FluentValidator
       /// <returns>The same <see cref="RuleBuilder{T, DateTime}"/> instance for method chaining.</returns>
       public static RuleBuilder<T, DateTime> IsWeekday<T>(this RuleBuilder<T, DateTime> rb) where T : class
       {
-         return rb.IsWeekday(new IsWeekdayError(rb.GetAttributeName()));
+         return rb.IsWeekday(DateErrorMessages.IsWeekday(rb.GetAttributeName()));
       }
 
       /// <summary>

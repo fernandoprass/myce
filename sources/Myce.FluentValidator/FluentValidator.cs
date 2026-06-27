@@ -12,6 +12,18 @@ namespace Myce.FluentValidator
       private readonly List<FluentValidatorMessage> _globalMessages = [];
       private Func<Func<T, bool>, Func<T, bool>> _ruleWrapper = rule => rule;
 
+
+      private readonly MessageLanguage _language;
+
+      public FluentValidator() { 
+         _language = MessageLanguage.English;
+      }
+
+      public FluentValidator(MessageLanguage language)
+      {
+         _language = language;
+      }
+
       /// <summary>
       /// The list of error messages corresponding to the rules that failed during validation. 
       /// This property is populated after calling the Validate method, and it will contain only the
@@ -99,7 +111,7 @@ namespace Myce.FluentValidator
       internal void AddRule(Func<T, bool> rule, Message message)
       {
          _globalRules.Add(_ruleWrapper(rule));
-         _globalMessages.Add(new FluentValidatorMessage(message, false));
+         _globalMessages.Add(new FluentValidatorMessage(message, _language, false));
       }
 
       internal IDisposable BeginIfScope(bool condition)

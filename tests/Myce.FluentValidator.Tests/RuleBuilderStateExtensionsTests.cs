@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Myce.FluentValidator.Tests
 {
-   public class RuleBuilderCommonExtensionsTests
+   public class RuleBuilderStateExtensionsTests
    {
       private class TestEntity
       {
@@ -153,7 +153,7 @@ namespace Myce.FluentValidator.Tests
          var result = validator.Validate(entity);
 
          Assert.False(result);
-         Assert.IsType<IsNotNullError>(validator.Messages.First());
+         Assert.Equal(StateErrorMessages.IsNotNullErrorCode, validator.Messages.First().Code);
          Assert.Equal("not found",validator.Messages.Last().Show());
       }
 
@@ -172,7 +172,8 @@ namespace Myce.FluentValidator.Tests
          var result = validator.Validate(entity);
 
          Assert.False(result);
-         Assert.IsType<IsNullError>(validator.Messages.First());
+         Assert.Equal(StateErrorMessages.IsNullErrorCode, validator.Messages.First().Code);
+
          Assert.Equal("it shoud be not null", validator.Messages.Last().Show());
       }
 

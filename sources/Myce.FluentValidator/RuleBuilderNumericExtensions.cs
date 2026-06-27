@@ -24,7 +24,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> IsBetween<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, TAttribute min, TAttribute max)
          where T : class where TAttribute : struct, IComparable<TAttribute>
          => rb.AddNumericRule(min, (attr, _) => attr.CompareTo(min) >= 0 && attr.CompareTo(max) <= 0,
-                              new IsBetweenError(rb.GetAttributeName(), min.ToString(), max.ToString()));
+                              NumericErrorMessages.IsBetween(rb.GetAttributeName(), min.ToString(), max.ToString()));
 
       /// <summary>
       /// Validates that the numeric value is between minimum and maximum values extracted dynamically from other fields (inclusive).
@@ -43,7 +43,7 @@ namespace Myce.FluentValidator
             var min = minExpression(instance);
             var max = maxExpression(instance);
             return attr.CompareTo(min) >= 0 && attr.CompareTo(max) <= 0;
-         }, new IsBetweenError(rb.GetAttributeName(), "min field", "max field"));
+         }, NumericErrorMessages.IsBetween(rb.GetAttributeName(), "min field", "max field"));
 
       /// <summary>
       /// Validates that the numeric value is between a minimum and maximum (inclusive).
@@ -89,7 +89,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute?> IsBetween<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, TAttribute min, TAttribute max)
          where T : class where TAttribute : struct, IComparable<TAttribute>
          => rb.AddNullableNumericRule(min, (attr, _) => attr.CompareTo(min) >= 0 && attr.CompareTo(max) <= 0,
-                                      new IsBetweenError(rb.GetAttributeName(), min.ToString(), max.ToString()));
+                                      NumericErrorMessages.IsBetween(rb.GetAttributeName(), min.ToString(), max.ToString()));
 
       /// <summary>
       /// Validates that the nullable numeric value is between minimum and maximum values extracted dynamically from other fields (inclusive).
@@ -106,7 +106,7 @@ namespace Myce.FluentValidator
          {
             var attr = rb.GetAttributeValue(instance);
             return attr.HasValue && attr.Value.CompareTo(minExpression(instance)) >= 0 && attr.Value.CompareTo(maxExpression(instance)) <= 0;
-         }, new IsBetweenError(rb.GetAttributeName(), "min field", "max field"));
+         }, NumericErrorMessages.IsBetween(rb.GetAttributeName(), "min field", "max field"));
 
       /// <summary>
       /// Validates that the nullable numeric value is between a minimum and maximum (inclusive).
@@ -150,7 +150,7 @@ namespace Myce.FluentValidator
       /// <returns>The rule builder instance.</returns>
       public static RuleBuilder<T, TAttribute> IsGreaterThan<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, TAttribute value)
          where T : class where TAttribute : struct, IComparable<TAttribute>
-         => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) > 0, new IsGreaterThanError(rb.GetAttributeName(), value.ToString()));
+         => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) > 0, NumericErrorMessages.IsGreaterThan(rb.GetAttributeName(), value.ToString()));
 
       /// <summary>
       /// Validates that the numeric value is greater than the value of another property.
@@ -163,7 +163,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> IsGreaterThan<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, Func<T, TAttribute> expression)
          where T : class where TAttribute : struct, IComparable<TAttribute>
          => rb.AddRule(instance => rb.GetAttributeValue(instance).CompareTo(expression(instance)) > 0,
-                       new IsGreaterThanError(rb.GetAttributeName(), "the other field"));
+                       NumericErrorMessages.IsGreaterThan(rb.GetAttributeName(), "the other field"));
 
       /// <summary>
       /// Validates that the numeric value is greater than a specified value.
@@ -201,7 +201,7 @@ namespace Myce.FluentValidator
       /// <returns>The rule builder instance.</returns>
       public static RuleBuilder<T, TAttribute?> IsGreaterThan<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, TAttribute value)
          where T : class where TAttribute : struct, IComparable<TAttribute>
-         => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) > 0, new IsGreaterThanError(rb.GetAttributeName(), value.ToString()));
+         => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) > 0, NumericErrorMessages.IsGreaterThan(rb.GetAttributeName(), value.ToString()));
 
       /// <summary>
       /// Validates that the nullable numeric value is greater than the value of another property.
@@ -217,7 +217,7 @@ namespace Myce.FluentValidator
          {
             var attr = rb.GetAttributeValue(instance);
             return attr.HasValue && attr.Value.CompareTo(expression(instance)) > 0;
-         }, new IsGreaterThanError(rb.GetAttributeName(), "the other field"));
+         }, NumericErrorMessages.IsGreaterThan(rb.GetAttributeName(), "the other field"));
 
       /// <summary>
       /// Validates that the nullable numeric value is greater than a specified value.
@@ -259,7 +259,7 @@ namespace Myce.FluentValidator
       /// <returns>The rule builder instance.</returns>
       public static RuleBuilder<T, TAttribute> IsGreaterThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, TAttribute value)
          where T : class where TAttribute : struct, IComparable<TAttribute>
-         => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) >= 0, new IsGreaterThanOrEqualToError(rb.GetAttributeName(), value.ToString()));
+         => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) >= 0, NumericErrorMessages.IsGreaterThanOrEqualTo(rb.GetAttributeName(), value.ToString()));
 
       /// <summary>
       /// Validates that the numeric value is greater than or equal to the value of another property.
@@ -272,7 +272,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> IsGreaterThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, Func<T, TAttribute> expression)
          where T : class where TAttribute : struct, IComparable<TAttribute>
          => rb.AddRule(instance => rb.GetAttributeValue(instance).CompareTo(expression(instance)) >= 0,
-                       new IsGreaterThanOrEqualToError(rb.GetAttributeName(), "the other field"));
+                       NumericErrorMessages.IsGreaterThanOrEqualTo(rb.GetAttributeName(), "the other field"));
 
       /// <summary>
       /// Validates that the numeric value is greater than or equal to a specified value.
@@ -310,7 +310,7 @@ namespace Myce.FluentValidator
       /// <returns>The rule builder instance.</returns>
       public static RuleBuilder<T, TAttribute?> IsGreaterThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, TAttribute value)
          where T : class where TAttribute : struct, IComparable<TAttribute>
-         => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) >= 0, new IsGreaterThanOrEqualToError(rb.GetAttributeName(), value.ToString()));
+         => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) >= 0, NumericErrorMessages.IsGreaterThanOrEqualTo(rb.GetAttributeName(), value.ToString()));
 
       /// <summary>
       /// Validates that the nullable numeric value is greater than or equal to the value of another property.
@@ -326,7 +326,7 @@ namespace Myce.FluentValidator
          {
             var attr = rb.GetAttributeValue(instance);
             return attr.HasValue && attr.Value.CompareTo(expression(instance)) >= 0;
-         }, new IsGreaterThanOrEqualToError(rb.GetAttributeName(), "the other field"));
+         }, NumericErrorMessages.IsGreaterThanOrEqualTo(rb.GetAttributeName(), "the other field"));
 
       /// <summary>
       /// Validates that the nullable numeric value is greater than or equal to a specified value.
@@ -368,7 +368,7 @@ namespace Myce.FluentValidator
       /// <returns>The rule builder instance.</returns>
       public static RuleBuilder<T, TAttribute> IsLessThan<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, TAttribute value)
          where T : class where TAttribute : struct, IComparable<TAttribute>
-         => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) < 0, new IsLessThanError(rb.GetAttributeName(), value.ToString()));
+         => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) < 0, NumericErrorMessages.IsLessThan(rb.GetAttributeName(), value.ToString()));
 
       /// <summary>
       /// Validates that the numeric value is less than the value of another property.
@@ -381,7 +381,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> IsLessThan<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, Func<T, TAttribute> expression)
          where T : class where TAttribute : struct, IComparable<TAttribute>
          => rb.AddRule(instance => rb.GetAttributeValue(instance).CompareTo(expression(instance)) < 0,
-                       new IsLessThanError(rb.GetAttributeName(), "the other field"));
+                       NumericErrorMessages.IsLessThan(rb.GetAttributeName(), "the other field"));
 
       /// <summary>
       /// Validates that the numeric value is less than a specified value.
@@ -419,7 +419,7 @@ namespace Myce.FluentValidator
       /// <returns>The rule builder instance.</returns>
       public static RuleBuilder<T, TAttribute?> IsLessThan<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, TAttribute value)
          where T : class where TAttribute : struct, IComparable<TAttribute>
-         => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) < 0, new IsLessThanError(rb.GetAttributeName(), value.ToString()));
+         => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) < 0, NumericErrorMessages.IsLessThan(rb.GetAttributeName(), value.ToString()));
 
       /// <summary>
       /// Validates that the nullable numeric value is less than the value of another property.
@@ -435,7 +435,7 @@ namespace Myce.FluentValidator
          {
             var attr = rb.GetAttributeValue(instance);
             return attr.HasValue && attr.Value.CompareTo(expression(instance)) < 0;
-         }, new IsLessThanError(rb.GetAttributeName(), "the other field"));
+         }, NumericErrorMessages.IsLessThan(rb.GetAttributeName(), "the other field"));
 
       /// <summary>
       /// Validates that the nullable numeric value is less than a specified value.
@@ -477,7 +477,7 @@ namespace Myce.FluentValidator
       /// <returns>The rule builder instance.</returns>
       public static RuleBuilder<T, TAttribute> IsLessThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, TAttribute value)
          where T : class where TAttribute : struct, IComparable<TAttribute>
-         => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) <= 0, new IsLessThanOrEqualToError(rb.GetAttributeName(), value.ToString()));
+         => rb.AddNumericRule(value, (attr, val) => attr.CompareTo(val) <= 0, NumericErrorMessages.IsLessThanOrEqualTo(rb.GetAttributeName(), value.ToString()));
 
       /// <summary>
       /// Validates that the numeric value is less than or equal to the value of another property.
@@ -490,7 +490,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, TAttribute> IsLessThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute> rb, Func<T, TAttribute> expression)
          where T : class where TAttribute : struct, IComparable<TAttribute>
          => rb.AddRule(instance => rb.GetAttributeValue(instance).CompareTo(expression(instance)) <= 0,
-                       new IsLessThanOrEqualToError(rb.GetAttributeName(), "the other field"));
+                       NumericErrorMessages.IsLessThanOrEqualTo(rb.GetAttributeName(), "the other field"));
 
       /// <summary>
       /// Validates that the numeric value is less than or equal to the value of another property using a custom message.
@@ -515,7 +515,7 @@ namespace Myce.FluentValidator
       /// <returns>The rule builder instance.</returns>
       public static RuleBuilder<T, TAttribute?> IsLessThanOrEqualTo<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb, TAttribute value)
          where T : class where TAttribute : struct, IComparable<TAttribute>
-         => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) <= 0, new IsLessThanOrEqualToError(rb.GetAttributeName(), value.ToString()));
+         => rb.AddNullableNumericRule(value, (attr, val) => attr.CompareTo(val) <= 0, NumericErrorMessages.IsLessThanOrEqualTo(rb.GetAttributeName(), value.ToString()));
 
       /// <summary>
       /// Validates that the nullable numeric value is less than or equal to the value of another property.
@@ -531,7 +531,7 @@ namespace Myce.FluentValidator
          {
             var attr = rb.GetAttributeValue(instance);
             return attr.HasValue && attr.Value.CompareTo(expression(instance)) <= 0;
-         }, new IsLessThanOrEqualToError(rb.GetAttributeName(), "the other field"));
+         }, NumericErrorMessages.IsLessThanOrEqualTo(rb.GetAttributeName(), "the other field"));
 
       /// <summary>
       /// Validates that the nullable numeric value is less than or equal to a specified value.
@@ -572,7 +572,7 @@ namespace Myce.FluentValidator
       /// <returns>The rule builder instance.</returns>
       public static RuleBuilder<T, TAttribute> IsPositive<T, TAttribute>(this RuleBuilder<T, TAttribute> rb)
          where T : class where TAttribute : struct, IComparable<TAttribute>
-         => rb.AddNumericRule(default, (attr, val) => attr.CompareTo(val) > 0, new IsPositiveError(rb.GetAttributeName()));
+         => rb.AddNumericRule(default, (attr, val) => attr.CompareTo(val) > 0, NumericErrorMessages.IsPositive(rb.GetAttributeName()));
 
       /// <summary>
       /// Validates that the numeric value is positive (greater than zero).
@@ -595,7 +595,7 @@ namespace Myce.FluentValidator
       /// <returns>The rule builder instance.</returns>
       public static RuleBuilder<T, TAttribute?> IsPositive<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb)
          where T : class where TAttribute : struct, IComparable<TAttribute>
-         => rb.AddNullableNumericRule(default, (attr, val) => attr.CompareTo(val) > 0, new IsPositiveError(rb.GetAttributeName()));
+         => rb.AddNullableNumericRule(default, (attr, val) => attr.CompareTo(val) > 0, NumericErrorMessages.IsPositive(rb.GetAttributeName()));
 
       /// <summary>
       /// Validates that the nullable numeric value is positive (greater than zero).
@@ -618,7 +618,7 @@ namespace Myce.FluentValidator
       /// <returns>The rule builder instance.</returns>
       public static RuleBuilder<T, TAttribute> IsNegative<T, TAttribute>(this RuleBuilder<T, TAttribute> rb)
          where T : class where TAttribute : struct, IComparable<TAttribute>
-         => rb.AddNumericRule(default, (attr, val) => attr.CompareTo(val) < 0, new IsNegativeError(rb.GetAttributeName()));
+         => rb.AddNumericRule(default, (attr, val) => attr.CompareTo(val) < 0, NumericErrorMessages.IsNegative(rb.GetAttributeName()));
 
       /// <summary>
       /// Validates that the numeric value is negative (less than zero).
@@ -641,7 +641,7 @@ namespace Myce.FluentValidator
       /// <returns>The rule builder instance.</returns>
       public static RuleBuilder<T, TAttribute?> IsNegative<T, TAttribute>(this RuleBuilder<T, TAttribute?> rb)
          where T : class where TAttribute : struct, IComparable<TAttribute>
-         => rb.AddNullableNumericRule(default, (attr, val) => attr.CompareTo(val) < 0, new IsNegativeError(rb.GetAttributeName()));
+         => rb.AddNullableNumericRule(default, (attr, val) => attr.CompareTo(val) < 0, NumericErrorMessages.IsNegative(rb.GetAttributeName()));
 
       /// <summary>
       /// Validates that the nullable numeric value is negative (less than zero).

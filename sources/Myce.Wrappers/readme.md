@@ -1,7 +1,7 @@
 # MYCE.Wrappers
 MYCE (Makes Your Coding Easier) is a Nuget package for Visual Studio that contains a set of wrappers for the most common System.IO classes, which is especially useful for mock methods in unit tests.
 
-Supports `net6.0`, `net8.0`, `net9.0`, `net10.0`, and `netstandard2.0`.
+Supports `net6.0`, `net7.0`, `net8.0`, `net9.0`, `net10.0`, and `netstandard2.0`.
 
 ## Library
 This is a simple wrapper for some of the most used classes of System.IO Namespace. For more information, including examples, visit 

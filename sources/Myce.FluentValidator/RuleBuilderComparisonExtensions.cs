@@ -22,7 +22,7 @@ namespace Myce.FluentValidator
          where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();
-         return ruleBuilder.IsEqualTo(value, new MustBeEqualError(attributeName, value?.ToString()));
+         return ruleBuilder.IsEqualTo(value, ComparisonErrorMessages.MustBeEqual(attributeName, value?.ToString()));
       }
 
       /// <summary>
@@ -57,7 +57,7 @@ namespace Myce.FluentValidator
          Expression<Func<T, TAttribute>> comparisonProperty)
          where T : class
       {
-         return ruleBuilder.EqualityCompare(comparisonProperty, true, (attributeName, comparisonName) => new ComparisonError(attributeName, "be equal to", comparisonName));
+         return ruleBuilder.EqualityCompare(comparisonProperty, true, ComparisonErrorMessages.MustBeEqualToField);
       }
 
       /// <summary>
@@ -88,7 +88,7 @@ namespace Myce.FluentValidator
          where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();
-         return ruleBuilder.IsNotEqualTo(value, new MustNotBeEqualError(attributeName, value?.ToString()));
+         return ruleBuilder.IsNotEqualTo(value, ComparisonErrorMessages.MustNotBeEqual(attributeName, value?.ToString()));
       }
 
       /// <summary>
@@ -122,7 +122,7 @@ namespace Myce.FluentValidator
          Expression<Func<T, TAttribute>> comparisonProperty)
          where T : class
       {
-         return ruleBuilder.EqualityCompare(comparisonProperty, false, (attributeName, comparisonName) => new ComparisonError(attributeName, "not be equal to", comparisonName));
+         return ruleBuilder.EqualityCompare(comparisonProperty, false, ComparisonErrorMessages.MustNotBeEqualToField);
       }
 
       /// <summary>

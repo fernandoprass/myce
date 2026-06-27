@@ -21,7 +21,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, string> Contains<T>(this RuleBuilder<T, string> rb, string substring) where T : class
       {
          var attributeName = rb.GetAttributeName();
-         return rb.Contains(substring, StringComparison.OrdinalIgnoreCase, new MustContainSubstringError(attributeName, substring));
+         return rb.Contains(substring, StringComparison.OrdinalIgnoreCase, StringErrorMessages.MustContainSubstring(attributeName, substring));
       }
 
       /// <summary>
@@ -47,7 +47,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, string> Contains<T>(this RuleBuilder<T, string> rb, string substring, StringComparison stringComparison) where T : class
       {
          var attributeName = rb.GetAttributeName();
-         return rb.Contains(substring, stringComparison, new MustContainSubstringError(attributeName, substring));
+         return rb.Contains(substring, stringComparison, StringErrorMessages.MustContainSubstring(attributeName, substring));
       }
 
       /// <summary>
@@ -75,7 +75,7 @@ namespace Myce.FluentValidator
       /// <param name="rb">The rule builder instance.</param>
       public static RuleBuilder<T, string> ContainsOnlyNumber<T>(this RuleBuilder<T, string> rb) where T : class
       {
-         return rb.ContainsOnlyNumber(new ShouldContainOnlyNumberError(rb.GetAttributeName()));
+         return rb.ContainsOnlyNumber(StringErrorMessages.ShouldContainOnlyNumber(rb.GetAttributeName()));
       }
 
       /// <summary>
@@ -101,7 +101,7 @@ namespace Myce.FluentValidator
       /// <param name="length">Expected number of characters.</param>
       public static RuleBuilder<T, string> ExactNumberOfCharacters<T>(this RuleBuilder<T, string> rb, int length) where T : class
       {
-         return rb.ExactNumberOfCharacters(length, new NotExactNumberOfCharactersError(rb.GetAttributeName(), length));
+         return rb.ExactNumberOfCharacters(length, StringErrorMessages.NotExactNumberOfCharacters(rb.GetAttributeName(), length));
       }
 
       /// <summary>
@@ -153,7 +153,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, string> IsValidDate<T>(this RuleBuilder<T, string> rb) where T : class
       {
          var attributeName = rb.GetAttributeName();
-         return rb.IsValidDate(new InvalidDateError(attributeName));
+         return rb.IsValidDate(StringErrorMessages.InvalidDate(attributeName));
       }
 
       /// <summary>
@@ -177,7 +177,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, string> IsValidEmailAddress<T>(this RuleBuilder<T, string> ruleBuilder) where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();
-         return ruleBuilder.IsValidEmailAddress(new InvalidEmailError(attributeName));
+         return ruleBuilder.IsValidEmailAddress(StringErrorMessages.InvalidEmail(attributeName));
       }
 
       /// <summary>
@@ -201,7 +201,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, string> Matches<T>(this RuleBuilder<T, string> rb, string pattern) where T : class
       {
          var attributeName = rb.GetAttributeName();
-         return rb.Matches(pattern, new InvalidEmailError(attributeName));
+         return rb.Matches(pattern, StringErrorMessages.InvalidFormat(attributeName));
       }
 
       /// <summary> 
@@ -222,7 +222,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, string> IsAlpha<T>(this RuleBuilder<T, string> rb) where T : class
       {
          var attributeName = rb.GetAttributeName();
-         return rb.IsAlpha(new ShouldContainOnlyLettersError(attributeName));
+         return rb.IsAlpha(StringErrorMessages.ShouldContainOnlyLetters(attributeName));
       }
 
       /// <summary> Validates that the string contains only alphabetic characters. </summary>
@@ -236,7 +236,7 @@ namespace Myce.FluentValidator
       public static RuleBuilder<T, string> IsAlphaNumeric<T>(this RuleBuilder<T, string> rb) where T : class
       {
          var attributeName = rb.GetAttributeName();
-         return rb.IsAlphaNumeric(new ShouldContainOnlyLettersAndNumbersError(attributeName));
+         return rb.IsAlphaNumeric(StringErrorMessages.ShouldContainOnlyLettersAndNumbers(attributeName));
       }
 
       /// <summary> Validates that the string contains only alphanumeric characters. </summary>
@@ -252,7 +252,7 @@ namespace Myce.FluentValidator
       /// <param name="maxLength">The maximum lenght allowed. </param>
       public static RuleBuilder<T, string> MaxLength<T>(this RuleBuilder<T, string> ruleBuilder, int maxLength) where T : class
       {
-         return ruleBuilder.MaxLength(maxLength, new MoreCharactersThanExpectedError(ruleBuilder.GetAttributeName(), maxLength));
+         return ruleBuilder.MaxLength(maxLength, StringErrorMessages.MoreCharactersThanExpected(ruleBuilder.GetAttributeName(), maxLength));
       }
 
       /// <summary>
@@ -274,7 +274,7 @@ namespace Myce.FluentValidator
       /// </summary>
       public static RuleBuilder<T, string> MinLength<T>(this RuleBuilder<T, string> ruleBuilder, int minLength) where T : class
       {
-         return ruleBuilder.MinLength(minLength, new FewerCharactersThanExpectedError(ruleBuilder.GetAttributeName(), minLength));
+         return ruleBuilder.MinLength(minLength, StringErrorMessages.FewerCharactersThanExpected(ruleBuilder.GetAttributeName(), minLength));
       }
 
       /// <summary>

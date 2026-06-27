@@ -11,5 +11,7 @@
       public WarningMessage(string code, string text, Variable variable) : base(MessageType.Warning, code, text, variable) { }
 
       public WarningMessage(string code, string text, IEnumerable<Variable> variables) : base(MessageType.Warning, code, text, variables) { }
+
+      public WarningMessage(string code, Dictionary<string, string> translations) : base(MessageType.Warning, code, translations) { }
    }
 }

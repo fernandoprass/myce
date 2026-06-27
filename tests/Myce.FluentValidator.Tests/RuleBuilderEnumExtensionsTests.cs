@@ -103,7 +103,8 @@ namespace Myce.FluentValidator.Tests
          var validator = new FluentValidator<UserTestRequest>()
             .RuleFor(x => x.Status).IsInEnum();
 
-         Assert.False(validator.Validate(request));
+         var result = validator.Validate(request);
+         Assert.False(result);
       }
 
       [Theory]
