@@ -10,8 +10,9 @@ namespace Myce.FluentValidator
    {
       public Message Message { get; set; } = null!;
       public bool WasRuleBroken { get; set; }
-      public FluentValidatorMessage(Message message, bool wasRuleBroken)
+      public FluentValidatorMessage(Message message, MessageLanguage language, bool wasRuleBroken)
       {
+         message.Language = language.ToString();
          Message = message;
          WasRuleBroken = wasRuleBroken;
       }

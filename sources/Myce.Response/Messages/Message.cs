@@ -212,20 +212,17 @@ namespace Myce.Response.Messages
       /// </summary>
       public string Show()
       {
-         if (string.IsNullOrWhiteSpace(Text))
+         if (_translatedTexts.Any())
          {
-            // If Text is empty but we have multilingual translations configured, route to fallback resolution
-            if (_translatedTexts.Any())
-            {
-               string targetLanguage = _translatedTexts.ContainsKey(Language)
-                  ? Language
-                  : _translatedTexts.Keys.FirstOrDefault() ?? string.Empty;
+            string targetLanguage = _translatedTexts.ContainsKey(Language)
+               ? Language
+               : _translatedTexts.Keys.FirstOrDefault() ?? string.Empty;
 
-               return Show(targetLanguage);
-            }
-
-            return string.Empty;
+            return Show(targetLanguage);
          }
+
+         if (string.IsNullOrWhiteSpace(Text))
+            return string.Empty;
 
          if (_variables == null || !_variables.Any())
             return Text;
