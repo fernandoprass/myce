@@ -151,5 +151,40 @@ namespace Myce.FluentValidator.Tests
 
          Assert.Equal(expected, validator.Validate(account));
       }
+
+      [Fact]
+      public void Fields_CompareWithAnotherFields_ReturnsTrueWhenValid()
+      {
+         var product = new NumericEntity { Balance = 5, Price = 3, Discount = 3, Tax = 10 };
+         var validator = new FluentValidator<NumericEntity>();
+
+         validator
+            .RuleFor(x => x.Price).IsEqualTo(x => x.Discount!.Value)
+            .RuleFor(x => x.Price).IsNotEqualTo(x => (double)x.Balance)
+            .RuleFor(x => x.Price).IsLessThanOrEqualTo(x => (double)x.Tax!.Value)
+            .RuleFor(x => x.Balance).IsBetween(x => (decimal)x.Price, x => x.Tax!.Value);
+
+         var isValid = validator.Validate(product);
+
+         Assert.True(isValid);
+         Assert.Empty(validator.Messages);
+      }
+
+      [Fact]
+      public void Fields_CompareWithAnotherField_ReturnsFalseWhenInvalid()
+      {
+         var product = new NumericEntity { Balance = 0, Price = 5.7, Discount = 6.7, Tax = 10, Age = 0 };
+         var validator = new FluentValidator<NumericEntity>();
+
+         validator
+            .RuleFor(x => x.Age).IsNotEqualTo(x => (int)x.Balance)
+            .RuleFor(x => x.Price).IsGreaterThan(x => (double)x.Tax!.Value)
+            .RuleFor(x => x.Tax).IsLessThanOrEqualTo(x => x.Balance);
+
+         var isValid = validator.Validate(product);
+
+         Assert.False(isValid);
+         Assert.Equal(3, validator.Messages.Count);
+      }
    }
 }
