@@ -140,7 +140,7 @@ public class MessageMultilingualTests
          { "pt-BR", "Usuário {user} alterou {fieldName} para {value}." }
       };
 
-      var fieldNameTranslations = new Dictionary<string, string>
+      var variableTranslations = new Dictionary<string, string>
       {
          { "en-US", "Birth Date" },
          { "pt-BR", "Data de Nascimento" }
@@ -153,7 +153,7 @@ public class MessageMultilingualTests
       message.AddVariable("value", "2026-01-01");
 
       // 2. Adding the localizable field variable
-      message.AddVariableTranslation("fieldName", fieldNameTranslations);
+      message.AddVariableTranslation("fieldName", variableTranslations);
 
       string resultEn = message.Show("en-US");
       string resultPt = message.Show("pt-BR");
@@ -202,5 +202,37 @@ public class MessageMultilingualTests
 
       Assert.Single(message.Variables); // Ensures only one item was added to the fallback list
       Assert.Contains(message.Variables, v => v.Name == "status" && v.Value == "Ativo");
+   }
+
+   [Fact]
+   public void TranslateTo_WhenInformExistingLanguage_ShouldTranslateCorrectly()
+   {
+      var templates = new Dictionary<string, string>
+      {
+         { "en-US", "User {user} set {fieldName} to {value}." },
+         { "pt-BR", "Usuário {user} alterou {fieldName} para {value}." }
+      };
+
+      var variableTranslations = new Dictionary<string, string>
+      {
+         { "en-US", "Birth Date" },
+         { "pt-BR", "Data de Nascimento" }
+      };
+
+      var message = new TestMessage(MessageType.Information, "AUDIT_LOG", templates);
+
+      // 1. Mixing legacy fixed value variables
+      message.AddVariable("user", "Admin");
+      message.AddVariable("value", "2026-01-01");
+
+      // 2. Adding the localizable field variable
+      message.AddVariableTranslation("fieldName", variableTranslations);
+
+      //before translation message should be in default language (en-US)
+      Assert.Equal("User {user} set {fieldName} to {value}.", message.Text);
+
+      message.TranslateTo("pt-BR");
+
+      Assert.Equal("Usuário {user} alterou {fieldName} para {value}.", message.Text);
    }
 }

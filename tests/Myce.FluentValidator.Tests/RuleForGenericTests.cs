@@ -34,7 +34,7 @@ namespace Myce.FluentValidator.Tests
             BirthDate = new DateTime(1978, 02, 22) 
          };
 
-         var validator = new FluentValidator<Person>();
+         var validator = new FluentValidator<Person>(MessageLanguage.PortugueseBrazil);
 
          validator.RuleFor(x => x.Name).IsRequired().IsEqualTo("John Smith")
             .RuleFor(x => x.Gender).IsInEnum()

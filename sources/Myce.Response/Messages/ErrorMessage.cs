@@ -1,15 +1,13 @@
-﻿using static System.Net.Mime.MediaTypeNames;
-
-namespace Myce.Response.Messages
+﻿namespace Myce.Response.Messages
 {
    public class ErrorMessage : Message
    {
       public ErrorMessage() : base(MessageType.Error) { }
 
-      public ErrorMessage(string text) : base(MessageType.Error, string.Empty, text) { }
+      public ErrorMessage(string text) : base(MessageType.Error, text) { }
       
       public ErrorMessage(string code, string text) : base(MessageType.Error, code, text) { }
-
+      
       public ErrorMessage(string code, string text, Variable variable) : base(MessageType.Error, code, text, variable) { }
 
       public ErrorMessage(string code, string text, IEnumerable<Variable> variables) : base(MessageType.Error, code, text, variables) { }

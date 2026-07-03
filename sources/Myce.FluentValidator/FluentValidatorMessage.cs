@@ -12,7 +12,7 @@ namespace Myce.FluentValidator
       public bool WasRuleBroken { get; set; }
       public FluentValidatorMessage(Message message, MessageLanguage language, bool wasRuleBroken)
       {
-         message.Language = language.ToString();
+         message.TranslateTo(language.ToString());
          Message = message;
          WasRuleBroken = wasRuleBroken;
       }

@@ -25,7 +25,7 @@ namespace Myce.Response.Messages
       /// <summary>
       /// Default language key used as fallback if requested translation is missing. If not informed, uses en-US.
       /// </summary>
-      public string Language { get; set; } = _defaultLanguage;
+      public string Language { get; private set; } = _defaultLanguage;
 
       /// <summary>
       /// Message type that determines the category or severity of the message. This property is set during object initialization and 
@@ -52,6 +52,17 @@ namespace Myce.Response.Messages
       public IReadOnlyCollection<Variable> Variables => _variables.AsReadOnly();
 
       /// <summary>
+      /// Translates the message to the specified language. If the new language doesn't exist, the default language will be used. 
+      /// This method updates both the Language and Text properties of the message instance.
+      /// </summary>
+      /// <param name="language">The new language</param>
+      public void TranslateTo(string language)
+      {
+         Language = language;
+         Text = GetTextTranslated(language);
+      }
+      
+      /// <summary>
       /// Initializes a new instance of the Message class with the specified message type.
       /// </summary>
       /// <param name="type">The type of the message. Determines the category or severity of the message..</param>
@@ -61,24 +72,34 @@ namespace Myce.Response.Messages
       }
 
       /// <summary>
-      /// Initializes a new instance of the Message class with the specified message type, code, and text.
+      /// Initializes a new instance of the Message class with the specified message type and text.
       /// </summary>
       /// <param name="type">The type of the message. Determines the category or severity of the message.</param>
-      /// <param name="code">The code that uniquely identifies the message. Cannot be null.</param>
       /// <param name="text">The text content of the message. Cannot be null.</param>
-      public Message(MessageType type, string code, string text)
-      {
-         Type = type;
-         Code = code ?? string.Empty;
-         Text = text ?? string.Empty;
-      }
+      public Message(MessageType type, string text) : this(type, string.Empty, text, _defaultLanguage) { }
 
       /// <summary>
       /// Initializes a new instance of the Message class with the specified message type and text.
       /// </summary>
       /// <param name="type">The type of the message. Determines the category or severity of the message.</param>
+      /// <param name="code">The code that uniquely identifies the message. Cannot be null.</param>
       /// <param name="text">The text content of the message. Cannot be null.</param>
-      public Message(MessageType type, string text) : this(type, string.Empty, text) { }
+      public Message(MessageType type, string code, string text) : this(type, code, text, _defaultLanguage) { }
+
+      /// <summary>
+      /// Initializes a new instance of the Message class with the specified message type, code, and text.
+      /// </summary>
+      /// <param name="type">The type of the message. Determines the category or severity of the message.</param>
+      /// <param name="code">The code that uniquely identifies the message. Cannot be null.</param>
+      /// <param name="text">The text content of the message. Cannot be null.</param>
+      /// <param name="language">The language culture code (e.g., "en-US", "pt-BR").</param>
+      public Message(MessageType type, string code, string text, string language)
+      {
+         Type = type;
+         Code = code ?? string.Empty;
+         Text = text ?? string.Empty;
+         Language = language;
+      }
 
       /// <summary>
       /// Initializes a new instance of the Message class with the specified message type, code, text, and a collection
@@ -89,7 +110,7 @@ namespace Myce.Response.Messages
       /// <param name="text">The text content of the message. Cannot be null.</param>
       /// <param name="variables">Variables to associate with the message. Each variable provides 
       /// additional context or data for the message. Cannot be null.</param>
-      public Message(MessageType type, string code, string text, Variable variable) : this(type, code, text)
+      public Message(MessageType type, string code, string text, Variable variable) : this(type, code, text, _defaultLanguage)
       {
          _variables.Add(variable);
       }
@@ -103,7 +124,7 @@ namespace Myce.Response.Messages
       /// <param name="text">The text content of the message. Cannot be null.</param>
       /// <param name="variables">A collection of variables to associate with the message. Each variable provides 
       /// additional context or data for the message. Cannot be null.</param>
-      public Message(MessageType type, string code, string text, IEnumerable<Variable> variables) : this(type, code, text)
+      public Message(MessageType type, string code, string text, IEnumerable<Variable> variables) : this(type, code, text, _defaultLanguage)
       {
          _variables.AddRange(variables);
       }
@@ -114,10 +135,21 @@ namespace Myce.Response.Messages
       /// <param name="type">The type of the message.</param>
       /// <param name="code">The unique message code identifier.</param>
       /// <param name="translations">The dictionary containing language keys and message templates (e.g., Key: "en-US", Value: "Inform Date of birth").</param>
-      public Message(MessageType type, string code, Dictionary<string, string> translations)
+      public Message(MessageType type, string code, Dictionary<string, string> translations) : this(type, code, _defaultLanguage, translations) { }
+
+
+      /// <summary>
+      /// Initializes a new instance of the Message class supporting multiple languages.
+      /// </summary>
+      /// <param name="type">The type of the message.</param>
+      /// <param name="code">The unique message code identifier.</param>
+      /// <param name="translations">The dictionary containing language keys and message templates (e.g., Key: "en-US", Value: "Inform Date of birth").</param>
+      /// <param name="language">The language culture code (e.g., "en-US", "pt-BR").</param>
+      public Message(MessageType type, string code, string language, Dictionary<string, string> translations)
       {
          Type = type;
          Code = code ?? string.Empty;
+         Language = language;
          if (translations != null)
          {
             foreach (var kvp in translations)
@@ -125,7 +157,7 @@ namespace Myce.Response.Messages
                _translatedTexts[kvp.Key] = kvp.Value;
             }
          }
-         Text = GetTextTranslated();
+         Text = GetTextTranslated(language);
       }
 
       /// <summary>
@@ -134,7 +166,7 @@ namespace Myce.Response.Messages
       /// <returns>A string containing the code and text of the object in the format "Code: {Code}, Text: {Text}".</returns>
       public override string ToString()
       {
-         return $"{nameof(Code)}: {Code}, {nameof(Text)}: {Text}";
+         return $"{nameof(Code)}: {Code}, {nameof(Text)}: {Text}, {nameof(Language)}: {Language}";
       }
 
       /// <summary>
@@ -290,16 +322,16 @@ namespace Myce.Response.Messages
 
             var varTranslations = kvp.Value;
 
-            if (!varTranslations.TryGetValue(language, value: out string localizedValue))
+            if (!varTranslations.TryGetValue(language, value: out string translatedValue))
             {
-               if (!varTranslations.TryGetValue(Language, out localizedValue))
+               if (!varTranslations.TryGetValue(Language, out translatedValue))
                {
-                  localizedValue = varTranslations.Values.FirstOrDefault() ?? string.Empty;
+                  translatedValue = varTranslations.Values.FirstOrDefault() ?? string.Empty;
                }
             }
 
-            builder.Replace("{" + varName + "}", localizedValue);
-            builder.Replace("[" + varName + "]", localizedValue);
+            builder.Replace("{" + varName + "}", translatedValue);
+            builder.Replace("[" + varName + "]", translatedValue);
          }
 
          return builder.ToString();
@@ -311,9 +343,41 @@ namespace Myce.Response.Messages
       /// <returns></returns>
       private string GetTextTranslated()
       {
-         return _translatedTexts.TryGetValue(Language, out var txt) ? txt :
+         return GetTextTranslated(Language);
+      }
+
+      /// <summary>
+      /// Get the translation for the Text. If language is not informed, get from default language (en-US). If there is no translation for en-US, returns empty string. 
+      /// </summary>
+      /// <param name="language">New language</param>
+      /// <returns></returns>
+      private string GetTextTranslated(string language)
+      {
+         return _translatedTexts.TryGetValue(language, out var txt) ? txt :
                 _translatedTexts.TryGetValue(_defaultLanguage, out var defTxt) ? defTxt :
                 string.Empty;
+      }
+
+      /// <summary>
+      /// Get the translation for the Text. If language is not informed, get from default language (en-US). If there is no translation for en-US, returns empty string. 
+      /// </summary>
+      /// <returns></returns>
+      private string GetVariablesTranslated()
+      {
+         return GetVariablesTranslated(Language);
+      }
+
+      /// <summary>
+      /// Get the translation for the Text. If language is not informed, get from default language (en-US). If there is no translation for en-US, returns empty string. 
+      /// </summary>
+      /// <param name="language">New language</param>
+      /// <returns></returns>
+      private string GetVariablesTranslated(string language)
+      {
+         return string.Empty;
+         //return _translatedVariables.TryGetValue(language, out var txt) ? txt :
+         //       _translatedVariables.TryGetValue(_defaultLanguage, out var defTxt) ? defTxt :
+         //       string.Empty;
       }
    }
 }
