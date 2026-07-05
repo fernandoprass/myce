@@ -23,9 +23,10 @@ namespace Myce.FluentValidator.Tests
       [Fact]
       public void DefaultLanguage_ShouldReturnMessagesInEnglish()
       {
-         var validator = CreateValidator(new FluentValidator<Person>());
+         var validator = CreateValidator(MessageLanguage.English);
+         var person = CreateInvalidPerson();
 
-         validator.Validate(CreateInvalidPerson());
+         validator.Validate(person);
 
          var messages = validator.Messages.Select(message => message.Show()).ToArray();
 
@@ -42,10 +43,10 @@ namespace Myce.FluentValidator.Tests
       [Fact]
       public void PortugueseBrazilLanguage_ShouldReturnMessagesInPortuguese()
       {
-         var validator = CreateValidator(
-            new FluentValidator<Person>(MessageLanguage.PortugueseBrazil));
+         var validator = CreateValidator(MessageLanguage.PortugueseBrazil);
+         var person = CreateInvalidPerson();
 
-         validator.Validate(CreateInvalidPerson());
+         validator.Validate(person);
 
          var messages = validator.Messages.Select(message => message.Show()).ToArray();
 
@@ -59,13 +60,14 @@ namespace Myce.FluentValidator.Tests
          ], messages);
       }
 
-      private static FluentValidator<Person> CreateValidator(FluentValidator<Person> validator)
+      private static FluentValidator<Person> CreateValidator(MessageLanguage language)
       {
-         validator.RuleFor(person => person.Name).MinLength(5);
-         validator.RuleFor(person => person.Age).IsGreaterThan(18);
-         validator.RuleFor(person => person.BirthDate).IsToday();
-         validator.RuleFor(person => person.Status).IsInEnum();
-         validator.RuleFor(person => person.Code).IsEqualTo("EXPECTED");
+         var validator = new FluentValidator<Person>(language)
+               .RuleFor(person => person.Name).MinLength(5)
+               .RuleFor(person => person.Age).IsGreaterThan(18)
+               .RuleFor(person => person.BirthDate).IsToday()
+               .RuleFor(person => person.Status).IsInEnum()
+               .RuleFor(person => person.Code).IsEqualTo("EXPECTED");
          return validator;
       }
 

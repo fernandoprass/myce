@@ -226,5 +226,46 @@ namespace Myce.Response.Tests
          Assert.NotNull(result);
          Assert.Contains(result.Messages, m => m.Type == MessageType.Error);
       }
+
+      [Fact]
+      public void Failure_WhenPassLanguage_ShouldTranslateMessages()
+      {
+         var template1 = new Dictionary<string, string>
+         {
+            { "en-US", "{fieldName} is mandatory." },
+            { "pt-BR", "{fieldName} é obrigatório." }
+         };
+
+         var message1 = new ErrorMessage("MandataoryError", template1);
+         message1.AddVariable("en-US", "fieldName", "Birth Date");
+         message1.AddVariable("pt-BR", "fieldName", "Data de Nascimento");
+
+
+         var template2 = new Dictionary<string, string>
+         {
+            { "en-US", "{dateBorn} should be in the past." },
+            { "pt-BR", "{dateBorn} deve ser no passado." }
+         };
+
+         var message2 = new ErrorMessage("MandataoryError", template2);
+         message2.AddVariable("en-US", "dateBorn", "Birth Date");
+         message2.AddVariable("pt-BR", "dateBorn", "Data de Nascimento");
+
+         var messages = new List<Message>
+         {
+            message1,
+            message2
+         };
+
+         var result = Result.Failure(messages);
+
+         Assert.Equal("{fieldName} is mandatory.", result.Messages.First().Text);
+         Assert.Equal("{dateBorn} should be in the past.", result.Messages.Last().Text);
+
+         result = Result.Failure(messages, "pt-BR");
+
+         Assert.Equal("{fieldName} é obrigatório.", result.Messages.First().Text);
+         Assert.Equal("{dateBorn} deve ser no passado.", result.Messages.Last().Text);
+      }
    }
 }

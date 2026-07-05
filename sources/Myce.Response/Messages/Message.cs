@@ -6,7 +6,7 @@ namespace Myce.Response.Messages
    {      
       private const string DEFAULT_LANGUAGE = "en-US";
 
-      private static string _language = DEFAULT_LANGUAGE;
+      private string _language { get; set; } = DEFAULT_LANGUAGE;
 
       /// <summary>
       /// List of variables to be used in the message text. Each variable consists of a name and a value, and can be referenced
@@ -74,7 +74,7 @@ namespace Myce.Response.Messages
       /// </summary>
       /// <param name="type">The type of the message. Determines the category or severity of the message.</param>
       /// <param name="text">The text content of the message. Cannot be null.</param>
-      public Message(MessageType type, string text) : this(type, string.Empty, text, _language) { }
+      public Message(MessageType type, string text) : this(type, string.Empty, text, DEFAULT_LANGUAGE) { }
 
       /// <summary>
       /// Initializes a new instance of the Message class with the specified message type and text.
@@ -82,7 +82,7 @@ namespace Myce.Response.Messages
       /// <param name="type">The type of the message. Determines the category or severity of the message.</param>
       /// <param name="code">The code that uniquely identifies the message. Cannot be null.</param>
       /// <param name="text">The text content of the message. Cannot be null.</param>
-      public Message(MessageType type, string code, string text) : this(type, code, text, _language) { }
+      public Message(MessageType type, string code, string text) : this(type, code, text, DEFAULT_LANGUAGE) { }
 
       /// <summary>
       /// Initializes a new instance of the Message class with the specified message type, code, and text.
@@ -108,7 +108,7 @@ namespace Myce.Response.Messages
       /// <param name="text">The text content of the message. Cannot be null.</param>
       /// <param name="variables">Variables to associate with the message. Each variable provides 
       /// additional context or data for the message. Cannot be null.</param>
-      public Message(MessageType type, string code, string text, Variable variable) : this(type, code, text, _language)
+      public Message(MessageType type, string code, string text, Variable variable) : this(type, code, text, DEFAULT_LANGUAGE)
       {
          _variables.Add(variable);
       }
@@ -122,7 +122,7 @@ namespace Myce.Response.Messages
       /// <param name="text">The text content of the message. Cannot be null.</param>
       /// <param name="variables">A collection of variables to associate with the message. Each variable provides 
       /// additional context or data for the message. Cannot be null.</param>
-      public Message(MessageType type, string code, string text, IEnumerable<Variable> variables) : this(type, code, text, _language)
+      public Message(MessageType type, string code, string text, IEnumerable<Variable> variables) : this(type, code, text, DEFAULT_LANGUAGE)
       {
          _variables.AddRange(variables);
       }

@@ -13,11 +13,9 @@ namespace Myce.FluentValidator
       private Func<Func<T, bool>, Func<T, bool>> _ruleWrapper = rule => rule;
 
 
-      private readonly MessageLanguage _language;
+      private readonly MessageLanguage _language = MessageLanguage.English;
 
-      public FluentValidator() { 
-         _language = MessageLanguage.English;
-      }
+      public FluentValidator() { }
 
       public FluentValidator(MessageLanguage language)
       {

@@ -95,7 +95,6 @@ public class MessageMultilingualTests
    public void AddTextTranslation_ShouldAddAndResolveIndividualTemplates()
    {
       var message = new TestMessage(MessageType.Error);
-      message.Code = "INCREMENTAL_TEST";
 
       message.AddTextTranslation("en-US", "Static text in English.");
       message.AddTextTranslation("pt-BR", "Texto estático em Português.");
