@@ -16,6 +16,125 @@ public class TestMessage : Message
 
 public class MessageMultilingualTests
 {
+   [Fact]
+   public void AddVariableMultilingual_ShouldPopulateLegacyVariablesCollectionForBackwardCompatibility()
+   {
+      var templates = new Dictionary<string, string> { { "en-US", "Hello {name}" } };
+
+      var message = new TestMessage(MessageType.Information, "GREETING", templates);
+
+      message.AddVariable("en-US", "name", "John Doe");
+      message.AddVariable("pt-BR", "name", "Fulano");
+
+      Assert.NotEmpty(message.Variables);
+      Assert.Contains(message.Variables, v => v.Name == "name" && v.Value == "John Doe");
+      Assert.Contains(message.Variables, v => v.Name == "name" && v.Value == "Fulano");
+   }
+
+   [Fact]
+   public void AddVariableTranslation_ShouldAddAndResolveIndividualVariableTranslations()
+   {
+      var message = new TestMessage(MessageType.Error);
+      message.AddTextTranslation("en-US", "The field {fieldName} is invalid.");
+      message.AddTextTranslation("pt-BR", "O campo {fieldName} é inválido.");
+
+      message.AddVariable("en-US", "fieldName", "Email");
+      message.AddVariable("pt-BR", "fieldName", "E-mail");
+
+      Assert.Equal("The field Email is invalid.", message.Show("en-US"));
+      Assert.Equal("O campo E-mail é inválido.", message.Show("pt-BR"));
+   }
+
+   [Fact]
+   public void AddVariableTranslation_FirstTranslationExists_ShouldPopulateLegacyVariablesCollection()
+   {
+      var message = new TestMessage(MessageType.Information);
+
+      message.AddVariable("pt-BR", "status", "Ativa");
+      Assert.Single(message.Variables);
+
+      // Second translation should not duplicate legacy collection
+      message.AddVariable("pt-BR", "status", "Ativo");
+
+      // Ensures only one item was added to the fallback list
+      Assert.Single(message.Variables); 
+      Assert.Contains(message.Variables, v => v.Name == "status" && v.Value == "Ativo");
+   }
+
+   [Fact]
+   public void TranslateTo_WhenInformExistingLanguage_ShouldTranslateCorrectly()
+   {
+      var templates = new Dictionary<string, string>
+      {
+         { "en-US", "User {user} set {fieldName} to {value}." },
+         { "pt-BR", "Usuário {user} alterou {fieldName} para {value}." }
+      };
+
+      // 1. Mixing legacy fixed value variables
+      var message = new TestMessage(MessageType.Information, "AUDIT_LOG", templates);
+      message.AddVariable("en-US", "fieldName", "Birth Date");
+      message.AddVariable("en-US", "user", "Admin");
+      message.AddVariable("en-US", "value", "2026-01-01");
+
+      message.AddVariable("pt-BR", "user", "Administrador");
+      message.AddVariable("pt-BR", "fieldName", "Data de Nascimento");
+      message.AddVariable("pt-BR", "value", "01/01/2026");
+
+      //before translation message should be in default language (en-US)
+      Assert.Equal("User {user} set {fieldName} to {value}.", message.Text);
+      Assert.Equal("User Admin set Birth Date to 2026-01-01.", message.Show());
+
+      message.TranslateTo("pt-BR");
+
+      //after translation message should be in the new language (pt-BR)
+      Assert.Equal("Usuário {user} alterou {fieldName} para {value}.", message.Text);
+      Assert.Equal("Usuário Administrador alterou Data de Nascimento para 01/01/2026.", message.Show());
+   }
+
+   [Fact]
+   public void AddTextTranslation_ShouldAddAndResolveIndividualTemplates()
+   {
+      var message = new TestMessage(MessageType.Error);
+      message.Code = "INCREMENTAL_TEST";
+
+      message.AddTextTranslation("en-US", "Static text in English.");
+      message.AddTextTranslation("pt-BR", "Texto estático em Português.");
+
+      Assert.Equal("Static text in English.", message.Show("en-US"));
+      Assert.Equal("Texto estático em Português.", message.Show("pt-BR"));
+   }
+
+   [Fact]
+   public void AddTextTranslation_WhenFirstLanguageIsNotEnglish_ShouldUpdateLanguage()
+   {
+      var templates = new Dictionary<string, string>
+      {
+         { "pt-BR", "Mensagem em português." },
+         { "en-US", "Message in English" },
+      };
+
+      var message = new TestMessage(MessageType.Warning, "CODE", templates);
+
+      Assert.Equal("pt-BR", message.Language);
+   }
+
+   [Fact]
+   public void AddTextTranslation_WhenAddExistingLanguage_ShouldUpdateText()
+   {
+      var templates = new Dictionary<string, string>
+      {
+         { "pt-BR", "Mensagem em português." },
+         { "en-US", "Message in English" },
+      };
+
+      var message = new TestMessage(MessageType.Warning, "CODE", templates);
+      message.AddTextTranslation("pt-BR", "Mensagem atualizada em português.");
+
+      Assert.Equal("pt-BR", message.Language);
+      Assert.Equal("Mensagem atualizada em português.", message.Text);
+      Assert.Equal("Mensagem atualizada em português.", message.Show());
+   }
+
    [Theory]
    // Testing template placeholder syntax {var} and [var] for exact language matches
    [InlineData("en-US", "The field Birth Date must be today.")]
@@ -25,17 +144,12 @@ public class MessageMultilingualTests
       var templates = new Dictionary<string, string>
       {
          { "en-US", "The field {fieldName} must be today." },
-         { "pt-BR", "O campo {fieldName} deve ser a data de hoje." }
-      };
-
-      var variableTranslations = new Dictionary<string, string>
-      {
-         { "en-US", "Birth Date" },
-         { "pt-BR", "Data de Nascimento" }
+         { "pt-BR", "O campo [fieldName] deve ser a data de hoje." }
       };
 
       var message = new TestMessage(MessageType.Error, "DATETIME_IS_TODAY", templates);
-      message.AddVariableTranslation("fieldName", variableTranslations);
+      message.AddVariable("en-US", "fieldName", "Birth Date");
+      message.AddVariable("pt-BR", "fieldName", "Data de Nascimento");
 
       var result = message.Show(language);
 
@@ -54,14 +168,9 @@ public class MessageMultilingualTests
          { "pt-BR", "O campo {fieldName} deve ser a data de hoje." }
       };
 
-      var variableTranslations = new Dictionary<string, string>
-      {
-         { "en-US", "Birth Date" },
-         { "pt-BR", "Data de Nascimento" }
-      };
-
       var message = new TestMessage(MessageType.Error, "DATETIME_IS_TODAY", templates);
-      message.AddVariableTranslation("fieldName", variableTranslations);
+      message.AddVariable("en-US", "fieldName", "Birth Date");
+      message.AddVariable("pt-BR", "fieldName", "Data de Nascimento");
 
       var result = message.Show(missingLanguage);
 
@@ -77,13 +186,8 @@ public class MessageMultilingualTests
          { "pt-BR", "O campo {fieldName} deve ser a data de hoje." }
       };
 
-      var variableTranslations = new Dictionary<string, string>
-      {
-         { "pt-BR", "Data de Nascimento" }
-      };
-
       var message = new TestMessage(MessageType.Error, "DATETIME_IS_TODAY", templates);
-      message.AddVariableTranslation("fieldName", variableTranslations);
+      message.AddVariable("pt-BR", "fieldName", "Data de Nascimento");
 
       var result = message.Show("fr-FR"); // French requested, but only pt-BR exists
 
@@ -99,36 +203,13 @@ public class MessageMultilingualTests
          { "pt-BR", "O campo {fieldName} deve ser a data de hoje." }
       };
 
-      var variableTranslations = new Dictionary<string, string>
-      {
-         { "en-US", "Birth Date" },
-         { "pt-BR", "Data de Nascimento" }
-      };
-
       var message = new TestMessage(MessageType.Error, "DATETIME_IS_TODAY", templates);
-      message.AddVariableTranslation("fieldName", variableTranslations);
+      message.AddVariable("en-US", "fieldName", "Birth Date");
+      message.AddVariable("pt-BR", "fieldName", "Data de Nascimento");
 
       var result = message.Show(); // Executing standard legacy parameterless method
 
       Assert.Equal("The field Birth Date must be today.", result);
-   }
-
-   [Fact]
-   public void AddVariableMultilingual_ShouldPopulateLegacyVariablesCollectionForBackwardCompatibility()
-   {
-      var templates = new Dictionary<string, string> { { "en-US", "Hello {name}" } };
-      var variableTranslations = new Dictionary<string, string>
-      {
-         { "en-US", "John Doe" },
-         { "pt-BR", "Fulano" }
-      };
-
-      var message = new TestMessage(MessageType.Information, "GREETING", templates);
-
-      message.AddVariableTranslation("name", variableTranslations);
-
-      Assert.NotEmpty(message.Variables);
-      Assert.Contains(message.Variables, v => v.Name == "name" && (v.Value == "John Doe" || v.Value == "Fulano"));
    }
 
    [Fact]
@@ -140,99 +221,20 @@ public class MessageMultilingualTests
          { "pt-BR", "Usuário {user} alterou {fieldName} para {value}." }
       };
 
-      var variableTranslations = new Dictionary<string, string>
-      {
-         { "en-US", "Birth Date" },
-         { "pt-BR", "Data de Nascimento" }
-      };
-
-      var message = new TestMessage(MessageType.Information, "AUDIT_LOG", templates);
-
       // 1. Mixing legacy fixed value variables
+      var message = new TestMessage(MessageType.Information, "AUDIT_LOG", templates);
+      message.AddVariable("fieldName", "Birth Date");
       message.AddVariable("user", "Admin");
       message.AddVariable("value", "2026-01-01");
 
-      // 2. Adding the localizable field variable
-      message.AddVariableTranslation("fieldName", variableTranslations);
+      message.AddVariable("pt-BR", "user", "Administrador");
+      message.AddVariable("pt-BR", "fieldName", "Data de Nascimento");
+      message.AddVariable("pt-BR", "value", "01/01/2026");
 
       string resultEn = message.Show("en-US");
       string resultPt = message.Show("pt-BR");
 
       Assert.Equal("User Admin set Birth Date to 2026-01-01.", resultEn);
-      Assert.Equal("Usuário Admin alterou Data de Nascimento para 2026-01-01.", resultPt);
-   }
-
-   [Fact]
-   public void AddTextTranslation_ShouldAddAndResolveIndividualTemplates()
-   {
-      var message = new TestMessage(MessageType.Error);
-      message.Code = "INCREMENTAL_TEST";
-
-      // Act - Adding translations individually
-      message.AddTextTranslation("en-US", "Static text in English.");
-      message.AddTextTranslation("pt-BR", "Texto estático em Português.");
-
-      // Assert
-      Assert.Equal("Static text in English.", message.Show("en-US"));
-      Assert.Equal("Texto estático em Português.", message.Show("pt-BR"));
-   }
-
-   [Fact]
-   public void AddVariableTranslation_ShouldAddAndResolveIndividualVariableTranslations()
-   {
-      var message = new TestMessage(MessageType.Error);
-      message.Code = "VAR_TEST";
-      message.AddTextTranslation("en-US", "The field {fieldName} is invalid.");
-      message.AddTextTranslation("pt-BR", "O campo {fieldName} é inválido.");
-
-      message.AddVariableTranslation("fieldName", "en-US", "Email");
-      message.AddVariableTranslation("fieldName", "pt-BR", "E-mail");
-
-      Assert.Equal("The field Email is invalid.", message.Show("en-US"));
-      Assert.Equal("O campo E-mail é inválido.", message.Show("pt-BR"));
-   }
-
-   [Fact]
-   public void AddVariableTranslation_FirstTranslation_ShouldPopulateLegacyVariablesCollection()
-   {
-      var message = new TestMessage(MessageType.Information);
-
-      message.AddVariableTranslation("status", "pt-BR", "Ativo");
-      message.AddVariableTranslation("status", "en-US", "Active"); // Second translation should not duplicate legacy collection
-
-      Assert.Single(message.Variables); // Ensures only one item was added to the fallback list
-      Assert.Contains(message.Variables, v => v.Name == "status" && v.Value == "Ativo");
-   }
-
-   [Fact]
-   public void TranslateTo_WhenInformExistingLanguage_ShouldTranslateCorrectly()
-   {
-      var templates = new Dictionary<string, string>
-      {
-         { "en-US", "User {user} set {fieldName} to {value}." },
-         { "pt-BR", "Usuário {user} alterou {fieldName} para {value}." }
-      };
-
-      var variableTranslations = new Dictionary<string, string>
-      {
-         { "en-US", "Birth Date" },
-         { "pt-BR", "Data de Nascimento" }
-      };
-
-      var message = new TestMessage(MessageType.Information, "AUDIT_LOG", templates);
-
-      // 1. Mixing legacy fixed value variables
-      message.AddVariable("user", "Admin");
-      message.AddVariable("value", "2026-01-01");
-
-      // 2. Adding the localizable field variable
-      message.AddVariableTranslation("fieldName", variableTranslations);
-
-      //before translation message should be in default language (en-US)
-      Assert.Equal("User {user} set {fieldName} to {value}.", message.Text);
-
-      message.TranslateTo("pt-BR");
-
-      Assert.Equal("Usuário {user} alterou {fieldName} para {value}.", message.Text);
+      Assert.Equal("Usuário Administrador alterou Data de Nascimento para 01/01/2026.", resultPt);
    }
 }

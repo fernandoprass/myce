@@ -7,61 +7,61 @@ namespace Myce.FluentValidator.ErrorMessages
    {
       private const string FieldName = "fieldName";
 
-      public const string IsTodayErrorCode = nameof(IsTodayErrorCode);
-      public const string IsYesterdayErrorCode = nameof(IsYesterdayErrorCode);
-      public const string IsTomorrowErrorCode = nameof(IsTomorrowErrorCode);
-      public const string IsInTheFutureErrorCode = nameof(IsInTheFutureErrorCode);
-      public const string IsInThePastErrorCode = nameof(IsInThePastErrorCode);
-      public const string IsWeekendErrorCode = nameof(IsWeekendErrorCode);
-      public const string IsWeekdayErrorCode = nameof(IsWeekdayErrorCode);
+      public const string IsTodayError = nameof(IsTodayError);
+      public const string IsYesterdayError = nameof(IsYesterdayError);
+      public const string IsTomorrowError = nameof(IsTomorrowError);
+      public const string IsInTheFutureError = nameof(IsInTheFutureError);
+      public const string IsInThePastError = nameof(IsInThePastError);
+      public const string IsWeekendError = nameof(IsWeekendError);
+      public const string IsWeekdayError = nameof(IsWeekdayError);
 
       // Centralized dictionary structured as: [Code] -> [Language] -> [Template Text]
       private static readonly Dictionary<string, Dictionary<string, string>> _localTranslations = new()
       {
          {
-            IsTodayErrorCode, new()
+            IsTodayError, new()
             {
                { "en-US", "'{fieldName}' must be today." },
                { "pt-BR", "'{fieldName}' deve ser hoje." }
             }
          },
          {
-            IsYesterdayErrorCode, new()
+            IsYesterdayError, new()
             {
                { "en-US", "'{fieldName}' must be yesterday." },
                { "pt-BR", "'{fieldName}' deve ser ontem." }
             }
          },
          {
-            IsTomorrowErrorCode, new()
+            IsTomorrowError, new()
             {
                { "en-US", "'{fieldName}' must be tomorrow." },
                { "pt-BR", "'{fieldName}' deve ser amanhã." }
             }
          },
          {
-            IsInTheFutureErrorCode, new()
+            IsInTheFutureError, new()
             {
                { "en-US", "'{fieldName}' must be a future date." },
                { "pt-BR", "'{fieldName}' deve ser uma data futura." }
             }
          },
          {
-            IsInThePastErrorCode, new()
+            IsInThePastError, new()
             {
                { "en-US", "'{fieldName}' must be a past date." },
                { "pt-BR", "'{fieldName}' deve ser uma data passada." }
             }
          },
          {
-            IsWeekendErrorCode, new()
+            IsWeekendError, new()
             {
                { "en-US", "'{fieldName}' must be a weekend date." },
                { "pt-BR", "'{fieldName}' deve ser uma data de fim de semana." }
             }
          },
          {
-            IsWeekdayErrorCode, new()
+            IsWeekdayError, new()
             {
                { "en-US", "'{fieldName}' must be a weekday." },
                { "pt-BR", "'{fieldName}' deve ser um dia útil." }
@@ -70,25 +70,25 @@ namespace Myce.FluentValidator.ErrorMessages
       };
 
       public static ErrorMessage IsToday(string fieldName)
-         => Create(IsTodayErrorCode, fieldName);
+         => Create(IsTodayError, fieldName);
 
       public static ErrorMessage IsYesterday(string fieldName)
-         => Create(IsYesterdayErrorCode, fieldName);
+         => Create(IsYesterdayError, fieldName);
 
       public static ErrorMessage IsTomorrow(string fieldName)
-         => Create(IsTomorrowErrorCode, fieldName);
+         => Create(IsTomorrowError, fieldName);
 
       public static ErrorMessage IsInTheFuture(string fieldName)
-         => Create(IsInTheFutureErrorCode, fieldName);
+         => Create(IsInTheFutureError, fieldName);
 
       public static ErrorMessage IsInThePast(string fieldName)
-         => Create(IsInThePastErrorCode, fieldName);
+         => Create(IsInThePastError, fieldName);
 
       public static ErrorMessage IsWeekend(string fieldName)
-         => Create(IsWeekendErrorCode, fieldName);
+         => Create(IsWeekendError, fieldName);
 
       public static ErrorMessage IsWeekday(string fieldName)
-         => Create(IsWeekdayErrorCode, fieldName);
+         => Create(IsWeekdayError, fieldName);
 
       private static ErrorMessage Create(string code, string fieldName)
       {

@@ -54,7 +54,7 @@ namespace Myce.FluentValidator.Tests
 
          Assert.False(isValid);
          Assert.Single(validator.Messages);
-         Assert.Equal("'UserEmail' must be equal to False.", validator.Messages[0].Show());
+         Assert.Equal("'UserEmail' must be equal to 'False'.", validator.Messages[0].Show());
       }
 
       [Theory]

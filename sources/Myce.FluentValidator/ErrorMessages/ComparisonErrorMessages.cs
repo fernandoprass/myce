@@ -9,37 +9,37 @@ namespace Myce.FluentValidator.ErrorMessages
       private const string Value = "value";
       private const string ComparisonName = "comparisonName";
 
-      public const string MustBeEqualErrorCode = nameof(MustBeEqualErrorCode);
-      public const string MustNotBeEqualErrorCode = nameof(MustNotBeEqualErrorCode);
-      public const string MustBeEqualToFieldErrorCode = nameof(MustBeEqualToFieldErrorCode);
-      public const string MustNotBeEqualToFieldErrorCode = nameof(MustNotBeEqualToFieldErrorCode);
+      public const string MustBeEqualError = nameof(MustBeEqualError);
+      public const string MustNotBeEqualError = nameof(MustNotBeEqualError);
+      public const string MustBeEqualToFieldError = nameof(MustBeEqualToFieldError);
+      public const string MustNotBeEqualToFieldError = nameof(MustNotBeEqualToFieldError);
 
       // Centralized dictionary structured as: [Code] -> [Language] -> [Template Text]
       private static readonly Dictionary<string, Dictionary<string, string>> _localTranslations = new()
       {
          {
-            MustBeEqualErrorCode, new()
+            MustBeEqualError, new()
             {
-               { "en-US", "'{fieldName}' must be equal to {value}." },
-               { "pt-BR", "'{fieldName}' deve ser igual a {value}." }
+               { "en-US", "'{fieldName}' must be equal to '{value}'." },
+               { "pt-BR", "'{fieldName}' deve ser igual a '{value}'." }
             }
          },
          {
-            MustNotBeEqualErrorCode, new()
+            MustNotBeEqualError, new()
             {
-               { "en-US", "'{fieldName}' must not be equal to {value}." },
-               { "pt-BR", "'{fieldName}' não deve ser igual a {value}." }
+               { "en-US", "'{fieldName}' must not be equal to '{value}'." },
+               { "pt-BR", "'{fieldName}' não deve ser igual a '{value}'." }
             }
          },
          {
-            MustBeEqualToFieldErrorCode, new()
+            MustBeEqualToFieldError, new()
             {
                { "en-US", "'{fieldName}' must be equal to '{comparisonName}'." },
                { "pt-BR", "'{fieldName}' deve ser igual a '{comparisonName}'." }
             }
          },
          {
-            MustNotBeEqualToFieldErrorCode, new()
+            MustNotBeEqualToFieldError, new()
             {
                { "en-US", "'{fieldName}' must not be equal to '{comparisonName}'." },
                { "pt-BR", "'{fieldName}' não deve ser igual a '{comparisonName}'." }
@@ -49,7 +49,7 @@ namespace Myce.FluentValidator.ErrorMessages
 
       public static ErrorMessage MustBeEqual(string fieldName, string value)
       {
-         var error = new ErrorMessage(MustBeEqualErrorCode, _localTranslations[MustBeEqualErrorCode]);
+         var error = new ErrorMessage(MustBeEqualError, _localTranslations[MustBeEqualError]);
          error.AddVariable(FieldName, fieldName);
          error.AddVariable(Value, value);
          return error;
@@ -57,7 +57,7 @@ namespace Myce.FluentValidator.ErrorMessages
 
       public static ErrorMessage MustNotBeEqual(string fieldName, string value)
       {
-         var error = new ErrorMessage(MustNotBeEqualErrorCode, _localTranslations[MustNotBeEqualErrorCode]);
+         var error = new ErrorMessage(MustNotBeEqualError, _localTranslations[MustNotBeEqualError]);
          error.AddVariable(FieldName, fieldName);
          error.AddVariable(Value, value);
          return error;
@@ -65,7 +65,7 @@ namespace Myce.FluentValidator.ErrorMessages
 
       public static ErrorMessage MustBeEqualToField(string fieldName, string comparisonName)
       {
-         var error = new ErrorMessage(MustBeEqualToFieldErrorCode, _localTranslations[MustBeEqualToFieldErrorCode]);
+         var error = new ErrorMessage(MustBeEqualToFieldError, _localTranslations[MustBeEqualToFieldError]);
          error.AddVariable(FieldName, fieldName);
          error.AddVariable(ComparisonName, comparisonName);
          return error;
@@ -73,7 +73,7 @@ namespace Myce.FluentValidator.ErrorMessages
 
       public static ErrorMessage MustNotBeEqualToField(string fieldName, string comparisonName)
       {
-         var error = new ErrorMessage(MustNotBeEqualToFieldErrorCode, _localTranslations[MustNotBeEqualToFieldErrorCode]);
+         var error = new ErrorMessage(MustNotBeEqualToFieldError, _localTranslations[MustNotBeEqualToFieldError]);
          error.AddVariable(FieldName, fieldName);
          error.AddVariable(ComparisonName, comparisonName);
          return error;

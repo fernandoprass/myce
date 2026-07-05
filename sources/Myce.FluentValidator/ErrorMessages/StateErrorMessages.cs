@@ -7,45 +7,45 @@ namespace Myce.FluentValidator.ErrorMessages
    {
       private const string FieldName = "fieldName";
 
-      public const string IsFalseErrorCode = nameof(IsFalseErrorCode);
-      public const string IsTrueErrorCode = nameof(IsTrueErrorCode);
-      public const string IsNullErrorCode = nameof(IsNullErrorCode);
-      public const string IsNotNullErrorCode = nameof(IsNotNullErrorCode);
-      public const string IsRequiredErrorCode = nameof(IsRequiredErrorCode);
+      public const string IsFalseError = nameof(IsFalseError);
+      public const string IsTrueError = nameof(IsTrueError);
+      public const string IsNullError = nameof(IsNullError);
+      public const string IsNotNullError = nameof(IsNotNullError);
+      public const string IsRequiredError = nameof(IsRequiredError);
 
       // Centralized dictionary structured as: [Code] -> [Language] -> [Template Text]
       private static readonly Dictionary<string, Dictionary<string, string>> _localTranslations = new()
       {
          {
-            IsFalseErrorCode, new()
+            IsFalseError, new()
             {
                { "en-US", "'{fieldName}' is false." },
                { "pt-BR", "'{fieldName}' é falso(a)." }
             }
          },
          {
-            IsTrueErrorCode, new()
+            IsTrueError, new()
             {
                { "en-US", "'{fieldName}' is true." },
                { "pt-BR", "'{fieldName}' é verdadeiro(a)." }
             }
          },
          {
-            IsNullErrorCode, new()
+            IsNullError, new()
             {
                { "en-US", "'{fieldName}' is null." },
                { "pt-BR", "'{fieldName}' é nulo(a)." }
             }
          },
          {
-            IsNotNullErrorCode, new()
+            IsNotNullError, new()
             {
                { "en-US", "'{fieldName}' is not null." },
                { "pt-BR", "'{fieldName}' não é nulo(a)." }
             }
          },
          {
-            IsRequiredErrorCode, new()
+            IsRequiredError, new()
             {
                { "en-US", "'{fieldName}' is required." },
                { "pt-BR", "'{fieldName}' é obrigatório(a)." }
@@ -55,35 +55,35 @@ namespace Myce.FluentValidator.ErrorMessages
 
       public static ErrorMessage IsFalse(string fieldName)
       {
-         var error = new ErrorMessage(IsFalseErrorCode, _localTranslations[IsFalseErrorCode]);
+         var error = new ErrorMessage(IsFalseError, _localTranslations[IsFalseError]);
          error.AddVariable(FieldName, fieldName);
          return error;
       }
 
       public static ErrorMessage IsTrue(string fieldName)
       {
-         var error = new ErrorMessage(IsTrueErrorCode, _localTranslations[IsTrueErrorCode]);
+         var error = new ErrorMessage(IsTrueError, _localTranslations[IsTrueError]);
          error.AddVariable(FieldName, fieldName);
          return error;
       }
 
       public static ErrorMessage IsNull(string fieldName)
       {
-         var error = new ErrorMessage(IsNullErrorCode, _localTranslations[IsNullErrorCode]);
+         var error = new ErrorMessage(IsNullError, _localTranslations[IsNullError]);
          error.AddVariable(FieldName, fieldName);
          return error;
       }
 
       public static ErrorMessage IsNotNull(string fieldName)
       {
-         var error = new ErrorMessage(IsNotNullErrorCode, _localTranslations[IsNotNullErrorCode]);
+         var error = new ErrorMessage(IsNotNullError, _localTranslations[IsNotNullError]);
          error.AddVariable(FieldName, fieldName);
          return error;
       }
 
       public static ErrorMessage IsRequired(string fieldName)
       {
-         var error = new ErrorMessage(IsRequiredErrorCode, _localTranslations[IsRequiredErrorCode]);
+         var error = new ErrorMessage(IsRequiredError, _localTranslations[IsRequiredError]);
          error.AddVariable(FieldName, fieldName);
          return error;
       }

@@ -34,8 +34,8 @@ namespace Myce.FluentValidator.Tests
             "'Name' has fewer characters than expected (5).",
             "'Age' must be greater than 18.",
             "'BirthDate' must be today.",
-            "'Status' has an invalid value for PersonStatus.",
-            "'Code' must be equal to EXPECTED."
+            "'Status' has an invalid value for 'PersonStatus'.",
+            "'Code' must be equal to 'EXPECTED'."
          ], messages);
       }
 
@@ -54,8 +54,8 @@ namespace Myce.FluentValidator.Tests
             "'Name' possui menos caracteres que o esperado (5).",
             "'Age' deve ser maior que 18.",
             "'BirthDate' deve ser hoje.",
-            "'Status' possui um valor inválido para PersonStatus.",
-            "'Code' deve ser igual a EXPECTED."
+            "'Status' possui um valor inválido para 'PersonStatus'.",
+            "'Code' deve ser igual a 'EXPECTED'."
          ], messages);
       }
 

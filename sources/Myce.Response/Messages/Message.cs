@@ -1,11 +1,12 @@
 using System.Text;
-using System.Collections.Generic;
 
 namespace Myce.Response.Messages
 {
    public abstract class Message
-   {
-      private static readonly string _defaultLanguage = "en-US";
+   {      
+      private const string DEFAULT_LANGUAGE = "en-US";
+
+      private static string _language = DEFAULT_LANGUAGE;
 
       /// <summary>
       /// List of variables to be used in the message text. Each variable consists of a name and a value, and can be referenced
@@ -18,14 +19,11 @@ namespace Myce.Response.Messages
       private readonly Dictionary<string, string> _translatedTexts = new(StringComparer.OrdinalIgnoreCase);
 
       /// <summary>
-      /// Holds localizable values for specific variables: [VariableName] -> [Language] -> [Localized Value]
+      /// The Default language for messages. Uses TranslateTo() to update.
       /// </summary>
-      private readonly Dictionary<string, Dictionary<string, string>> _translatedVariables = new(StringComparer.OrdinalIgnoreCase);
-
-      /// <summary>
-      /// Default language key used as fallback if requested translation is missing. If not informed, uses en-US.
-      /// </summary>
-      public string Language { get; private set; } = _defaultLanguage;
+      public string Language { 
+         get {return _language; } 
+      }
 
       /// <summary>
       /// Message type that determines the category or severity of the message. This property is set during object initialization and 
@@ -58,7 +56,7 @@ namespace Myce.Response.Messages
       /// <param name="language">The new language</param>
       public void TranslateTo(string language)
       {
-         Language = language;
+         _language = language;
          Text = GetTextTranslated(language);
       }
       
@@ -76,7 +74,7 @@ namespace Myce.Response.Messages
       /// </summary>
       /// <param name="type">The type of the message. Determines the category or severity of the message.</param>
       /// <param name="text">The text content of the message. Cannot be null.</param>
-      public Message(MessageType type, string text) : this(type, string.Empty, text, _defaultLanguage) { }
+      public Message(MessageType type, string text) : this(type, string.Empty, text, _language) { }
 
       /// <summary>
       /// Initializes a new instance of the Message class with the specified message type and text.
@@ -84,7 +82,7 @@ namespace Myce.Response.Messages
       /// <param name="type">The type of the message. Determines the category or severity of the message.</param>
       /// <param name="code">The code that uniquely identifies the message. Cannot be null.</param>
       /// <param name="text">The text content of the message. Cannot be null.</param>
-      public Message(MessageType type, string code, string text) : this(type, code, text, _defaultLanguage) { }
+      public Message(MessageType type, string code, string text) : this(type, code, text, _language) { }
 
       /// <summary>
       /// Initializes a new instance of the Message class with the specified message type, code, and text.
@@ -98,7 +96,7 @@ namespace Myce.Response.Messages
          Type = type;
          Code = code ?? string.Empty;
          Text = text ?? string.Empty;
-         Language = language;
+         _language = language;
       }
 
       /// <summary>
@@ -110,7 +108,7 @@ namespace Myce.Response.Messages
       /// <param name="text">The text content of the message. Cannot be null.</param>
       /// <param name="variables">Variables to associate with the message. Each variable provides 
       /// additional context or data for the message. Cannot be null.</param>
-      public Message(MessageType type, string code, string text, Variable variable) : this(type, code, text, _defaultLanguage)
+      public Message(MessageType type, string code, string text, Variable variable) : this(type, code, text, _language)
       {
          _variables.Add(variable);
       }
@@ -124,7 +122,7 @@ namespace Myce.Response.Messages
       /// <param name="text">The text content of the message. Cannot be null.</param>
       /// <param name="variables">A collection of variables to associate with the message. Each variable provides 
       /// additional context or data for the message. Cannot be null.</param>
-      public Message(MessageType type, string code, string text, IEnumerable<Variable> variables) : this(type, code, text, _defaultLanguage)
+      public Message(MessageType type, string code, string text, IEnumerable<Variable> variables) : this(type, code, text, _language)
       {
          _variables.AddRange(variables);
       }
@@ -134,9 +132,12 @@ namespace Myce.Response.Messages
       /// </summary>
       /// <param name="type">The type of the message.</param>
       /// <param name="code">The unique message code identifier.</param>
-      /// <param name="translations">The dictionary containing language keys and message templates (e.g., Key: "en-US", Value: "Inform Date of birth").</param>
-      public Message(MessageType type, string code, Dictionary<string, string> translations) : this(type, code, _defaultLanguage, translations) { }
-
+      /// <param name="translations">The dictionary containing language keys and message templates (e.g., Key: "en-US", Value: "Inform Date of birth"). 
+      /// The first language present in the dictionary will be assigned as the default language for the message.
+      /// </param>
+      public Message(MessageType type, string code, Dictionary<string, string> translations)
+         : this(type, code, translations?.Keys.FirstOrDefault() ?? DEFAULT_LANGUAGE, translations!)
+      {}
 
       /// <summary>
       /// Initializes a new instance of the Message class supporting multiple languages.
@@ -147,17 +148,17 @@ namespace Myce.Response.Messages
       /// <param name="language">The language culture code (e.g., "en-US", "pt-BR").</param>
       public Message(MessageType type, string code, string language, Dictionary<string, string> translations)
       {
+         if (translations == null || translations.Count == 0)
+         {
+            throw new ArgumentNullException(nameof(translations));
+         }
+
+         _translatedTexts = translations;
+
          Type = type;
          Code = code ?? string.Empty;
-         Language = language;
-         if (translations != null)
-         {
-            foreach (var kvp in translations)
-            {
-               _translatedTexts[kvp.Key] = kvp.Value;
-            }
-         }
-         Text = GetTextTranslated(language);
+         _language = language ?? DEFAULT_LANGUAGE;
+         Text = GetTextTranslated(_language);
       }
 
       /// <summary>
@@ -166,7 +167,7 @@ namespace Myce.Response.Messages
       /// <returns>A string containing the code and text of the object in the format "Code: {Code}, Text: {Text}".</returns>
       public override string ToString()
       {
-         return $"{nameof(Code)}: {Code}, {nameof(Text)}: {Text}, {nameof(Language)}: {Language}";
+         return $"{nameof(Language)}: {Language}, {nameof(Code)}: {Code}, {nameof(Text)}: {Text}";
       }
 
       /// <summary>
@@ -178,104 +179,61 @@ namespace Myce.Response.Messages
       {
          if (string.IsNullOrEmpty(language)) return;
          _translatedTexts[language] = text ?? string.Empty;
+
+         if (language == _language)
+         {
+            Text = text;
+         }
       }
 
       /// <summary>
       /// Add new variable to the massage
       /// </summary>
-      /// <param name="name">The variable name</param>
+      /// <param name="name">The placeholder name of the variable (e.g., "fieldName").</param>
       /// <param name="value">The variable value</param>
-      public void AddVariable(string name, string value)
-      {
-         var variable = new Variable { Name = name, Value = value };
-         _variables.Add(variable);
-      }
+      public void AddVariable(string name, string value) => AddVariable(_language, name, value);
 
       /// <summary>
-      /// Adds or updates a single localized translation value for a specific variable.
+      /// Add new variable to the massage
       /// </summary>
-      /// <param name="variable">The placeholder name of the variable (e.g., "fieldName").</param>
       /// <param name="language">The language culture code (e.g., "en-US", "pt-BR").</param>
-      /// <param name="value">The localized value for the variable.</param>
-      public void AddVariableTranslation(string variable, string language, string value)
+      /// <param name="name">The placeholder name of the variable (e.g., "fieldName").</param>
+      /// <param name="value">The variable value</param>
+      public void AddVariable(string language, string name, string value)
       {
-         if (string.IsNullOrEmpty(variable) || string.IsNullOrEmpty(language)) return;
+         if (string.IsNullOrEmpty(language) || string.IsNullOrEmpty(name)) return;
 
-         if (!_translatedVariables.TryGetValue(variable, out var translations))
+         var existingVariable = _variables.FirstOrDefault(v =>
+            v.Language.Equals(language, StringComparison.OrdinalIgnoreCase) &&
+            v.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+         if (existingVariable != null)
          {
-            translations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            _translatedVariables[variable] = translations;
+            existingVariable.Value = value ?? string.Empty;
          }
-
-         translations[language] = value ?? string.Empty;
-
-         // If this is the first translation being added for this variable, 
-         // sync it with the legacy collection to preserve backward compatibility.
-         if (!_variables.Any(v => string.Equals(v.Name, variable, StringComparison.OrdinalIgnoreCase)))
+         else
          {
-            AddVariable(variable, value ?? string.Empty);
+            var variable = new Variable(language, name, value ?? string.Empty);
+            _variables.Add(variable);
          }
       }
 
       /// <summary>
-      /// Adds a variable whose value changes depending on the requested language (e.g., localized field names).
-      /// </summary>
-      /// <param name="name">The placeholder name used in the template (e.g., "fieldName").</param>
-      /// <param name="translations">A dictionary mapping language culture codes to their respective localized variable values (e.g., Key: "en-US", Value: "Birth Date").</param>
-      public void AddVariableTranslation(string name, Dictionary<string, string> translations)
-      {
-         if (string.IsNullOrEmpty(name) || translations == null) return;
-
-         _translatedVariables[name] = translations;
-
-         // Populates legacy collection with the first available translation to protect backward compatibility
-         var firstValue = translations.Values.FirstOrDefault();
-         if (firstValue != null)
-         {
-            AddVariable(name, firstValue);
-         }
-      }
-
-      /// <summary>
-      /// Show the Text value. If any variable is used, the parse is done
-      /// There are two ways to use variables
-      /// 2. using {}
-      /// 3. using []
+      /// Resolves and returns the formatted message text.
+      /// If any variable is used, the parse is done. There are two ways to use variables:
+      /// 1. using {} => 'Inform a value for {variableName}.'
+      /// 2. using [] => 'Inform a value for [variableName].'
       /// </summary>
       public string Show()
       {
-         if (_translatedTexts.Any())
-         {
-            string targetLanguage = _translatedTexts.ContainsKey(Language)
-               ? Language
-               : _translatedTexts.Keys.FirstOrDefault() ?? string.Empty;
-
-            return Show(targetLanguage);
-         }
-
-         if (string.IsNullOrWhiteSpace(Text))
-            return string.Empty;
-
-         if (_variables == null || !_variables.Any())
-            return Text;
-
-         var builder = new StringBuilder(Text);
-
-         foreach (var variable in _variables)
-         {
-            if (string.IsNullOrEmpty(variable.Name)) continue;
-
-            string valueToReplace = variable.Value ?? string.Empty;
-
-            builder.Replace("{" + variable.Name + "}", valueToReplace);
-            builder.Replace("[" + variable.Name + "]", valueToReplace);
-         }
-
-         return builder.ToString();
+         return Show(_language);
       }
 
       /// <summary>
       /// Resolves and returns the fully translated and formatted message text for the specified language.
+      /// If any variable is used, the parse is done. There are two ways to use variables:
+      /// 1. using {} => 'Inform a value for {variableName}.'
+      /// 2. using [] => 'Inform a value for [variableName].'
       /// </summary>
       /// <param name="language">The target language culture code (e.g., "en-US", "pt-BR").</param>
       /// <returns>The formatted string message.</returns>
@@ -290,10 +248,12 @@ namespace Myce.Response.Messages
          else if (_translatedTexts.TryGetValue(Language, out var fallbackTemplate))
          {
             template = fallbackTemplate;
+            language = Language; // Update language to the fallback language for variable replacement
          }
          else
          {
             template = _translatedTexts.Values.FirstOrDefault() ?? (!string.IsNullOrWhiteSpace(Text) ? Text : $"[{Code}]");
+            language = _translatedTexts.Keys.FirstOrDefault() ?? Language;
          }
 
          if (string.IsNullOrWhiteSpace(template))
@@ -302,82 +262,41 @@ namespace Myce.Response.Messages
          var builder = new StringBuilder(template);
 
          // 2. Process Standard/Fixed variables first
-         foreach (var variable in _variables)
+         string variablesLanguage = GetVariablesLanguage(language);
+
+         foreach (var variable in _variables.Where(v => v.Language == variablesLanguage))
          {
-            if (string.IsNullOrEmpty(variable.Name)) continue;
-
-            // If this variable has a localized version, skip it here to let the localized processor handle it
-            if (_translatedVariables.ContainsKey(variable.Name)) continue;
-
             string valueToReplace = variable.Value ?? string.Empty;
             builder.Replace("{" + variable.Name + "}", valueToReplace);
             builder.Replace("[" + variable.Name + "]", valueToReplace);
-         }
-
-         // 3. Process Multilingual variables with language resolution fallbacks
-         foreach (var kvp in _translatedVariables)
-         {
-            string varName = kvp.Key;
-            if (string.IsNullOrEmpty(varName)) continue;
-
-            var varTranslations = kvp.Value;
-
-            if (!varTranslations.TryGetValue(language, value: out string translatedValue))
-            {
-               if (!varTranslations.TryGetValue(Language, out translatedValue))
-               {
-                  translatedValue = varTranslations.Values.FirstOrDefault() ?? string.Empty;
-               }
-            }
-
-            builder.Replace("{" + varName + "}", translatedValue);
-            builder.Replace("[" + varName + "]", translatedValue);
          }
 
          return builder.ToString();
       }
 
       /// <summary>
-      /// Get the translation for the Text. If language is not informed, get from default language (en-US). If there is no translation for en-US, returns empty string. 
+      /// Get the translation language for the variables. If there is no translation for the informed language, 
+      /// get the translation for the Message language, if it is also doesn´t exists, uses default language (en-US).
       /// </summary>
+      /// <param name="language"></param>
       /// <returns></returns>
-      private string GetTextTranslated()
+      private string GetVariablesLanguage(string language)
       {
-         return GetTextTranslated(Language);
+         return _variables.Any(v => v.Language == language) ? language :
+                _variables.Any(v => v.Language == _language) ? _language : DEFAULT_LANGUAGE;
       }
 
       /// <summary>
-      /// Get the translation for the Text. If language is not informed, get from default language (en-US). If there is no translation for en-US, returns empty string. 
+      /// Get the translation for the Text. If language is not informed, get from default language (en-US). 
+      /// If there is no translation for en-US, returns the current Text. 
       /// </summary>
       /// <param name="language">New language</param>
       /// <returns></returns>
       private string GetTextTranslated(string language)
       {
          return _translatedTexts.TryGetValue(language, out var txt) ? txt :
-                _translatedTexts.TryGetValue(_defaultLanguage, out var defTxt) ? defTxt :
-                string.Empty;
-      }
-
-      /// <summary>
-      /// Get the translation for the Text. If language is not informed, get from default language (en-US). If there is no translation for en-US, returns empty string. 
-      /// </summary>
-      /// <returns></returns>
-      private string GetVariablesTranslated()
-      {
-         return GetVariablesTranslated(Language);
-      }
-
-      /// <summary>
-      /// Get the translation for the Text. If language is not informed, get from default language (en-US). If there is no translation for en-US, returns empty string. 
-      /// </summary>
-      /// <param name="language">New language</param>
-      /// <returns></returns>
-      private string GetVariablesTranslated(string language)
-      {
-         return string.Empty;
-         //return _translatedVariables.TryGetValue(language, out var txt) ? txt :
-         //       _translatedVariables.TryGetValue(_defaultLanguage, out var defTxt) ? defTxt :
-         //       string.Empty;
+                _translatedTexts.TryGetValue(DEFAULT_LANGUAGE, out var defTxt) ? defTxt :
+                Text;
       }
    }
 }
