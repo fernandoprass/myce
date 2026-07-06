@@ -1,4 +1,3 @@
-using Myce.Response.Messages;
 using Xunit;
 
 namespace Myce.FluentValidator.Tests

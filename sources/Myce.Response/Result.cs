@@ -1,7 +1,4 @@
-using Myce.Extensions;
 using Myce.Response.Messages;
-using System.Diagnostics.SymbolStore;
-using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 namespace Myce.Response
@@ -135,15 +132,7 @@ namespace Myce.Response
       }
 
       public static Result Failure(IEnumerable<Message> messages, string language)
-      {      
-         if (!messages.Any(x => x.Type == MessageType.Error))
-         {
-            throw new Exception("To return 'Failure', there must be at least one error message in the list.");
-         }
-         messages.ForEach(m => m.TranslateTo(language));
-
-         return new Result(messages);
-      }
+         => Failure(messages.WithLanguage(language));
 
       /// <summary>
       /// Adds a message to the collection.

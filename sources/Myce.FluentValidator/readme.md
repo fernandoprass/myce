@@ -84,7 +84,7 @@ foreach (var message in validator.Messages)
 }
 ```
 
-`MessageLanguage` includes the built-in `English` (`en-US`) and `PortugueseBrazil` (`pt-BR`) languages.
+`MessageLanguage` is defined by `Myce.FluentValidator` and includes the built-in `English` (`en-US`) and `PortugueseBrazil` (`pt-BR`) languages. When a rule is registered, FluentValidator calls `TranslateTo(...)` on its message, so `Language`, `Text`, and parameterless `Show()` all reflect the validator language.
 
 Additional languages can be registered using their culture code. Register the language once in a shared class and use it both when adding translations and when displaying a message:
 
@@ -96,12 +96,13 @@ public static class ApplicationLanguages
 }
 
 var message = new ErrorMessage("FIELD_REQUIRED", "The field {fieldName} is required.");
-message.AddVariable("fieldName", "Name");
 message.AddTextTranslation(
     ApplicationLanguages.French,
     "Le champ {fieldName} est obligatoire.");
+message.AddVariable(ApplicationLanguages.French, "fieldName", "nom");
 
 string texteFr = message.Show(ApplicationLanguages.French);
+// "Le champ nom est obligatoire."
 ```
 
 Custom languages can also be passed to a validator:
@@ -110,7 +111,17 @@ Custom languages can also be passed to a validator:
 var validator = new FluentValidator<Person>(ApplicationLanguages.French);
 ```
 
-Messages without a translation for the selected language use the message fallback behavior. Add the corresponding translation to custom messages when using a registered language.
+`Register(...)` validates and normalizes language names through `CultureInfo`, then caches them in a thread-safe, case-insensitive registry. Registering the same culture again returns the existing instance.
+
+Registered languages can be resolved from a culture code:
+
+```csharp
+MessageLanguage? language = MessageLanguage.FromCultureCode("pt-BR");
+```
+
+For backward compatibility, `FromCultureCode("en")` resolves to `en-US` and `FromCultureCode("pt")` resolves to `pt-BR`. Prefer full culture names such as `en-US`, `pt-BR`, `es-ES`, and `fr-FR`.
+
+Messages without a template for the selected language use the fallback behavior from Myce.Response. Built-in validator messages currently provide English and Brazilian Portuguese translations. Add text and variable translations to custom messages before using another registered language.
 
 ### 4. Reusable Templates (DRY Principle)
 You can define validation logic for common fields (like Email) and reuse them across different classes.
@@ -284,6 +295,12 @@ String validators:
 | `MinLength` | Validates the minimum length of a string. |
 
 ## Notes
+Version 2.0.3
+- Fixed validator-message translation to use `Message.TranslateTo(...)`, keeping `Language`, `Text`, and `Show()` consistent.
+- Added cached, case-insensitive language registration.
+- Added `MessageLanguage.FromCultureCode(...)` for resolving registered culture codes.
+- Added compatibility mappings from `en` to `en-US` and from `pt` to `pt-BR`.
+
 Version 2.0.0
 - Added multilingual default validation messages.
 - English (`en-US`) remains the default language.

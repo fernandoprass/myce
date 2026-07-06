@@ -1,4 +1,5 @@
-﻿using Myce.Response.Messages;
+﻿using Myce.FluentValidator;
+using Myce.Response.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -308,7 +308,7 @@ namespace Myce.FluentValidator.Tests
 
       private static ErrorMessage GetGenericErrorMessage()
       {
-         return new ErrorMessage { Code = "001", Text = "message" };
+         return new ErrorMessage("001", "message");
       }
    }
 }

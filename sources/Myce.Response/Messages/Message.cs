@@ -11,12 +11,12 @@ namespace Myce.Response.Messages
       /// <summary>
       /// List of variables to be used in the message text. Each variable consists of a name and a value, and can be referenced
       /// </summary>
-      private readonly List<Variable> _variables = [];
+      private List<Variable> _variables = [];
 
       /// <summary>
       /// Holds the multilingual templates for this specific message instance: [Language] -> [Template Text]
       /// </summary>
-      private readonly Dictionary<string, string> _translatedTexts = new(StringComparer.OrdinalIgnoreCase);
+      private Dictionary<string, string> _translatedTexts = new(StringComparer.OrdinalIgnoreCase);
 
       /// <summary>
       /// The Default language for messages. Uses TranslateTo() to update.
@@ -42,12 +42,12 @@ namespace Myce.Response.Messages
       /// to an empty string and can be set during object initialization or later as needed. The text can include placeholders for variables, 
       /// which will be replaced with their corresponding values when the Show() method is called.
       /// </summary>
-      public string Text { get; set; } = string.Empty;
+      public string Text { get; private set; } = string.Empty;
 
       /// <summary>
       /// List of variables associated with the message. Each variable provides additional context or data for the message, and can be referenced in the Text property using placeholders.
       /// </summary>
-      public IReadOnlyCollection<Variable> Variables => _variables.AsReadOnly();
+      public IReadOnlyCollection<Variable> Variables => GetEffectiveVariables();
 
       /// <summary>
       /// Translates the message to the specified language. If the new language doesn't exist, the default language will be used. 
@@ -56,8 +56,29 @@ namespace Myce.Response.Messages
       /// <param name="language">The new language</param>
       public void TranslateTo(string language)
       {
-         _language = language;
-         Text = GetTextTranslated(language);
+         var resolved = ResolveTemplate(language);
+         _language = resolved.Language;
+         Text = resolved.Template;
+      }
+
+      /// <summary>
+      /// Creates an independent copy translated to the requested language.
+      /// The current message is not modified.
+      /// </summary>
+      public Message WithLanguage(string language)
+      {
+         var clone = (Message)MemberwiseClone();
+         clone._translatedTexts = new Dictionary<string, string>(
+            _translatedTexts,
+            StringComparer.OrdinalIgnoreCase);
+         clone._variables = _variables
+            .Select(variable => new Variable(
+               variable.Language,
+               variable.Name,
+               variable.Value))
+            .ToList();
+         clone.TranslateTo(language);
+         return clone;
       }
       
       /// <summary>
@@ -153,21 +174,14 @@ namespace Myce.Response.Messages
             throw new ArgumentNullException(nameof(translations));
          }
 
-         _translatedTexts = translations;
+         _translatedTexts = new Dictionary<string, string>(
+            translations,
+            StringComparer.OrdinalIgnoreCase);
 
          Type = type;
          Code = code ?? string.Empty;
          _language = language ?? DEFAULT_LANGUAGE;
-         Text = GetTextTranslated(_language);
-      }
-
-      /// <summary>
-      /// Returns a string that represents the current object, including the code and text values.
-      /// </summary>
-      /// <returns>A string containing the code and text of the object in the format "Code: {Code}, Text: {Text}".</returns>
-      public override string ToString()
-      {
-         return $"{nameof(Language)}: {Language}, {nameof(Code)}: {Code}, {nameof(Text)}: {Text}";
+         Text = ResolveTemplate(_language).Template;
       }
 
       /// <summary>
@@ -180,7 +194,7 @@ namespace Myce.Response.Messages
          if (string.IsNullOrEmpty(language)) return;
          _translatedTexts[language] = text ?? string.Empty;
 
-         if (language == _language)
+         if (language.Equals(_language, StringComparison.OrdinalIgnoreCase))
          {
             Text = text;
          }
@@ -239,64 +253,123 @@ namespace Myce.Response.Messages
       /// <returns>The formatted string message.</returns>
       public string Show(string language)
       {
-         // 1. Resolve Template with Fallback Strategy
-         string template;
-         if (_translatedTexts.TryGetValue(language, out var exactTemplate))
-         {
-            template = exactTemplate;
-         }
-         else if (_translatedTexts.TryGetValue(Language, out var fallbackTemplate))
-         {
-            template = fallbackTemplate;
-            language = Language; // Update language to the fallback language for variable replacement
-         }
-         else
-         {
-            template = _translatedTexts.Values.FirstOrDefault() ?? (!string.IsNullOrWhiteSpace(Text) ? Text : $"[{Code}]");
-            language = _translatedTexts.Keys.FirstOrDefault() ?? Language;
-         }
-
-         if (string.IsNullOrWhiteSpace(template))
+         var resolved = ResolveTemplate(language);
+         if (string.IsNullOrWhiteSpace(resolved.Template))
             return string.Empty;
 
-         var builder = new StringBuilder(template);
+         var builder = new StringBuilder(resolved.Template);
 
-         // 2. Process Standard/Fixed variables first
-         string variablesLanguage = GetVariablesLanguage(language);
-
-         foreach (var variable in _variables.Where(v => v.Language == variablesLanguage))
+         foreach (var variableName in _variables
+            .Select(variable => variable.Name)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase))
          {
+            var variable = ResolveVariable(variableName, resolved.Language);
+            if (variable == null) continue;
+
             string valueToReplace = variable.Value ?? string.Empty;
-            builder.Replace("{" + variable.Name + "}", valueToReplace);
-            builder.Replace("[" + variable.Name + "]", valueToReplace);
+            builder.Replace("{" + variableName + "}", valueToReplace);
+            builder.Replace("[" + variableName + "]", valueToReplace);
          }
 
          return builder.ToString();
       }
 
       /// <summary>
+      /// Returns a string that represents the current object, including the code and text values.
+      /// </summary>
+      /// <returns>A string containing the code and text of the object in the format "Code: {Code}, Text: {Text}".</returns>
+      public override string ToString()
+      {
+         return $"{nameof(Language)}: {Language}, {nameof(Code)}: {Code}, {nameof(Text)}: {Text}";
+      }
+
+      #region Private Methods
+
+      /// <summary>
       /// Get the translation language for the variables. If there is no translation for the informed language, 
       /// get the translation for the Message language, if it is also doesn´t exists, uses default language (en-US).
       /// </summary>
-      /// <param name="language"></param>
+      /// <param name="language">The target language culture code (e.g., "en-US", "pt-BR").</param>
       /// <returns></returns>
-      private string GetVariablesLanguage(string language)
+      private (string Template, string Language) ResolveTemplate(string language)
       {
-         return _variables.Any(v => v.Language == language) ? language :
-                _variables.Any(v => v.Language == _language) ? _language : DEFAULT_LANGUAGE;
+         if (!string.IsNullOrWhiteSpace(language) &&
+             TryGetTranslation(language, out var requestedTemplate, out var requestedLanguage))
+         {
+            return (requestedTemplate, requestedLanguage);
+         }
+
+         if (TryGetTranslation(_language, out var currentTemplate, out var currentLanguage))
+         {
+            return (currentTemplate, currentLanguage);
+         }
+
+         if (TryGetTranslation(DEFAULT_LANGUAGE, out var defaultTemplate, out var defaultLanguage))
+         {
+            return (defaultTemplate, defaultLanguage);
+         }
+
+         var firstTranslation = _translatedTexts.FirstOrDefault();
+         if (!string.IsNullOrWhiteSpace(firstTranslation.Key))
+         {
+            return (firstTranslation.Value, firstTranslation.Key);
+         }
+
+         return (Text, _language);
       }
 
-      /// <summary>
-      /// Get the translation for the Text. If language is not informed, get from default language (en-US). 
-      /// If there is no translation for en-US, returns the current Text. 
-      /// </summary>
-      /// <param name="language">New language</param>
-      /// <returns></returns>
-      private string GetTextTranslated(string language)
+      private Variable? ResolveVariable(string name, string language)
       {
-         return _translatedTexts.TryGetValue(language, out var txt) ? txt :
-                _translatedTexts.TryGetValue(DEFAULT_LANGUAGE, out var defTxt) ? defTxt :
-                Text;
+         var candidates = new[] { language, _language, DEFAULT_LANGUAGE }
+            .Where(candidate => !string.IsNullOrWhiteSpace(candidate))
+            .Distinct(StringComparer.OrdinalIgnoreCase);
+
+         foreach (var candidate in candidates)
+         {
+            var variable = _variables.FirstOrDefault(item =>
+               item.Name.Equals(name, StringComparison.OrdinalIgnoreCase) &&
+               item.Language.Equals(candidate, StringComparison.OrdinalIgnoreCase));
+
+            if (variable != null) return variable;
+         }
+
+         return _variables.FirstOrDefault(item =>
+            item.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
       }
+
+      private bool TryGetTranslation(
+         string language,
+         out string template,
+         out string resolvedLanguage)
+      {
+         foreach (var translation in _translatedTexts)
+         {
+            if (translation.Key.Equals(language, StringComparison.OrdinalIgnoreCase))
+            {
+               template = translation.Value;
+               resolvedLanguage = translation.Key;
+               return true;
+            }
+         }
+
+         template = string.Empty;
+         resolvedLanguage = string.Empty;
+         return false;
+      }
+
+      private IReadOnlyCollection<Variable> GetEffectiveVariables()
+      {
+         return _variables
+                  .Select(variable => variable.Name)
+                  .Where(name => !string.IsNullOrWhiteSpace(name))
+                  .Distinct(StringComparer.OrdinalIgnoreCase)
+                  .Select(name => ResolveVariable(name, _language))
+                  .Where(variable => variable != null)
+                  .Cast<Variable>()
+                  .ToList()
+                  .AsReadOnly();
+      }
+      #endregion
    }
 }

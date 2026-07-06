@@ -1,3 +1,4 @@
+using Myce.FluentValidator;
 using Myce.FluentValidator.ErrorMessages;
 using Myce.Response.Messages;
 using System.ComponentModel.DataAnnotations;

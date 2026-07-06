@@ -17,7 +17,7 @@ public class TestMessage : Message
 public class MessageMultilingualTests
 {
    [Fact]
-   public void AddVariableMultilingual_ShouldPopulateLegacyVariablesCollectionForBackwardCompatibility()
+   public void Variables_ShouldExposeOnlyValuesForCurrentLanguage()
    {
       var templates = new Dictionary<string, string> { { "en-US", "Hello {name}" } };
 
@@ -28,7 +28,7 @@ public class MessageMultilingualTests
 
       Assert.NotEmpty(message.Variables);
       Assert.Contains(message.Variables, v => v.Name == "name" && v.Value == "John Doe");
-      Assert.Contains(message.Variables, v => v.Name == "name" && v.Value == "Fulano");
+      Assert.DoesNotContain(message.Variables, v => v.Name == "name" && v.Value == "Fulano");
    }
 
    [Fact]
@@ -235,5 +235,149 @@ public class MessageMultilingualTests
 
       Assert.Equal("User Admin set Birth Date to 2026-01-01.", resultEn);
       Assert.Equal("Usuário Administrador alterou Data de Nascimento para 01/01/2026.", resultPt);
+   }
+
+   [Fact]
+   public void TranslateTo_WithMissingLanguage_ShouldKeepLanguageAndTextConsistent()
+   {
+      var templates = new Dictionary<string, string>
+      {
+         { "en-US", "The field {fieldName} is required." },
+         { "pt-BR", "O campo {fieldName} é obrigatório." }
+      };
+
+      var message = new TestMessage(MessageType.Error, "REQUIRED", templates);
+      message.AddVariable("en-US", "fieldName", "Name");
+
+      message.TranslateTo("fr-FR");
+
+      Assert.Equal("en-US", message.Language);
+      Assert.Equal("The field {fieldName} is required.", message.Text);
+      Assert.Equal("The field Name is required.", message.Show());
+   }
+
+   [Fact]
+   public void Show_WithPartiallyTranslatedVariables_ShouldFallbackPerVariable()
+   {
+      var templates = new Dictionary<string, string>
+      {
+         { "en-US", "{fieldName} must be greater than {minimum}." },
+         { "pt-BR", "{fieldName} deve ser maior que {minimum}." }
+      };
+
+      var message = new TestMessage(MessageType.Error, "MINIMUM", templates);
+      message.AddVariable("en-US", "fieldName", "Age");
+      message.AddVariable("en-US", "minimum", "18");
+      message.AddVariable("pt-BR", "fieldName", "Idade");
+
+      Assert.Equal("Idade deve ser maior que 18.", message.Show("pt-BR"));
+   }
+
+   [Fact]
+   public void Show_ShouldMatchTemplateAndVariablesIgnoringCultureCodeCasing()
+   {
+      var templates = new Dictionary<string, string>
+      {
+         { "pt-BR", "O campo {fieldName} é obrigatório." }
+      };
+
+      var message = new TestMessage(MessageType.Error, "REQUIRED", templates);
+      message.AddVariable("PT-br", "fieldName", "Nome");
+
+      Assert.Equal("O campo Nome é obrigatório.", message.Show("pt-br"));
+   }
+
+   [Fact]
+   public void Constructor_ShouldCopyTranslationsOwnedByCaller()
+   {
+      var templates = new Dictionary<string, string>
+      {
+         { "en-US", "Original text." }
+      };
+
+      var message = new TestMessage(MessageType.Information, "CODE", templates);
+      templates["en-US"] = "Changed externally.";
+      templates["pt-BR"] = "Adicionada externamente.";
+
+      Assert.Equal("Original text.", message.Show("en-US"));
+      Assert.Equal("Original text.", message.Show("pt-BR"));
+   }
+
+   [Fact]
+   public void Serialization_ShouldIncludeOnlyEffectiveVariablesForCurrentLanguage()
+   {
+      var templates = new Dictionary<string, string>
+      {
+         { "en-US", "{fieldName} must be greater than {minimum}." },
+         { "pt-BR", "{fieldName} deve ser maior que {minimum}." }
+      };
+
+      var message = new TestMessage(MessageType.Error, "MINIMUM", templates);
+      message.AddVariable("en-US", "fieldName", "Age");
+      message.AddVariable("en-US", "minimum", "18");
+      message.AddVariable("pt-BR", "fieldName", "Idade");
+      message.TranslateTo("pt-BR");
+
+      using var document = System.Text.Json.JsonDocument.Parse(
+         System.Text.Json.JsonSerializer.Serialize(message));
+      var variables = document.RootElement.GetProperty("Variables");
+
+      Assert.Equal(2, variables.GetArrayLength());
+      Assert.Contains(
+         variables.EnumerateArray(),
+         variable => variable.GetProperty("Name").GetString() == "fieldName" &&
+                     variable.GetProperty("Language").GetString() == "pt-BR");
+      Assert.Contains(
+         variables.EnumerateArray(),
+         variable => variable.GetProperty("Name").GetString() == "minimum" &&
+                     variable.GetProperty("Language").GetString() == "en-US");
+   }
+
+   [Fact]
+   public void WithLanguage_ShouldTranslateCopyWithoutMutatingOriginalMessage()
+   {
+      var templates = new Dictionary<string, string>
+      {
+         { "en-US", "The field {fieldName} is required." },
+         { "pt-BR", "O campo {fieldName} é obrigatório." }
+      };
+
+      var original = new TestMessage(MessageType.Error, "REQUIRED", templates);
+      original.AddVariable("en-US", "fieldName", "Name");
+      original.AddVariable("pt-BR", "fieldName", "Nome");
+
+      var translated = original.WithLanguage("pt-BR");
+      translated.Variables.Single().Value = "Nome alterado";
+
+      Assert.NotSame(original, translated);
+      Assert.Equal("en-US", original.Language);
+      Assert.Equal("The field Name is required.", original.Show());
+      Assert.Equal("pt-BR", translated.Language);
+      Assert.Equal("O campo Nome alterado é obrigatório.", translated.Show());
+      Assert.Equal("Name", original.Variables.Single().Value);
+   }
+
+   [Fact]
+   public void EnumerableWithLanguage_ShouldCloneEveryMessage()
+   {
+      var templates = new Dictionary<string, string>
+      {
+         { "en-US", "Required." },
+         { "pt-BR", "Obrigatório." }
+      };
+
+      var originals = new Message[]
+      {
+         new ErrorMessage("REQUIRED", templates),
+         new WarningMessage("WARNING", templates)
+      };
+
+      var translated = originals.WithLanguage("pt-BR");
+
+      Assert.All(translated, message => Assert.Equal("pt-BR", message.Language));
+      Assert.Equal("en-US", originals[0].Language);
+      Assert.Equal("en-US", originals[1].Language);
+      Assert.NotSame(originals[0], translated.ElementAt(0));
+      Assert.NotSame(originals[1], translated.ElementAt(1));
    }
 }

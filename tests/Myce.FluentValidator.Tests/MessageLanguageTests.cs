@@ -1,5 +1,4 @@
-﻿using Myce.Response.Messages;
-using Xunit;
+﻿using Xunit;
 
 namespace Myce.FluentValidator.Tests;
 
@@ -43,7 +42,8 @@ public class MessageLanguageTests
    [InlineData(null)]
    [InlineData("")]
    [InlineData("   ")]
-   [InlineData("fr-FR")] // Not registered yet
+   [InlineData("de-DE")] // Not registered
+   [InlineData("not_a_valid_culture!")]
    public void FromCultureCode_WithInvalidOrUnregisteredStrings_ShouldReturnNull(string? cultureCode)
    {
       var result = MessageLanguage.FromCultureCode(cultureCode!);
@@ -76,6 +76,30 @@ public class MessageLanguageTests
       Assert.Same(firstRegistration, secondRegistration);
    }
 
+   [Fact]
+   public void Register_ShouldNormalizeCultureCodeUsingCultureInfo()
+   {
+      var language = MessageLanguage.Register("  IT-it  ");
+
+      Assert.Equal("it-IT", language.ToString());
+      Assert.Same(language, MessageLanguage.FromCultureCode("it-it"));
+   }
+
+   [Fact]
+   public void Register_WhenCalledConcurrently_ShouldReturnOneSharedInstance()
+   {
+      var languages =
+         new System.Collections.Concurrent.ConcurrentBag<MessageLanguage>();
+
+      Parallel.For(
+         0,
+         100,
+         _ => languages.Add(MessageLanguage.Register("nl-NL")));
+
+      var first = languages.First();
+      Assert.All(languages, language => Assert.Same(first, language));
+   }
+
    [Theory]
    [InlineData(null)]
    [InlineData("")]
@@ -83,6 +107,13 @@ public class MessageLanguageTests
    public void Register_WithNullOrEmptyCulture_ShouldThrowArgumentException(string? invalidCode)
    {
       Assert.Throws<ArgumentException>(() => MessageLanguage.Register(invalidCode!));
+   }
+
+   [Fact]
+   public void Register_WithUnsupportedCulture_ShouldThrowCultureNotFoundException()
+   {
+      Assert.Throws<System.Globalization.CultureNotFoundException>(
+         () => MessageLanguage.Register("not_a_valid_culture!"));
    }
 
    [Fact]
