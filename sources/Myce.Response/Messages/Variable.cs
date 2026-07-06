@@ -11,8 +11,11 @@ namespace Myce.Response.Messages
       public Variable(string name, string value) : this(_defaultLanguageKey, name, value) { }
 
       public Variable(string language, string name, string value)
+         : this(Internationalization.CultureName.Get(language), name, value) { }
+
+      public Variable(CultureInfo culture, string name, string value)
       {
-         Language = language;
+         Language = culture?.Name ?? throw new ArgumentNullException(nameof(culture));
          Name = name;
          Value = value;
       }

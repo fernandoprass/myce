@@ -17,6 +17,97 @@ public class TestMessage : Message
 public class MessageMultilingualTests
 {
    [Fact]
+   public void FluentLocalizationApi_ShouldConfigureAndTranslateMessage()
+   {
+      var message = new ErrorMessage(
+         "FIELD_REQUIRED",
+         "The field {fieldName} is required.");
+
+      message
+         .AddTranslation("pt-BR", "O campo {fieldName} é obrigatório.")
+         .AddVariable("fieldName", "Name")
+         .AddVariableTranslation("fieldName", "pt-BR", "Nome");
+
+      var translated = message.WithLanguage("pt-BR");
+
+      Assert.Equal("O campo {fieldName} é obrigatório.", translated.Text);
+      Assert.Equal("O campo Nome é obrigatório.", translated.Show());
+      Assert.Equal("The field Name is required.", message.Show());
+   }
+
+   [Fact]
+   public void WithLanguage_ShouldAcceptCultureInfoAndPreserveMessageContract()
+   {
+      var message = new ErrorMessage(
+         "FIELD_REQUIRED",
+         "The field {fieldName} is required.");
+
+      message
+         .AddTranslation(
+            new System.Globalization.CultureInfo("pt-BR"),
+            "O campo {fieldName} é obrigatório.")
+         .AddVariable("fieldName", "Name")
+         .AddVariableTranslation(
+            "fieldName",
+            new System.Globalization.CultureInfo("pt-BR"),
+            "Nome");
+
+      var translated = message.WithLanguage(
+         new System.Globalization.CultureInfo("pt-BR"));
+
+      Assert.Equal(MessageType.Error, translated.Type);
+      Assert.Equal("FIELD_REQUIRED", translated.Code);
+      Assert.Equal("O campo {fieldName} é obrigatório.", translated.Text);
+      Assert.Single(translated.Variables);
+      Assert.Equal("Nome", translated.Variables.Single().Value);
+   }
+
+   [Fact]
+   public void Constructors_ShouldAcceptCultureInfo()
+   {
+      var culture = System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+      var variable = new Variable(culture, "name", "João");
+      var message = new ErrorMessage(
+         "GREETING",
+         "Olá {name}.",
+         culture);
+
+      message.AddVariable(variable.Language, variable.Name, variable.Value);
+
+      Assert.Equal("pt-BR", message.Language);
+      Assert.Equal("Olá João.", message.Show());
+   }
+
+   [Fact]
+   public void TranslationConstructor_ShouldAcceptCultureInfo()
+   {
+      var translations = new Dictionary<string, string>
+      {
+         ["en-US"] = "English.",
+         ["pt-BR"] = "Português."
+      };
+
+      var message = new InformationMessage(
+         "CODE",
+         System.Globalization.CultureInfo.GetCultureInfo("pt-BR"),
+         translations);
+
+      Assert.Equal("pt-BR", message.Language);
+      Assert.Equal("Português.", message.Text);
+   }
+
+   [Fact]
+   public void AddTranslation_WithInvalidCulture_ShouldThrowCultureNotFoundException()
+   {
+      var message = new ErrorMessage("CODE", "Default text.");
+
+      Assert.Throws<System.Globalization.CultureNotFoundException>(
+         () => message.AddTranslation(
+            "not_a_valid_culture!",
+            "Invalid translation."));
+   }
+
+   [Fact]
    public void Variables_ShouldExposeOnlyValuesForCurrentLanguage()
    {
       var templates = new Dictionary<string, string> { { "en-US", "Hello {name}" } };
@@ -35,8 +126,8 @@ public class MessageMultilingualTests
    public void AddVariableTranslation_ShouldAddAndResolveIndividualVariableTranslations()
    {
       var message = new TestMessage(MessageType.Error);
-      message.AddTextTranslation("en-US", "The field {fieldName} is invalid.");
-      message.AddTextTranslation("pt-BR", "O campo {fieldName} é inválido.");
+      message.AddTranslation("en-US", "The field {fieldName} is invalid.");
+      message.AddTranslation("pt-BR", "O campo {fieldName} é inválido.");
 
       message.AddVariable("en-US", "fieldName", "Email");
       message.AddVariable("pt-BR", "fieldName", "E-mail");
@@ -92,19 +183,19 @@ public class MessageMultilingualTests
    }
 
    [Fact]
-   public void AddTextTranslation_ShouldAddAndResolveIndividualTemplates()
+   public void AddTranslation_ShouldAddAndResolveIndividualTemplates()
    {
       var message = new TestMessage(MessageType.Error);
 
-      message.AddTextTranslation("en-US", "Static text in English.");
-      message.AddTextTranslation("pt-BR", "Texto estático em Português.");
+      message.AddTranslation("en-US", "Static text in English.");
+      message.AddTranslation("pt-BR", "Texto estático em Português.");
 
       Assert.Equal("Static text in English.", message.Show("en-US"));
       Assert.Equal("Texto estático em Português.", message.Show("pt-BR"));
    }
 
    [Fact]
-   public void AddTextTranslation_WhenFirstLanguageIsNotEnglish_ShouldUpdateLanguage()
+   public void AddTranslation_WhenFirstLanguageIsNotEnglish_ShouldUpdateLanguage()
    {
       var templates = new Dictionary<string, string>
       {
@@ -118,7 +209,7 @@ public class MessageMultilingualTests
    }
 
    [Fact]
-   public void AddTextTranslation_WhenAddExistingLanguage_ShouldUpdateText()
+   public void AddTranslation_WhenAddExistingLanguage_ShouldUpdateText()
    {
       var templates = new Dictionary<string, string>
       {
@@ -127,7 +218,7 @@ public class MessageMultilingualTests
       };
 
       var message = new TestMessage(MessageType.Warning, "CODE", templates);
-      message.AddTextTranslation("pt-BR", "Mensagem atualizada em português.");
+      message.AddTranslation("pt-BR", "Mensagem atualizada em português.");
 
       Assert.Equal("pt-BR", message.Language);
       Assert.Equal("Mensagem atualizada em português.", message.Text);
@@ -379,5 +470,58 @@ public class MessageMultilingualTests
       Assert.Equal("en-US", originals[1].Language);
       Assert.NotSame(originals[0], translated.ElementAt(0));
       Assert.NotSame(originals[1], translated.ElementAt(1));
+   }
+
+   [Fact]
+   public void TranslateTo_WithCultureInfo_ShouldUpdateCurrentLocalization()
+   {
+      var message = new ErrorMessage("CODE", "English.");
+      message.AddTranslation("pt-BR", "Português.");
+
+      message.TranslateTo(
+         System.Globalization.CultureInfo.GetCultureInfo("pt-BR"));
+
+      Assert.Equal("pt-BR", message.Language);
+      Assert.Equal("Português.", message.Text);
+   }
+
+   [Fact]
+   public void Show_WithCultureInfo_ShouldRenderWithoutChangingCurrentLanguage()
+   {
+      var message = new ErrorMessage("CODE", "Hello {name}.")
+         .AddTranslation("pt-BR", "Olá {name}.")
+         .AddVariable("name", "John")
+         .AddVariableTranslation("name", "pt-BR", "João");
+
+      string result = message.Show(
+         System.Globalization.CultureInfo.GetCultureInfo("pt-BR"));
+
+      Assert.Equal("Olá João.", result);
+      Assert.Equal("en-US", message.Language);
+   }
+
+   [Fact]
+   public void EnumerableWithLanguage_WithCultureInfo_ShouldLocalizeCopies()
+   {
+      var message = new InformationMessage("CODE", "English.");
+      message.AddTranslation("pt-BR", "Português.");
+      var originals = new[] { message };
+
+      var translated = originals.WithLanguage(
+         System.Globalization.CultureInfo.GetCultureInfo("pt-BR"));
+
+      Assert.IsType<InformationMessage>(translated.Single());
+      Assert.Equal("pt-BR", translated.Single().Language);
+      Assert.Equal("en-US", originals.Single().Language);
+   }
+
+   [Fact]
+   public void CultureNames_ShouldBeNormalized()
+   {
+      var message = new ErrorMessage("CODE", "English.");
+
+      message.AddTranslation("PT-br", "Português.");
+
+      Assert.Equal("pt-BR", message.WithLanguage("pt-br").Language);
    }
 }

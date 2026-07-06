@@ -71,6 +71,43 @@ return Result.Failure(message);
 
 ## Multilingual Messages
 
+`Message` remains the main class used by consumers:
+
+```csharp
+var message = new ErrorMessage(
+    "FIELD_REQUIRED",
+    "The field {fieldName} is required.");
+
+var portuguese = CultureInfo.GetCultureInfo("pt-BR");
+
+message
+    .AddTranslation(portuguese, "O campo {fieldName} é obrigatório.")
+    .AddVariable("fieldName", "Name")
+    .AddVariableTranslation("fieldName", portuguese, "Nome");
+
+Message translated = message.WithLanguage(portuguese);
+
+Console.WriteLine(translated.Text);   // "O campo {fieldName} é obrigatório."
+Console.WriteLine(translated.Show()); // "O campo Nome é obrigatório."
+```
+
+`WithLanguage(...)` creates a localized copy and does not modify the original message. `CultureInfo` is the primary type used by every localization API and internally by the localizer:
+
+```csharp
+Message translated = message.WithLanguage(
+    CultureInfo.GetCultureInfo("pt-BR"));
+```
+
+Culture names are validated, normalized, and cached.
+
+String overloads remain available for values arriving from HTTP headers,
+configuration, and frontend requests. They convert the value to `CultureInfo`
+and delegate to the corresponding strongly typed overload:
+
+```csharp
+Message translated = message.WithLanguage("pt-BR");
+```
+
 ### Bulk Initialization
 
 The first entry in the translation dictionary becomes the message's initial language.
@@ -99,11 +136,11 @@ Calling `Show(language)` renders that language without changing the message's cu
 var message = new ErrorMessage();
 message.Code = "INVALID_FIELD";
 
-message.AddTextTranslation("en-US", "The {fieldName} is invalid.");
-message.AddTextTranslation("pt-BR", "O {fieldName} é inválido.");
+message.AddTranslation("en-US", "The {fieldName} is invalid.");
+message.AddTranslation("pt-BR", "O {fieldName} é inválido.");
 
-message.AddVariable("en-US", "fieldName", "Email Address");
-message.AddVariable("pt-BR", "fieldName", "Endereço de E-mail");
+message.AddVariable("fieldName", "Email Address");
+message.AddVariableTranslation("fieldName", "pt-BR", "Endereço de E-mail");
 
 string result = message.Show("pt-BR");
 // "O Endereço de E-mail é inválido."
@@ -113,15 +150,17 @@ Adding the same language and variable-name pair again updates its value instead 
 
 ### Changing the Current Language
 
-`TranslateTo(language)` updates both `Language` and `Text`. Parameterless `Show()` then renders the message using that language and its corresponding variables.
+Prefer `WithLanguage(language)`, which returns an independent localized copy:
 
 ```csharp
-message.TranslateTo("pt-BR");
+Message translated = message.WithLanguage("pt-BR");
 
-Console.WriteLine(message.Language); // "pt-BR"
-Console.WriteLine(message.Text);     // "O {fieldName} é inválido."
-Console.WriteLine(message.Show());   // "O Endereço de E-mail é inválido."
+Console.WriteLine(translated.Language); // "pt-BR"
+Console.WriteLine(translated.Text);     // "O {fieldName} é inválido."
+Console.WriteLine(translated.Show());   // "O Endereço de E-mail é inválido."
 ```
+
+`TranslateTo(language)` remains available when intentionally changing the existing message instance.
 
 If the requested template is unavailable, rendering falls back to the message's current language and then to the first available template. Standard messages and variables default to `en-US`.
 
@@ -170,6 +209,11 @@ In addition to the base properties:
 - **Type**: Information, warning, or error.
 - **Variables**: Read-only collection of language-specific placeholder values.
 
+`Message` remains the public entry point. Internally, translation storage,
+culture resolution, fallback, and formatting are handled separately by the
+message catalog and localizer. Localized copies contain an independent catalog,
+so changing their variables does not affect the source message.
+
 ### Message Types
 
 1. **InformationMessage**: Non-critical status information.
@@ -203,7 +247,7 @@ Version 1.5.2
 
 - Fixed multilingual template and variable resolution.
 - Added culture-specific variables through `AddVariable(language, name, value)`.
-- Added `TranslateTo(language)` to update the current language and text.
+- Added `TranslateTo(language)` and `TranslateTo(culture)` to update the current language and text.
 - Added `Result.Failure(messages, language)` to translate returned messages.
 - Updated title fallback to prefer the first formatted error message.
 

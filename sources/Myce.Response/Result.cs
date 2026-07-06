@@ -1,4 +1,6 @@
 using Myce.Response.Messages;
+using Myce.Response.Messages.Internationalization;
+using System.Globalization;
 using System.Text.Json.Serialization;
 
 namespace Myce.Response
@@ -132,7 +134,14 @@ namespace Myce.Response
       }
 
       public static Result Failure(IEnumerable<Message> messages, string language)
-         => Failure(messages.WithLanguage(language));
+         => Failure(
+            messages,
+            CultureName.Get(language));
+
+      public static Result Failure(
+         IEnumerable<Message> messages,
+         CultureInfo culture)
+         => Failure(messages.WithLanguage(culture));
 
       /// <summary>
       /// Adds a message to the collection.

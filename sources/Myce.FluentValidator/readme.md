@@ -84,7 +84,7 @@ foreach (var message in validator.Messages)
 }
 ```
 
-`MessageLanguage` is defined by `Myce.FluentValidator` and includes the built-in `English` (`en-US`) and `PortugueseBrazil` (`pt-BR`) languages. When a rule is registered, FluentValidator calls `TranslateTo(...)` on its message, so `Language`, `Text`, and parameterless `Show()` all reflect the validator language.
+`MessageLanguage` is defined by `Myce.FluentValidator` and includes the built-in `English` (`en-US`) and `PortugueseBrazil` (`pt-BR`) languages. When a rule is registered, FluentValidator creates a localized message with `WithLanguage(...)`, so the original message is not mutated.
 
 Additional languages can be registered using their culture code. Register the language once in a shared class and use it both when adding translations and when displaying a message:
 
@@ -96,7 +96,7 @@ public static class ApplicationLanguages
 }
 
 var message = new ErrorMessage("FIELD_REQUIRED", "The field {fieldName} is required.");
-message.AddTextTranslation(
+message.AddTranslation(
     ApplicationLanguages.French,
     "Le champ {fieldName} est obligatoire.");
 message.AddVariable(ApplicationLanguages.French, "fieldName", "nom");
@@ -112,6 +112,15 @@ var validator = new FluentValidator<Person>(ApplicationLanguages.French);
 ```
 
 `Register(...)` validates and normalizes language names through `CultureInfo`, then caches them in a thread-safe, case-insensitive registry. Registering the same culture again returns the existing instance.
+
+`CultureInfo` can be used directly and is exposed by each registered language:
+
+```csharp
+var frenchCulture = CultureInfo.GetCultureInfo("fr-FR");
+MessageLanguage french = MessageLanguage.Register(frenchCulture);
+
+CultureInfo culture = french.Culture;
+```
 
 Registered languages can be resolved from a culture code:
 
@@ -296,7 +305,7 @@ String validators:
 
 ## Notes
 Version 2.0.3
-- Fixed validator-message translation to use `Message.TranslateTo(...)`, keeping `Language`, `Text`, and `Show()` consistent.
+- Validator messages are localized with `Message.WithLanguage(...)`, preserving the original message.
 - Added cached, case-insensitive language registration.
 - Added `MessageLanguage.FromCultureCode(...)` for resolving registered culture codes.
 - Added compatibility mappings from `en` to `en-US` and from `pt` to `pt-BR`.

@@ -86,6 +86,28 @@ public class MessageLanguageTests
    }
 
    [Fact]
+   public void Register_WithCultureInfo_ShouldExposeCanonicalCulture()
+   {
+      var culture = System.Globalization.CultureInfo.GetCultureInfo("fr-FR");
+
+      var language = MessageLanguage.Register(culture);
+
+      Assert.Same(culture, language.Culture);
+      Assert.Equal("fr-FR", language.Culture.Name);
+   }
+
+   [Fact]
+   public void FromCulture_ShouldResolveRegisteredLanguage()
+   {
+      var culture = System.Globalization.CultureInfo.GetCultureInfo("es-ES");
+      var registered = MessageLanguage.Register(culture);
+
+      var resolved = MessageLanguage.FromCulture(culture);
+
+      Assert.Same(registered, resolved);
+   }
+
+   [Fact]
    public void Register_WhenCalledConcurrently_ShouldReturnOneSharedInstance()
    {
       var languages =

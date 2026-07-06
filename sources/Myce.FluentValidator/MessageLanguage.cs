@@ -7,7 +7,7 @@ namespace Myce.FluentValidator;
 
 public sealed class MessageLanguage
 {
-   private readonly string _cultureCode;
+   public CultureInfo Culture { get; }
 
    private static readonly ConcurrentDictionary<string, MessageLanguage> _cachedLanguages =
       new(StringComparer.OrdinalIgnoreCase);
@@ -15,9 +15,9 @@ public sealed class MessageLanguage
    public static readonly MessageLanguage English = Register("en-US");
    public static readonly MessageLanguage PortugueseBrazil = Register("pt-BR");
 
-   private MessageLanguage(string cultureCode)
+   private MessageLanguage(CultureInfo culture)
    {
-      _cultureCode = cultureCode;
+      Culture = culture;
    }
 
    /// <summary>
@@ -29,11 +29,18 @@ public sealed class MessageLanguage
       if (string.IsNullOrWhiteSpace(cultureCode))
          throw new ArgumentException("Culture code cannot be null or empty.", nameof(cultureCode));
 
-      string normalizedCultureCode = NormalizeCultureCode(cultureCode);
+      return Register(GetCulture(cultureCode));
+   }
 
+   public static MessageLanguage Register(CultureInfo culture)
+   {
+      if (culture == null)
+         throw new ArgumentNullException(nameof(culture));
+
+      CultureInfo normalizedCulture = GetCulture(culture.Name);
       return _cachedLanguages.GetOrAdd(
-         normalizedCultureCode,
-         code => new MessageLanguage(code));
+         normalizedCulture.Name,
+         _ => new MessageLanguage(normalizedCulture));
    }
 
    /// <summary>
@@ -52,8 +59,23 @@ public sealed class MessageLanguage
 
       try
       {
-         string normalizedCultureCode = NormalizeCultureCode(cultureCode);
-         _cachedLanguages.TryGetValue(normalizedCultureCode, out var language);
+         return FromCulture(GetCulture(cultureCode));
+      }
+      catch (CultureNotFoundException)
+      {
+         return null;
+      }
+   }
+
+   public static MessageLanguage? FromCulture(CultureInfo culture)
+   {
+      if (culture == null)
+         return null;
+
+      try
+      {
+         CultureInfo normalizedCulture = GetCulture(culture.Name);
+         _cachedLanguages.TryGetValue(normalizedCulture.Name, out var language);
          return language;
       }
       catch (CultureNotFoundException)
@@ -62,7 +84,7 @@ public sealed class MessageLanguage
       }
    }
 
-   private static string NormalizeCultureCode(string cultureCode)
+   private static CultureInfo GetCulture(string cultureCode)
    {
       string requestedCultureCode = cultureCode.Trim();
 
@@ -76,11 +98,11 @@ public sealed class MessageLanguage
          throw new CultureNotFoundException(
             $"Culture '{cultureCode}' is not supported.");
 
-      return CultureInfo.GetCultureInfo(culture.Name).Name;
+      return CultureInfo.GetCultureInfo(culture.Name);
    }
 
    public static implicit operator string(MessageLanguage language)
-      => language?._cultureCode ?? string.Empty;
+      => language?.Culture.Name ?? string.Empty;
 
-   public override string ToString() => _cultureCode;
+   public override string ToString() => Culture.Name;
 }

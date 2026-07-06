@@ -8,10 +8,20 @@
 
       public InformationMessage(string code, string text) : base(MessageType.Information, code, text) { }
 
+      public InformationMessage(string code, string text, CultureInfo culture) : base(MessageType.Information, code, text, culture) { }
+
       public InformationMessage(string code, string text, Variable variable) : base(MessageType.Information, code, text, variable) { }
 
       public InformationMessage(string code, string text, IEnumerable<Variable> variables) : base(MessageType.Information, code, text, variables) { }
 
       public InformationMessage(string code, Dictionary<string, string> translations) : base(MessageType.Information, code, translations) { }
+
+      public InformationMessage(string code, CultureInfo culture, Dictionary<string, string> translations) : base(MessageType.Information, code, culture, translations) { }
+
+      internal InformationMessage(
+         string code,
+         Internationalization.MessageCatalog catalog,
+         CultureInfo culture)
+         : base(MessageType.Information, code, catalog, culture) { }
    }
 }

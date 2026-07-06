@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Myce.Response.Messages
 {
    public static class MessageExtensions
@@ -9,11 +11,20 @@ namespace Myce.Response.Messages
       public static IReadOnlyCollection<Message> WithLanguage(
          this IEnumerable<Message> messages,
          string language)
+         => messages.WithLanguage(
+            Internationalization.CultureName.Get(language));
+
+      public static IReadOnlyCollection<Message> WithLanguage(
+         this IEnumerable<Message> messages,
+         CultureInfo culture)
       {
-         return messages == null
-            ? throw new ArgumentNullException(nameof(messages))
-            : (IReadOnlyCollection<Message>)messages
-            .Select(message => message.WithLanguage(language))
+         if (messages == null)
+            throw new ArgumentNullException(nameof(messages));
+         if (culture == null)
+            throw new ArgumentNullException(nameof(culture));
+
+         return messages
+            .Select(message => message.WithLanguage(culture))
             .ToList()
             .AsReadOnly();
       }

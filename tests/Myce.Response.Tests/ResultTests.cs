@@ -267,5 +267,20 @@ namespace Myce.Response.Tests
          Assert.Equal("{fieldName} é obrigatório.", result.Messages.First().Text);
          Assert.Equal("{dateBorn} deve ser no passado.", result.Messages.Last().Text);
       }
+
+      [Fact]
+      public void Failure_WhenPassCultureInfo_ShouldTranslateMessages()
+      {
+         var message = new ErrorMessage("CODE", "English.");
+         message.AddTranslation("pt-BR", "Português.");
+
+         var result = Result.Failure(
+            new[] { message },
+            System.Globalization.CultureInfo.GetCultureInfo("pt-BR"));
+
+         Assert.Equal("pt-BR", result.Messages.Single().Language);
+         Assert.Equal("Português.", result.Messages.Single().Text);
+         Assert.Equal("en-US", message.Language);
+      }
    }
 }
