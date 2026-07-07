@@ -2,6 +2,7 @@
 using Myce.Response.Messages;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -14,13 +15,24 @@ namespace Myce.FluentValidator
       private Func<Func<T, bool>, Func<T, bool>> _ruleWrapper = rule => rule;
 
 
-      private readonly MessageLanguage _language = MessageLanguage.English;
+      private readonly CultureInfo _culture;
+      private readonly IValidationMessageProvider _messageProvider;
 
-      public FluentValidator() { }
+      public FluentValidator()
+         : this(CultureInfo.GetCultureInfo("en-US")) { }
 
-      public FluentValidator(MessageLanguage language)
+      public FluentValidator(string cultureName)
+         : this(CultureInfo.GetCultureInfo(cultureName)) { }
+
+      public FluentValidator(CultureInfo culture)
+         : this(culture, ValidationMessageProvider.Default) { }
+
+      public FluentValidator(
+         CultureInfo culture,
+         IValidationMessageProvider messageProvider)
       {
-         _language = language;
+         _culture = culture ?? throw new ArgumentNullException(nameof(culture));
+         _messageProvider = messageProvider ?? throw new ArgumentNullException(nameof(messageProvider));
       }
 
       /// <summary>
@@ -110,8 +122,17 @@ namespace Myce.FluentValidator
       internal void AddRule(Func<T, bool> rule, Message message)
       {
          _globalRules.Add(_ruleWrapper(rule));
-         _globalMessages.Add(new FluentValidatorMessage(message, _language, false));
+         _globalMessages.Add(new FluentValidatorMessage(
+            message,
+            _culture,
+            _messageProvider,
+            false));
       }
+
+      internal string FormatValue(object? value)
+         => value is IFormattable formattable
+            ? formattable.ToString(null, _culture) ?? string.Empty
+            : value?.ToString() ?? string.Empty;
 
       internal IDisposable BeginIfScope(bool condition)
       {

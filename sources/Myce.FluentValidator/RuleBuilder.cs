@@ -240,6 +240,9 @@ namespace Myce.FluentValidator
       /// </summary>
       internal object? GetAttributeValueAsObject(T instance) => GetAttributeValue(instance);
 
+      internal string FormatValue(object? value)
+         => _validator.FormatValue(value);
+
       #endregion InternalAndPrivateMethods
    }
 }

@@ -22,7 +22,7 @@ namespace Myce.FluentValidator
          where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();
-         return ruleBuilder.IsEqualTo(value, ComparisonErrorMessages.MustBeEqual(attributeName, value?.ToString()));
+         return ruleBuilder.IsEqualTo(value, ComparisonErrorMessages.MustBeEqual(attributeName, ruleBuilder.FormatValue(value)));
       }
 
       /// <summary>
@@ -88,7 +88,7 @@ namespace Myce.FluentValidator
          where T : class
       {
          var attributeName = ruleBuilder.GetAttributeName();
-         return ruleBuilder.IsNotEqualTo(value, ComparisonErrorMessages.MustNotBeEqual(attributeName, value?.ToString()));
+         return ruleBuilder.IsNotEqualTo(value, ComparisonErrorMessages.MustNotBeEqual(attributeName, ruleBuilder.FormatValue(value)));
       }
 
       /// <summary>
