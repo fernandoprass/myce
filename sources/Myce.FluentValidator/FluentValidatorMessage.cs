@@ -1,20 +1,23 @@
-﻿using Myce.Response.Messages;
+using Myce.FluentValidator.ErrorMessages;
+using Myce.Response.Messages;
+using System.Globalization;
 
-namespace Myce.FluentValidator
+namespace Myce.FluentValidator;
+
+internal sealed class FluentValidatorMessage(
+   Message message,
+   CultureInfo culture,
+   IValidationMessageProvider messageProvider,
+   bool wasRuleBroken)
 {
-   /// <summary>
-   /// Class representing the result of a validation rule execution, containing 
-   /// the message and a flag indicating whether an error was found.
-   /// </summary>
-   internal class FluentValidatorMessage
-   {
-      public Message Message { get; set; } = null!;
-      public bool WasRuleBroken { get; set; }
-      public FluentValidatorMessage(Message message, MessageLanguage language, bool wasRuleBroken)
-      {
-         message.Language = language.ToString();
-         Message = message;
-         WasRuleBroken = wasRuleBroken;
-      }
-   }
+   public Message Message { get; } =
+         message is ValidationError.BuiltInValidationMessage &&
+         messageProvider.TryCreate(
+            message.Code,
+            culture,
+            message.Variables,
+            out var localized)
+            ? localized
+            : message.WithLanguage(culture);
+   public bool WasRuleBroken { get; set; } = wasRuleBroken;
 }

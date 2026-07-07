@@ -1,21 +1,18 @@
-
 # Myce.Response
 
-A lightweight and robust .NET library implementing the **Result Pattern** to standardize API responses, handle business logic flow, and manage complex messaging with frontend-driven internationalization support.
+A lightweight .NET library implementing the Result Pattern to standardize API responses, business-flow outcomes, messages, and backend-driven internationalization.
 
-Supports `net6.0`, `net7.0`, `net8.0`, `net9.0`, and `netstandard2.0`.
+Supports `net6.0`, `net7.0`, `net8.0`, `net9.0`, `net10.0`, and `netstandard2.0`.
 
 ## Features
 
-* **Unified Result Envelope**: Standardized `Result` and `Result<T>` classes for consistent API contracts.
-* **Rich Messaging System**: Support for multiple message types (Information, Warning, Error).
-* **Dynamic Variable Interpolation**: Messages support placeholders (using `{}` or `[]`) for runtime data injection.
-* **Frontend-Ready i18n**: Messages carry unique codes and variable dictionaries, allowing the frontend to handle translations.
-* **Lean Payloads**: Internal logic properties are marked with `[JsonIgnore]` to keep JSON responses small and efficient.
-* **Smart Fallback**: The `Title` property automatically defaults to the text of the first message if not explicitly set.  
-* **Merge**: Easily combine results between types while preserving messages.
-
----
+- **Unified Result Envelope**: Standardized `Result` and `Result<T>` API contracts.
+- **Rich Messaging**: Information, warning, and error messages.
+- **Variable Interpolation**: Supports `{name}` and `[name]` placeholders.
+- **Multilingual Messages**: Stores templates and variable values by culture.
+- **Lean Payloads**: Internal state properties use `[JsonIgnore]`.
+- **Smart Titles**: An unset title uses the formatted first error, or the first available message.
+- **Result Conversion and Merge**: Preserves messages when converting or combining results.
 
 ## Installation
 
@@ -25,58 +22,95 @@ dotnet add package Myce.Response
 
 ## Usage
 
-1.  Basic Result
-    
+### Basic Result
 
-Use the `Result` class for operations that report status without returning a data payload.
-
+Use `Result` when an operation does not return data:
 
 ```csharp
 public Result UpdateSystemSetting(string key, string value)
 {
     if (string.IsNullOrEmpty(key))
-        return Result.Failure(new ErrorMessage("KEY_REQUIRED", "Setting key is mandatory"));
- 
-    // Business logic execution...
+        return Result.Failure(
+            new ErrorMessage("KEY_REQUIRED", "Setting key is mandatory"));
+
     return Result.Success("Setting updated successfully");
 }
 ```
 
-2.  Returning Data with Result
-    
-Use `Result<T>` to wrap the return value of your services.
+### Returning Data
 
+Use `Result<T>` to wrap an operation's data:
 
 ```csharp
 public Result<User> GetUser(int id)
 {
     var user = _repository.Find(id);
-    
-    if (user == null)
-        return Result<User>.Failure(new ErrorMessage("USER_NOT_FOUND", "The requested user does not exist"));
+
+    if (user is null)
+        return Result<User>.Failure(
+            new ErrorMessage("USER_NOT_FOUND", "The requested user does not exist"));
 
     return Result<User>.Success(user);
 }
 ```
 
-3.  Messaging with Variables (i18n Support)
-    
-
-Placeholders in messages allow the frontend to perform translation using a dictionary while maintaining dynamic context.
+### Messages with Variables
 
 ```csharp
-var message = new ErrorMessage("INSUFFICIENT_FUNDS", "You need at least {Required} to complete this, but you have {Current}");
-message.AddVariable("Required", "50.00");
-message.AddVariable("Current", "10.50");
+var message = new ErrorMessage(
+    "INSUFFICIENT_FUNDS",
+    "You need at least {required}, but you have {current}.");
+
+message.AddVariable("required", "50.00");
+message.AddVariable("current", "10.50");
 
 return Result.Failure(message);
 ```
 
-4.  Backend-Driven Multilingual Messaging
+`AddVariable(name, value)` adds a value for the message's current language, which is `en-US` for ordinary messages.
 
-You can store multiple translations directly within the message on the backend and resolve them dynamically using the `.Show(language)` method.
+## Multilingual Messages
 
-**Option A: Using dictionaries (Bulk initialization)**
+`Message` remains the main class used by consumers:
+
+```csharp
+var message = new ErrorMessage(
+    "FIELD_REQUIRED",
+    "The field {fieldName} is required.");
+
+var portuguese = CultureInfo.GetCultureInfo("pt-BR");
+
+message
+    .AddTranslation(portuguese, "O campo {fieldName} é obrigatório.")
+    .AddVariable("fieldName", "Name")
+    .AddVariableTranslation("fieldName", portuguese, "Nome");
+
+Message translated = message.WithLanguage(portuguese);
+
+Console.WriteLine(translated.Text);   // "O campo {fieldName} é obrigatório."
+Console.WriteLine(translated.Show()); // "O campo Nome é obrigatório."
+```
+
+`WithLanguage(...)` creates a localized copy and does not modify the original message. `CultureInfo` is the primary type used by every localization API and internally by the localizer:
+
+```csharp
+Message translated = message.WithLanguage(
+    CultureInfo.GetCultureInfo("pt-BR"));
+```
+
+Culture names are validated, normalized, and cached.
+
+String overloads remain available for values arriving from HTTP headers,
+configuration, and frontend requests. They convert the value to `CultureInfo`
+and delegate to the corresponding strongly typed overload:
+
+```csharp
+Message translated = message.WithLanguage("pt-BR");
+```
+
+### Bulk Initialization
+
+The first entry in the translation dictionary becomes the message's initial language.
 
 ```csharp
 var templates = new Dictionary<string, string>
@@ -85,80 +119,150 @@ var templates = new Dictionary<string, string>
     { "pt-BR", "O campo {fieldName} deve ser a data de hoje." }
 };
 
-var fieldTranslations = new Dictionary<string, string>
-{
-    { "en-US", "Birth Date" },
-    { "pt-BR", "Data de Nascimento" }
-};
-
 var message = new ErrorMessage("DATETIME_IS_TODAY", templates);
-message.AddVariableMultilingual("fieldName", fieldTranslations);
 
-// Resolve dynamically based on the client's language
-string enOutput = message.Show("en-US"); // "The field Birth Date must be today."
-string ptOutput = message.Show("pt-BR"); // "O campo Data de Nascimento deve ser a data de hoje."
+message.AddVariable("en-US", "fieldName", "Birth Date");
+message.AddVariable("pt-BR", "fieldName", "Data de Nascimento");
+
+string english = message.Show("en-US");
+string portuguese = message.Show("pt-BR");
 ```
 
-**Option B: Incremental configuration (Individual translations)**
+Calling `Show(language)` renders that language without changing the message's current language.
+
+### Incremental Configuration
 
 ```csharp
-var message = new ErrorMessage(MessageType.Error);
+var message = new ErrorMessage();
 message.Code = "INVALID_FIELD";
 
-// Add text templates individually
-message.AddTextTranslation("en-US", "The {fieldName} is invalid.");
-message.AddTextTranslation("pt-BR", "O {fieldName} é inválido.");
+message.AddTranslation("en-US", "The {fieldName} is invalid.");
+message.AddTranslation("pt-BR", "O {fieldName} é inválido.");
 
-// Add variable translations individually
-message.AddVariableTranslation("fieldName", "en-US", "Email Address");
+message.AddVariable("fieldName", "Email Address");
 message.AddVariableTranslation("fieldName", "pt-BR", "Endereço de E-mail");
 
-string result = message.Show("pt-BR"); // "O Endereço de E-mail é inválido."
+string result = message.Show("pt-BR");
+// "O Endereço de E-mail é inválido."
 ```
+
+Adding the same language and variable-name pair again updates its value instead of creating a duplicate.
+
+### Changing the Current Language
+
+Prefer `WithLanguage(language)`, which returns an independent localized copy:
+
+```csharp
+Message translated = message.WithLanguage("pt-BR");
+
+Console.WriteLine(translated.Language); // "pt-BR"
+Console.WriteLine(translated.Text);     // "O {fieldName} é inválido."
+Console.WriteLine(translated.Show());   // "O Endereço de E-mail é inválido."
+```
+
+`TranslateTo(language)` remains available when intentionally changing the existing message instance.
+
+If the requested template is unavailable, rendering falls back to the message's current language and then to the first available template. Standard messages and variables default to `en-US`.
+
+### Translating a Failed Result
+
+Use the language overload to translate every message before returning a failure:
+
+```csharp
+var messages = new List<Message>
+{
+    requiredFieldMessage,
+    invalidDateMessage
+};
+
+return Result.Failure(messages, "pt-BR");
+```
+
+`Result.Failure(...)` requires at least one `ErrorMessage`; otherwise, it throws an exception.
 
 ## Architecture
 
-### The Result Object
+### Result
 
--   **Title**: (string) A high-level summary. If null, it returns `Messages.FirstOrDefault()?.Text`.
--   **IsSuccess**: (bool) Returns `true` only if no `ErrorMessage` is present. 
--   **Messages**: (IReadOnlyCollection) A list of `Information`, `Warning`, or `Error` objects.
--   **Data**: (T) The generic payload (specific to `Result<T>`).
-    
+- **Title**: Explicit summary, or the formatted first error message; if there is no error, the formatted first message.
+- **IsSuccess**: `true` when no error message exists.
+- **Messages**: Read-only collection of all messages.
+- **HasError**: Indicates whether an error exists.
+- **HasWarning**: Indicates whether a warning exists.
+- **HasMessage**: Indicates whether any message exists.
+
+### Result&lt;T&gt;
+
+In addition to the base properties:
+
+- **Data**: Generic result payload.
+- **HasData**: Indicates whether `Data` is non-null.
+- **IsValidAndDataIsNotNull**: Indicates success with non-null data.
+- **IsValidAndDataIsNull**: Indicates success with null data.
+- **HasErrorOrDataIsNull**: Indicates failure or null data.
+
+### Message
+
+- **Language**: Current culture code.
+- **Code**: Stable identifier for the message.
+- **Text**: Current untranslated template.
+- **Type**: Information, warning, or error.
+- **Variables**: Read-only collection of language-specific placeholder values.
+
+`Message` remains the public entry point. Internally, translation storage,
+culture resolution, fallback, and formatting are handled separately by the
+message catalog and localizer. Localized copies contain an independent catalog,
+so changing their variables does not affect the source message.
 
 ### Message Types
 
-1.  **InformationMessage**: Used for non-critical status updates.
-2.  **WarningMessage**: Used for alerts that do not block the operation.
-3.  **ErrorMessage**: Critical failures. Presence of this type makes `IsValid` return `false`.
-    
+1. **InformationMessage**: Non-critical status information.
+2. **WarningMessage**: An alert that does not make the result unsuccessful.
+3. **ErrorMessage**: A critical failure that makes `IsSuccess` return `false`.
 
-## Frontend Integration (Internationalization)
+## JSON and Frontend Integration
 
-This library follows a **Client-Side Translation** strategy. The backend provides the structural data, and the frontend applies the locale based on the `Code`.
+Messages expose the selected culture alongside their code, text, and culture-specific variables:
 
-| Property | Purpose |Example|
+| Property | Purpose | Example |
 |---|---|---|
-|`Code`|Unique translation key|"VALIDATION_ERROR"|
-| `Text` | Default fallback (English) |"Invalid input"|
-|`Variables`|Key-value pairs for interpolation|`[{"Name": "Field", "Value": "Email"}]`|
+| `Language` | Current message culture | `"pt-BR"` |
+| `Code` | Stable message identifier | `"VALIDATION_ERROR"` |
+| `Text` | Template for the current culture | `"O campo {fieldName} é inválido."` |
+| `Variables` | Values used for interpolation | `[{"language":"pt-BR","name":"fieldName","value":"E-mail"}]` |
+
+The frontend may display `Text` and interpolate `Variables`, or the backend may return formatted text through `Show()`.
 
 ## Best Practices
 
-1.  **Explicit Titles**: Set the `Title` property when you want a specific summary for the UI that differs from individual error messages.
-2.  **ToResult Mapping**: Use `.ToResult<V>(map)` to convert between types (e.g., Entity to DTO) while preserving all messages and state.
-    
+1. Use culture names such as `en-US`, `pt-BR`, and `es-ES`.
+2. Keep placeholder names consistent across all translations.
+3. Set `Title` explicitly when the UI summary should differ from the first error.
+4. Use `ToResult<V>(map)` to map data while preserving messages.
+5. Use `ToResultWithErrors<V>()` when only the messages should be carried to another result type.
 
 ## Notes
 
+Version 1.5.2
+
+- Fixed multilingual template and variable resolution.
+- Added culture-specific variables through `AddVariable(language, name, value)`.
+- Added `TranslateTo(language)` and `TranslateTo(culture)` to update the current language and text.
+- Added `Result.Failure(messages, language)` to translate returned messages.
+- Updated title fallback to prefer the first formatted error message.
+
 Version 1.5.0
--   Add internationalization support for Message class.
+
+- Added internationalization support for `Message`.
 
 Version 1.3.0
--   Remove obsolete attribute IsValid (was replaced by IsSuccess).
+
+- Removed obsolete `IsValid`; use `IsSuccess`.
 
 Version 1.2.0
--   Introduces support for `net10.0`, ensuring compatibility with the latest .NET features and improvements.
+
+- Added `net10.0` support.
 
 Version 1.0.0
--   The initial stable release of Myce.Response, providing basic response handling capabilities for .NET applications.
+
+- Initial stable release.

@@ -153,7 +153,7 @@ namespace Myce.FluentValidator.Tests
          var result = validator.Validate(entity);
 
          Assert.False(result);
-         Assert.Equal(StateErrorMessages.IsNotNullErrorCode, validator.Messages.First().Code);
+         Assert.Equal(StateErrorMessages.IsNotNullError, validator.Messages.First().Code);
          Assert.Equal("not found",validator.Messages.Last().Show());
       }
 
@@ -172,7 +172,7 @@ namespace Myce.FluentValidator.Tests
          var result = validator.Validate(entity);
 
          Assert.False(result);
-         Assert.Equal(StateErrorMessages.IsNullErrorCode, validator.Messages.First().Code);
+         Assert.Equal(StateErrorMessages.IsNullError, validator.Messages.First().Code);
 
          Assert.Equal("it shoud be not null", validator.Messages.Last().Show());
       }

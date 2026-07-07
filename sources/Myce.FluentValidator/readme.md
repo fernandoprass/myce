@@ -1,7 +1,7 @@
 # MYCE.FluentValidator
 MYCE (Makes Your Coding Easier) FluentValidator is a fluent validation library designed to simplify entity validation in .NET applications.
 
-Supports `net7.0`, `net8.0`, `net9.0`, `net10.0`, and `netstandard2.0`.
+Supports `net6.0`, `net7.0`, `net8.0`, `net9.0`, `net10.0`, and `netstandard2.0`.
 
 ## Installation
 Package Manager Console:
@@ -15,7 +15,7 @@ Install-Package Myce.FluentValidator
 - **High Performance**: Optimized with typed value access to avoid boxing/unboxing.
 - **Reusable Templates**: Define rules once and apply them to multiple DTOs.
 - **External Validation**: Validate standalone variables or external states with RuleForValue.
-- **Multilingual Messages**: Select the validation-message language when creating the validator and register additional languages when needed.
+- **Multilingual Messages**: Select the culture with `CultureInfo` and extend built-in translations through a message provider.
 
 ## Usage
 
@@ -64,16 +64,17 @@ if (validator.Messages.Any())
 
 ### 3. Multilingual Validation Messages
 
-English is used by default:
+English (`en-US`) is used by default:
 
 ```csharp
 var validator = new FluentValidator<Person>();
 ```
 
-To use the built-in Brazilian Portuguese translations, provide the language when creating the validator:
+Use `CultureInfo` to select another culture:
 
 ```csharp
-var validator = new FluentValidator<Person>(MessageLanguage.PortugueseBrazil);
+var portuguese = CultureInfo.GetCultureInfo("pt-BR");
+var validator = new FluentValidator<Person>(portuguese);
 
 validator.RuleFor(x => x.Name).IsRequired();
 validator.Validate(person);
@@ -84,33 +85,34 @@ foreach (var message in validator.Messages)
 }
 ```
 
-`MessageLanguage` includes the built-in `English` (`en-US`) and `PortugueseBrazil` (`pt-BR`) languages.
-
-Additional languages can be registered using their culture code. Register the language once in a shared class and use it both when adding translations and when displaying a message:
-
-```csharp
-public static class ApplicationLanguages
-{
-    public static readonly MessageLanguage French =
-        MessageLanguage.Register("fr-FR");
-}
-
-var message = new ErrorMessage("FIELD_REQUIRED", "The field {fieldName} is required.");
-message.AddVariable("fieldName", "Name");
-message.AddTextTranslation(
-    ApplicationLanguages.French,
-    "Le champ {fieldName} est obligatoire.");
-
-string texteFr = message.Show(ApplicationLanguages.French);
-```
-
-Custom languages can also be passed to a validator:
+The string constructor is convenient when the culture comes from configuration
+or an HTTP request:
 
 ```csharp
-var validator = new FluentValidator<Person>(ApplicationLanguages.French);
+var validator = new FluentValidator<Person>("pt-BR");
 ```
 
-Messages without a translation for the selected language use the message fallback behavior. Add the corresponding translation to custom messages when using a registered language.
+Built-in validation messages are stored in the centralized
+`ValidationMessageProvider`. English and Brazilian Portuguese are included.
+Create an independent provider with additional or overridden translations:
+
+```csharp
+var french = CultureInfo.GetCultureInfo("fr-FR");
+var messages = ValidationMessageProvider.Default.WithTranslation(
+    StringErrorMessages.FewerCharactersThanExpectedError,
+    french,
+    "'{fieldName}' contient moins de {minLength} caractères.");
+
+var validator = new FluentValidator<Person>(french, messages)
+    .RuleFor(x => x.Name)
+    .MinLength(3);
+```
+
+`WithTranslation(...)` does not mutate the default provider. Missing cultures
+fall back to the built-in English template. Custom messages supplied directly
+to rule overloads are preserved and are not replaced by the built-in provider.
+Rule arguments, such as decimal limits, are formatted using the validator's
+selected culture.
 
 ### 4. Reusable Templates (DRY Principle)
 You can define validation logic for common fields (like Email) and reuse them across different classes.
@@ -284,12 +286,18 @@ String validators:
 | `MinLength` | Validates the minimum length of a string. |
 
 ## Notes
+Version 2.0.3
+- Replaced `MessageLanguage` with `CultureInfo`.
+- Centralized every built-in validation template in `ValidationMessageProvider`.
+- Added immutable translation overlays through `WithTranslation(...)`.
+- Built-in rules now produce semantic message codes and arguments before localization.
+- Custom rule messages remain independent from the built-in provider.
+
 Version 2.0.0
 - Added multilingual default validation messages.
 - English (`en-US`) remains the default language.
 - Added built-in Brazilian Portuguese (`pt-BR`) translations.
-- Added the extensible `MessageLanguage` class, allowing applications to register additional culture codes with `MessageLanguage.Register(...)`.
-- The validator language can now be selected when constructing `FluentValidator<T>`.
+- The validator culture can be selected when constructing `FluentValidator<T>`.
 
 Version 1.8.1
 - Numeric validators now support comparison between attributes of the same entity, allowing for dynamic validation rules based on the state of the object. For example, you can validate that one numeric property is greater than another property within the same entity.

@@ -1,4 +1,6 @@
 using Myce.Response.Messages;
+using Myce.Response.Messages.Internationalization;
+using System.Globalization;
 using System.Text.Json.Serialization;
 
 namespace Myce.Response
@@ -87,35 +89,35 @@ namespace Myce.Response
       /// Creates a new instance of the Result type that represents a successful operation.
       /// </summary>
       /// <returns>A Result instance indicating success.</returns>
-      public static Result Success() => new Result();
+      public static Result Success() => new();
 
       /// <summary>
       /// Creates a successful result with the specified title.
       /// </summary>
       /// <param name="title">The title that describes the successful result. Cannot be null.</param>
       /// <returns>A <see cref="Result"/> instance representing a successful outcome with the given title.</returns>
-      public static Result Success(string title) => new Result(title);
+      public static Result Success(string title) => new(title);
 
       /// <summary>
       /// Creates a successful result with the specified information message.
       /// </summary>
       /// <param name="message">The message that confirm the operation. Cannot be null.</param>
       /// <returns>A <see cref="Result"/> instance representing a failure with the provided error message.</returns>
-      public static Result Success(InformationMessage message) => new Result(message);
+      public static Result Success(InformationMessage message) => new(message);
 
       /// <summary>
       /// Creates a successful result with the specified information message.
       /// </summary>
       /// <param name="message">The message that confirm the operation. Cannot be null.</param>
       /// <returns>A <see cref="Result"/> instance representing a failure with the provided error message.</returns>
-      public static Result Success(WarningMessage message) => new Result(message);
+      public static Result Success(WarningMessage message) => new(message);
 
       /// <summary>
       /// Creates a failed result with the specified error message.
       /// </summary>
       /// <param name="message">The error message that describes the reason for the failure. Cannot be null.</param>
       /// <returns>A <see cref="Result"/> instance representing a failure with the provided error message.</returns>
-      public static Result Failure(ErrorMessage message) => new Result(message);
+      public static Result Failure(ErrorMessage message) => new(message);
 
       /// <summary>
       /// Creates a failed result containing the specified error messages.
@@ -129,7 +131,17 @@ namespace Myce.Response
             throw new Exception("To return 'Failure', there must be at least one error message in the list.");
          }
          return new Result(messages);
-      } 
+      }
+
+      public static Result Failure(IEnumerable<Message> messages, string language)
+         => Failure(
+            messages,
+            CultureName.Get(language));
+
+      public static Result Failure(
+         IEnumerable<Message> messages,
+         CultureInfo culture)
+         => Failure(messages.WithLanguage(culture));
 
       /// <summary>
       /// Adds a message to the collection.

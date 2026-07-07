@@ -1,3 +1,4 @@
+using Myce.FluentValidator;
 using Myce.FluentValidator.ErrorMessages;
 using Myce.Response.Messages;
 using System.ComponentModel.DataAnnotations;
@@ -34,7 +35,8 @@ namespace Myce.FluentValidator.Tests
             BirthDate = new DateTime(1978, 02, 22) 
          };
 
-         var validator = new FluentValidator<Person>();
+         var validator = new FluentValidator<Person>(
+            System.Globalization.CultureInfo.GetCultureInfo("pt-BR"));
 
          validator.RuleFor(x => x.Name).IsRequired().IsEqualTo("John Smith")
             .RuleFor(x => x.Gender).IsInEnum()
@@ -46,7 +48,7 @@ namespace Myce.FluentValidator.Tests
 
          var errorMessageAge = validator.Messages.First();
          Assert.Contains("Age", errorMessageAge.Show());      
-         Assert.Equal(NumericErrorMessages.IsBetweenErrorCode, errorMessageAge.Code);
+         Assert.Equal(NumericErrorMessages.IsBetweenError, errorMessageAge.Code);
 
          Assert.Single(validator.Messages);
       }
@@ -98,7 +100,7 @@ namespace Myce.FluentValidator.Tests
 
          Assert.False(result);
          Assert.Equal(2, validator.Messages.Count);
-         Assert.Equal(StringErrorMessages.FewerCharactersThanExpectedErrorCode, validator.Messages.First().Code);
+         Assert.Equal(StringErrorMessages.FewerCharactersThanExpectedError, validator.Messages.First().Code);
          Assert.IsType<WarningMessage>(validator.Messages.Last());
       }
 

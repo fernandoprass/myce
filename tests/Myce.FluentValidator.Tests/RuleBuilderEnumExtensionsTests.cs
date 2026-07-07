@@ -1,4 +1,3 @@
-using Myce.FluentValidator.ErrorMessages;
 using Myce.Response.Messages;
 using Xunit;
 
@@ -45,7 +44,7 @@ namespace Myce.FluentValidator.Tests
 
          Assert.False(isValid);
          Assert.Single(validator.Messages);
-         Assert.Contains("'Status' has an invalid value for UserStatus.", validator.Messages.First().Show());
+         Assert.Equal("'Status' has an invalid value for 'UserStatus'.", validator.Messages.First().Show());
       }
 
       [Fact]

@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Xunit;
 
 namespace Myce.FluentValidator.Tests
@@ -16,6 +14,7 @@ namespace Myce.FluentValidator.Tests
       {
          public string Name { get; set; } = string.Empty;
          public int Age { get; set; }
+         public decimal Balance { get; set; }
          public DateTime BirthDate { get; set; }
          public PersonStatus Status { get; set; }
          public string Code { get; set; } = string.Empty;
@@ -24,9 +23,11 @@ namespace Myce.FluentValidator.Tests
       [Fact]
       public void DefaultLanguage_ShouldReturnMessagesInEnglish()
       {
-         var validator = CreateValidator(new FluentValidator<Person>());
+         var validator = CreateValidator(
+            System.Globalization.CultureInfo.GetCultureInfo("en-US"));
+         var person = CreateInvalidPerson();
 
-         validator.Validate(CreateInvalidPerson());
+         validator.Validate(person);
 
          var messages = validator.Messages.Select(message => message.Show()).ToArray();
 
@@ -35,8 +36,8 @@ namespace Myce.FluentValidator.Tests
             "'Name' has fewer characters than expected (5).",
             "'Age' must be greater than 18.",
             "'BirthDate' must be today.",
-            "'Status' has an invalid value for PersonStatus.",
-            "'Code' must be equal to EXPECTED."
+            "'Status' has an invalid value for 'PersonStatus'.",
+            "'Code' must be equal to 'EXPECTED'."
          ], messages);
       }
 
@@ -44,9 +45,10 @@ namespace Myce.FluentValidator.Tests
       public void PortugueseBrazilLanguage_ShouldReturnMessagesInPortuguese()
       {
          var validator = CreateValidator(
-            new FluentValidator<Person>(MessageLanguage.PortugueseBrazil));
+            System.Globalization.CultureInfo.GetCultureInfo("pt-BR"));
+         var person = CreateInvalidPerson();
 
-         validator.Validate(CreateInvalidPerson());
+         validator.Validate(person);
 
          var messages = validator.Messages.Select(message => message.Show()).ToArray();
 
@@ -55,18 +57,55 @@ namespace Myce.FluentValidator.Tests
             "'Name' possui menos caracteres que o esperado (5).",
             "'Age' deve ser maior que 18.",
             "'BirthDate' deve ser hoje.",
-            "'Status' possui um valor inválido para PersonStatus.",
-            "'Code' deve ser igual a EXPECTED."
+            "'Status' possui um valor inválido para 'PersonStatus'.",
+            "'Code' deve ser igual a 'EXPECTED'."
          ], messages);
       }
 
-      private static FluentValidator<Person> CreateValidator(FluentValidator<Person> validator)
+      [Fact]
+      public void CustomProvider_ShouldTranslateBuiltInRule()
       {
-         validator.RuleFor(person => person.Name).MinLength(5);
-         validator.RuleFor(person => person.Age).IsGreaterThan(18);
-         validator.RuleFor(person => person.BirthDate).IsToday();
-         validator.RuleFor(person => person.Status).IsInEnum();
-         validator.RuleFor(person => person.Code).IsEqualTo("EXPECTED");
+         var french =
+            System.Globalization.CultureInfo.GetCultureInfo("fr-FR");
+         var provider = ValidationMessageProvider.Default.WithTranslation(
+            ErrorMessages.StringErrorMessages.FewerCharactersThanExpectedError,
+            french,
+            "'{fieldName}' contient moins de {minLength} caractères.");
+         var validator = new FluentValidator<Person>(french, provider)
+            .RuleFor(person => person.Name).MinLength(5);
+
+         validator.Validate(CreateInvalidPerson());
+
+         Assert.Equal(
+            "'Name' contient moins de 5 caractères.",
+            validator.Messages.Single().Show());
+      }
+
+      [Fact]
+      public void RuleArguments_ShouldBeFormattedUsingValidatorCulture()
+      {
+         var portuguese =
+            System.Globalization.CultureInfo.GetCultureInfo("pt-BR");
+         var validator = new FluentValidator<Person>(portuguese)
+            .RuleFor(person => person.Balance)
+            .IsGreaterThan(12.5m);
+
+         validator.Validate(new Person { Balance = 10m });
+
+         Assert.Equal(
+            "'Balance' deve ser maior que 12,5.",
+            validator.Messages.Single().Show());
+      }
+
+      private static FluentValidator<Person> CreateValidator(
+         System.Globalization.CultureInfo culture)
+      {
+         var validator = new FluentValidator<Person>(culture)
+               .RuleFor(person => person.Name).MinLength(5)
+               .RuleFor(person => person.Age).IsGreaterThan(18)
+               .RuleFor(person => person.BirthDate).IsToday()
+               .RuleFor(person => person.Status).IsInEnum()
+               .RuleFor(person => person.Code).IsEqualTo("EXPECTED");
          return validator;
       }
 
