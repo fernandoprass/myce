@@ -1,4 +1,3 @@
-using System.Globalization;
 using Myce.Response.Messages.Internationalization;
 
 namespace Myce.Response.Messages

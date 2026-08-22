@@ -35,6 +35,24 @@ public class MessageMultilingualTests
       Assert.Equal("The field Name is required.", message.Show());
    }
 
+
+   [Fact]
+   public void FluentLocalizationApi_IfVariableTranslationDoesntExist_ShouldReturnDefaultTranslation()
+   {
+      var message = new ErrorMessage(
+         "categoryName",
+         "The category name is {categoryName}.");
+
+      message
+         .AddTranslation("pt-BR", "O nome da categoria é {categoryName}.")
+         .AddVariable("categoryName", "Electronics");
+      
+      var translated = message.WithLanguage("pt-BR");
+
+      Assert.Equal("O nome da categoria é Electronics.", translated.Show());
+      Assert.Equal("The category name is Electronics.", message.Show());
+   }
+
    [Fact]
    public void WithLanguage_ShouldAcceptCultureInfoAndPreserveMessageContract()
    {

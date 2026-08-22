@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using System.Globalization;
 
 namespace Myce.Response.Messages.Internationalization;
 
@@ -11,9 +10,7 @@ internal static class CultureName
    internal static CultureInfo Get(string? language)
    {
       if (string.IsNullOrWhiteSpace(language))
-         throw new ArgumentException(
-            "Language cannot be null or empty.",
-            nameof(language));
+         throw new ArgumentException("Language cannot be null or empty.", nameof(language));
 
       string requestedLanguage = language!.Trim();
 
@@ -25,19 +22,16 @@ internal static class CultureName
                requested,
                StringComparison.OrdinalIgnoreCase));
 
-         if (culture == null)
-            throw new CultureNotFoundException(
-               $"Culture '{language}' is not supported.");
-
-         return CultureInfo.GetCultureInfo(culture.Name);
+         return culture == null
+            ? throw new CultureNotFoundException($"Culture '{language}' is not supported.")
+            : CultureInfo.GetCultureInfo(culture.Name);
       });
    }
 
    internal static CultureInfo Get(CultureInfo? culture)
    {
-      if (culture == null)
-         throw new ArgumentNullException(nameof(culture));
-
-      return Get(culture.Name);
+      return culture == null 
+         ? throw new ArgumentNullException(nameof(culture)) 
+         : Get(culture.Name);
    }
 }

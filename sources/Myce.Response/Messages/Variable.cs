@@ -1,7 +1,11 @@
+using System.Text.Json.Serialization;
+
 namespace Myce.Response.Messages
 {
    public class Variable {
       private const string _defaultLanguageKey = "en-US";
+
+      [JsonIgnore]
       public string Language { get; private set; } = _defaultLanguageKey;
       public string Name { get; set; } = string.Empty;
       public string Value { get; set; } = string.Empty;

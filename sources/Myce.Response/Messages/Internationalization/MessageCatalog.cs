@@ -1,5 +1,3 @@
-using System.Globalization;
-
 namespace Myce.Response.Messages.Internationalization;
 
 internal sealed class MessageCatalog
@@ -53,16 +51,16 @@ internal sealed class MessageCatalog
       }
 
       if (languageVariables.TryGetValue(name, out var existing))
+      {
          existing.Value = value ?? string.Empty;
-      else
-         languageVariables[name] =
-            new Variable(culture.Name, name, value ?? string.Empty);
+      }
+      else 
+      { 
+         languageVariables[name] = new Variable(culture.Name, name, value ?? string.Empty);
+      }       
    }
 
-   internal bool TryGetVariable(
-      CultureInfo culture,
-      string name,
-      out Variable? variable)
+   internal bool TryGetVariable(CultureInfo culture, string name, out Variable? variable)
    {
       if (_variables.TryGetValue(culture.Name, out var languageVariables) &&
           languageVariables.TryGetValue(name, out var value))
@@ -75,10 +73,7 @@ internal sealed class MessageCatalog
       return false;
    }
 
-   internal bool TryGetTemplate(
-      CultureInfo culture,
-      out string template,
-      out CultureInfo resolvedCulture)
+   internal bool TryGetTemplate(CultureInfo culture, out string template, out CultureInfo resolvedCulture)
    {
       if (_templates.TryGetValue(culture.Name, out var value))
       {
